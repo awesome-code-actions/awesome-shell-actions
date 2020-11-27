@@ -16,3 +16,16 @@ docker-get-networknamespace-by-container-name-or-uuid() {
     sudo ls -l /proc/$container_pid/ns/net
 }
 
+docker-set-mirror() {
+    mirror=$1
+    FILE=/etc/docker/daemon.json
+    sudo mkdir -p /etc/docker
+    sudo jq -n --arg mirror $mirror '{"registry-mirrors":["\($mirror)"]}' |sudo tee $FILE 
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
+}
+
+# require: jq
+docker-get-mirror() {
+cat /etc/docker/daemon.json |jq '.["registry-mirrors"]'
+}
