@@ -1,7 +1,7 @@
 #!/bin/bash
 
-enter-into-networknamespace-by-pid-with-shell() {
+enter-into-networknamespace-by-pid-and-run() {
     pid=$1
-    shell=$2
-    nsenter -t $pid -n $shell
+    cmd=$2
+    nsenter -t $pid -n $cmd
 }
