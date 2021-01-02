@@ -16,19 +16,8 @@ those *.actions.sh under scripts folder expose all of function/action named whic
 ## how to load
 add below code to you zshrc/bashrc
 ```bash
-load_awesome_shell_actions() {
-    awesome_shell_actions_path=$1
-    if [ -d $awesome_shell_actions_path ] 
-    then 
-        echo "find awesome-shell-actions in ${awesome_shell_actions_path} start load"
-        for file in $awesome_shell_actions_path/scripts/*.sh; do
-            echo "load $file"
-            . "$file"
-        done
-    else
-        echo "cloud not find awesome-shell-actions in $awesome_shell_actions_path ignore"
-    fi
-}
-
-load_awesome_shell_actions $YOU_PATH
+## load bootstrap actions first
+. $YOU_PATH/scripts/awesome-shell-actions.sh
+## then you could use the awesome_shell_actions-load action to load all you actions 
+awesome-shell-actions-load $YOU_PATH
 ```
