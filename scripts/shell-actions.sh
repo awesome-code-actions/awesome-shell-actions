@@ -6,6 +6,14 @@ check-proxy() {
     env |grep -i proxy
 }
 
+set-proxy() {
+    URL=$1
+    export HTTPS_PROXY=$URL
+    export HTTP_PROXY=$URL
+    export https_proxy=$URL
+    export http_proxy=$URL
+}
+
 unset-all-proxy() {
     unset HTTP_PROXY
     unset HTTPS_PROXY

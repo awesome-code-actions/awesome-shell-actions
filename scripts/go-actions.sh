@@ -1,0 +1,3 @@
+go-test-all() {
+    go test -v ./...
+}

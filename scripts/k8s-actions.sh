@@ -16,3 +16,7 @@ function k-get-crd-by-name() {
     kubectl get po --all-namespaces -l $label -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}'
 }
 
+function k-list-contexts() {
+    kubectl config get-contexts
+}
+
