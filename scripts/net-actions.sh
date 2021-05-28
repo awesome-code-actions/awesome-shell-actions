@@ -8,6 +8,8 @@ find-port-by-pid() {
     netstat -ltnp|grep $pid
 }
 
+alias which-port-usd-by-pid=find-port-by-pid
+
 kill-process-by-port() {
    port=$1
    lsof -i:${port}|sed -n '2p'|awk '{print $2}' |tr -d '\n'|xargs -i{} kill -9 {}

@@ -44,3 +44,10 @@ function k-list-kind-by-resource() {
     res = $1
     kubectl api-resources | grep $res
 }
+
+function k-set-image() {
+    ns=$1
+    deployment=$2
+    newImage=$3
+    echo "set $ns $deployment image to $newimage"
+}
