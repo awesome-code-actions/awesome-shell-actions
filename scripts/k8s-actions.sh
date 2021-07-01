@@ -51,3 +51,15 @@ function k-set-image() {
     newImage=$3
     echo "set $ns $deployment image to $newimage"
 }
+
+function k-use-16() {
+    kubectl config use-context kind-k-1.16.5 
+}
+
+function see-net-connection() {
+    local ns=$1
+    local label=$1
+    local container=$1
+
+    while true; do kubectl get po -n $ns -l $label -o wide |tail -n +2 |awk '{print $1}' |xargs -I{} sh -c "kubectl exec {} -c $container " -n $ns -- sh -c ' echo -n \$(env|grep HOSTNAME) && echo -n \" \" && cat /proc/net/tcp |wc -l ';sleep l;echo -ne "\n\r";done
+}

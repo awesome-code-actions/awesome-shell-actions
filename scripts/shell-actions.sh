@@ -35,3 +35,8 @@ grant-run-permissions() {
     exe_path=$1
     chmod a+x $exe_path
 }
+
+
+atuin_fzf() {
+    atuin h l --cmd-only | fzf
+}

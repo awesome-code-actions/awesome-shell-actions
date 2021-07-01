@@ -53,3 +53,27 @@ git-which-tag-contains-this-text() {
 git-commit-no-edit() {
     git commit --amend --no-edit
 }
+
+git-checkout-master() {
+    git checkout master
+}
+
+git-contributor-a1() {
+    user=$1
+    git log --author="$user" --pretty=tformat: --numstat |gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
+}
+
+git-show-commit-by-user() {
+    user=$1
+    git log --oneline  --author="$user"
+}
+
+git-force-push-origin() {
+    current_branch=$(git branch --show-current |tr -d '\n\r')
+    git push origin $current_branch -f 
+}
+
+git-commit-no-edit-and-force-push-origin() {
+    git-commit-no-edit
+    git-force-push-origin
+}

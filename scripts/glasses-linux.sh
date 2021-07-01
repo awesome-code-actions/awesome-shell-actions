@@ -1,0 +1,3 @@
+which-kernel() {
+    uname -r
+}

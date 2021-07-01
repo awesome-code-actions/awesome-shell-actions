@@ -58,3 +58,15 @@ tmux-jumpto-panel-by-regex() {
 edit-tmux-config() {
     vim ~/.tmux.conf
 }
+
+tmux-switch-session() {
+    
+}
+
+tmux-list-all-key() {
+    tmux list-keys
+}
+
+tmux-zoom-current-panel() {
+    tmux resize-pane -Z
+}

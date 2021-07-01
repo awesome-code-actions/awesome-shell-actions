@@ -1,4 +1,4 @@
-shopt -s globstar
+#!/bin/zsh
 
 awesome-shell-actions-load() {
     awesome_shell_actions_path=$1
@@ -12,4 +12,8 @@ awesome-shell-actions-load() {
     else
         echo "cloud not find awesome-shell-actions in $awesome_shell_actions_path ignore"
     fi
+}
+
+edit-x-actions() {
+    vim $(fd -e  sh .  ~/.zsh/awesome-shell-actions/|fzf)
 }
