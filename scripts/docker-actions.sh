@@ -29,3 +29,32 @@ docker-set-mirror() {
 docker-get-mirror() {
 cat /etc/docker/daemon.json |jq '.["registry-mirrors"]'
 }
+
+
+docker-export-image-to-dir() {
+    image=$1
+    docker pull $image
+    name=$(echo $image | cut -d '/' -f 3 | tr -d '\n\r')
+    mkdir $name
+    cd $name
+    docker save $image --output $name.tar
+    tar xvf ./$name.tar
+    rm ./$name.tar 
+    find |grep  .tar |xargs -i{} tar xvf {}
+}
+
+docker-pull-arm() {
+    # arg-len: 1
+    # arg: image no-empty-string
+    image=$1
+    docker-pull-with-platform $image 
+}
+
+docker-pull-with-platform() {
+    # arg-len: 2
+    # arg: image no-empty-string
+    # arg: platform no-empty-string
+    image=$1
+    platform=$2
+    echo $image $platform
+}

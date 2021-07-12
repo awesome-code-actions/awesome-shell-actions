@@ -6,6 +6,7 @@ git-pull-current-remote-branch() {
 
 # 检查当前的repo的帐号用户信息
 git-check-current-info() {
+    echo "current info"
     echo user is "=>"$(git config user.name)"<="
     echo emil is "=>"$(git config user.email)"<="
 }
@@ -51,7 +52,7 @@ git-which-tag-contains-this-text() {
 }
 
 git-commit-no-edit() {
-    git commit --amend --no-edit
+    git commit --amend --no-edit --allow-empty
 }
 
 git-checkout-master() {
@@ -75,5 +76,13 @@ git-force-push-origin() {
 
 git-commit-no-edit-and-force-push-origin() {
     git-commit-no-edit
+    git-force-push-origin
+}
+
+git-add-modify-files-commit-no-edit-and-force-push-origin() {
+    git add -u
+    git status
+    git-commit-no-edit
+    git status
     git-force-push-origin
 }

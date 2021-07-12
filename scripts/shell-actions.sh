@@ -14,6 +14,10 @@ set-proxy() {
     export http_proxy=$URL
 }
 
+default-proxy() {
+    set-proxy http://127.0.0.1:20172
+}
+
 unset-all-proxy() {
     unset HTTP_PROXY
     unset HTTPS_PROXY
@@ -38,5 +42,15 @@ grant-run-permissions() {
 
 
 atuin_fzf() {
-    atuin h l --cmd-only | fzf
+    cmd=$(atuin h l --cmd-only | fzf )
+    echo "eval " $cmd
+    eval $cmd
+}
+
+copy-current-abs-to-clipboard() {
+    echo $PWD  | xclip -selection c
+}
+
+copy-current-name-to-clipboard() {
+    echo $(basename "$PWD") | xclip -selection c
 }

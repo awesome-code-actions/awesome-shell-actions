@@ -63,3 +63,10 @@ function see-net-connection() {
 
     while true; do kubectl get po -n $ns -l $label -o wide |tail -n +2 |awk '{print $1}' |xargs -I{} sh -c "kubectl exec {} -c $container " -n $ns -- sh -c ' echo -n \$(env|grep HOSTNAME) && echo -n \" \" && cat /proc/net/tcp |wc -l ';sleep l;echo -ne "\n\r";done
 }
+
+## arg: None
+## description: 获取当前k8s版本
+## category: glasses
+function k-version() {
+
+}
