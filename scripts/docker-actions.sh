@@ -31,16 +31,19 @@ cat /etc/docker/daemon.json |jq '.["registry-mirrors"]'
 }
 
 
-docker-export-image-to-dir() {
+docker-export-x86-image-to-dir() {
+    # arg-len: 2
     image=$1
     docker pull $image
     name=$(echo $image | cut -d '/' -f 3 | tr -d '\n\r')
-    mkdir $name
-    cd $name
-    docker save $image --output $name.tar
-    tar xvf ./$name.tar
-    rm ./$name.tar 
-    find |grep  .tar |xargs -i{} tar xvf {}
+    echo $nam
+    mkdir -p $name
+    cd ./$name
+    # docker save $image --output $name.tar
+    # tar xvf ./$name.tar
+    # rm ./$name.tar 
+    # find |grep  .tar |xargs -i{} tar xvf {}
+    # set +e
 }
 
 docker-pull-arm() {
@@ -54,7 +57,11 @@ docker-pull-with-platform() {
     # arg-len: 2
     # arg: image no-empty-string
     # arg: platform no-empty-string
-    image=$1
-    platform=$2
+
+    local image=$1
+    local platform=$2
     echo $image $platform
+    dig=$(docker manifest inspect $image | jq -r ".manifests[] | select(.platform.architecture==\"$platform\")|.digest" )
+    full_image=$image@$dig
+    docker pull $full_image
 }

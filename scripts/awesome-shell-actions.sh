@@ -15,5 +15,15 @@ awesome-shell-actions-load() {
 }
 
 edit-x-actions() {
-    vim $(fd -e  sh .  ~/.zsh/awesome-shell-actions/|fzf)
+    cmd=$(list-x-actions|fzf)
+    source_file=$(type $cmd|rg -o '.* from (.*)' -r '$1'  |tr -d '\n\r')
+
+    cmd_start_line=$(grep -no "$cmd()" $source_file |cut -d ':' -f 1 |tr -d '\n\r')
+    echo $source_file
+    echo $cmd_start_line
+    vim +$cmd_start_line $source_file
+}
+
+list-x-actions() {
+    print -rl ${(k)functions_source[(R)*awesome*]}
 }

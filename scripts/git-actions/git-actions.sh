@@ -12,6 +12,7 @@ git-check-current-info() {
 }
 
 git-set-origin() {
+    # arg-len: 1
     url=$1
     git remote set-url origin $url
 }
@@ -59,7 +60,7 @@ git-checkout-master() {
     git checkout master
 }
 
-git-contributor-a1() {
+git-contributor-by() {
     user=$1
     git log --author="$user" --pretty=tformat: --numstat |gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
 }

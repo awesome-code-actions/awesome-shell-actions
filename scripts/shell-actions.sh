@@ -1,5 +1,9 @@
 shell-reload-zsh() {
     source ~/.zshrc
+    if [ -f "~/.zshrc.zwc" ]; then
+        echo "zwc exists"
+        rm ~/.zshrc.zwc
+    fi
 }
 
 check-proxy() {
@@ -28,7 +32,7 @@ unset-all-proxy() {
 }
 
 reset-all-proxy() {
-    source ~/.zshrc
+    default-proxy
 }
 
 edit-zsh-config() {
@@ -53,4 +57,22 @@ copy-current-abs-to-clipboard() {
 
 copy-current-name-to-clipboard() {
     echo $(basename "$PWD") | xclip -selection c
+}
+
+while-true() {
+    # arg-len: 1
+    cmd=$1
+    while true; do eval $cmd ;sleep 1;echo "-----\n";done
+}
+
+copy-last-command() {
+    fc -ln -1 |tr -d '\n\r' | xclip -selection c
+}
+
+rerun-last-command() {
+    eval $(fc -ln -1 |tr -d '\n\r')
+}
+
+type-it() {
+xdotool sleep 4 type "$(printf ',xx crea\n ')"
 }

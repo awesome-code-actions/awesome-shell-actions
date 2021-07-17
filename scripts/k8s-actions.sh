@@ -64,9 +64,21 @@ function see-net-connection() {
     while true; do kubectl get po -n $ns -l $label -o wide |tail -n +2 |awk '{print $1}' |xargs -I{} sh -c "kubectl exec {} -c $container " -n $ns -- sh -c ' echo -n \$(env|grep HOSTNAME) && echo -n \" \" && cat /proc/net/tcp |wc -l ';sleep l;echo -ne "\n\r";done
 }
 
+function k-exec() {
+    pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
+    ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    echo $pod $ns
+    kubectl exec -it $pod -n $ns sh
+}
 ## arg: None
 ## description: 获取当前k8s版本
 ## category: glasses
 function k-version() {
 
+}
+
+function replace-to-tail() {
+    # arg-len: 2
+    local deployment=$1
+    local ns =$1
 }
