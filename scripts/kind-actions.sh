@@ -15,5 +15,13 @@ function kind-delete() {
 }
 
 function kind-list-image() {
+	# category: glasses
 	dockerhub-list-tags kindest/node
+}
+
+function kind-load-image() {
+	# arg-len: 1
+	local image=$1
+	docker pull $image
+	kind load docker-image $image --name $(kind get clusters |fzf --prompt="select cluster you image load for")
 }

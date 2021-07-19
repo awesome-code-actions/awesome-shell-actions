@@ -67,5 +67,9 @@ docker-pull-with-platform() {
 }
 
 docker-exec() {
+    docker exec -it $(docker ps | fzf --prompt="select docker you want to exec") sh
+}
 
+docker-delte() {
+    docker ps |tail -n+2 |fzf -m --prompt="select docker you want to kill(tab to mutli select)"|awk '{print $1}' |xargs -i{} docker rm -f {}
 }

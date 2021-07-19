@@ -24,6 +24,11 @@ awesome-shell-actions-load() {
     then 
         echo "find awesome-shell-actions in ${awesome_shell_actions_path} start load"
         source_it $awesome_shell_actions_path/scripts
+        for action in $(print -rl ${(k)functions_source[(R)*awesome*]});do 
+            short=$(echo $action | sed 's/-//g')
+            echo  "alias" $short=$action
+            alias $short=$action
+        done
     else
         echo "cloud not find awesome-shell-actions in $awesome_shell_actions_path ignore"
     fi
