@@ -70,6 +70,32 @@ function k-exec() {
     echo $pod $ns
     kubectl exec -it $pod -n $ns sh
 }
+
+function k-desc() {
+    pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
+    ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    echo $pod $ns
+    kubectl describe po $pod -n $ns 
+}
+
+function k-log() {
+    pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
+    ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    echo $pod $ns
+    kubectl logs -f $pod -n $ns 
+}
+
+function k-delete() {
+    pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
+    ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    echo $pod $ns
+    kubectl delete po $pod -n $ns 
+}
+
+function k-get-all-po() {
+    kubectl get po -A
+}
+
 ## arg: None
 ## description: 获取当前k8s版本
 ## category: glasses
@@ -77,8 +103,19 @@ function k-version() {
 
 }
 
-function replace-to-tail() {
+function k-replace-to-tail() {
     # arg-len: 2
+    # 将pod里的container的command替换成tail 并将原始的deployment dump成json 保存下来
+
     local deployment=$1
-    local ns =$1
+    local ns=$1
+
+    local pod="echo-resty-68c79c758f-ttlpv"
+    local ns="alb-wc"
+    local pod_json=$(kubectl get po -n $ns $pod -o json)
+    node_s $pod_json
+    local patch_json=$(node_s `
+        console.log(`$pod_json`)
+    `)
+    echo $patch_json
 }

@@ -65,3 +65,7 @@ docker-pull-with-platform() {
     full_image=$image@$dig
     docker pull $full_image
 }
+
+docker-exec() {
+
+}

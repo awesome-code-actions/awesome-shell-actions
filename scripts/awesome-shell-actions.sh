@@ -1,14 +1,29 @@
 #!/bin/zsh
 
+source_it() {
+    local p=$1
+    if [ -f "$p" ]; then
+        if [[ $p == *.sh ]]; then
+            echo "source file $p"
+            . $p
+        fi
+    fi
+
+    if [ -d "$p" ]; then
+        echo "source dir $p start"
+        for file in $p/*; do
+            source_it "$file"
+        done
+        echo "source dir $p over"
+    fi
+}
+
 awesome-shell-actions-load() {
     awesome_shell_actions_path=$1
     if [ -d $awesome_shell_actions_path ] 
     then 
         echo "find awesome-shell-actions in ${awesome_shell_actions_path} start load"
-        for file in $awesome_shell_actions_path/scripts/**/*.sh; do
-            echo "load $file"
-            . "$file"
-        done
+        source_it $awesome_shell_actions_path/scripts
     else
         echo "cloud not find awesome-shell-actions in $awesome_shell_actions_path ignore"
     fi
@@ -26,4 +41,24 @@ edit-x-actions() {
 
 list-x-actions() {
     print -rl ${(k)functions_source[(R)*awesome*]}
+}
+
+random() {
+    local size=$1
+    echo ${RANDOM:0:$size}
+}
+
+node_s() {
+    # 读取字符串作为node脚本并执行
+    local code=$1
+    echo $code ~/
+    echo $code
+}
+
+rust_s() {
+
+}
+
+python3_s() {
+
 }
