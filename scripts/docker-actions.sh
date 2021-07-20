@@ -67,7 +67,7 @@ docker-pull-with-platform() {
 }
 
 docker-exec() {
-    docker exec -it $(docker ps | fzf --prompt="select docker you want to exec") sh
+    docker exec -it $(docker ps | fzf --prompt="select docker you want to exec"| awk '{print $1}') sh
 }
 
 docker-delte() {

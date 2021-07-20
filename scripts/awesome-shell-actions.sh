@@ -26,7 +26,6 @@ awesome-shell-actions-load() {
         source_it $awesome_shell_actions_path/scripts
         for action in $(print -rl ${(k)functions_source[(R)*awesome*]});do 
             short=$(echo $action | sed 's/-//g')
-            echo  "alias" $short=$action
             alias $short=$action
         done
     else

@@ -85,6 +85,13 @@ function k-log() {
     kubectl logs -f $pod -n $ns 
 }
 
+function k-edit-deployment(){
+    pod=$(kubectl get deployment -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
+    ns=$( kubectl get deployment -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    echo $pod $ns
+    kubectl edit deployment  $pod -n $ns
+}
+
 function k-delete() {
     pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
     ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
@@ -96,6 +103,12 @@ function k-get-all-po() {
     kubectl get po -A
 }
 
+function k-get-po-json() {
+    pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
+    ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    echo $pod $ns
+    kubectl get po $pod -n $ns -o json | vim -
+}
 ## arg: None
 ## description: 获取当前k8s版本
 ## category: glasses
