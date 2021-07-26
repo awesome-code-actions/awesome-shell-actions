@@ -43,6 +43,11 @@ edit-x-actions() {
     vim +$cmd_start_line $source_file
 }
 
+which-x-actions() {
+    cmd=$(list-x-actions|fzf)
+    which $cmd
+}
+
 list-x-actions() {
     print -rl ${(k)functions_source[(R)*awesome*]}
 }

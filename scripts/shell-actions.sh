@@ -74,5 +74,10 @@ rerun-last-command() {
 }
 
 type-it() {
-xdotool sleep 4 type "$(printf ',xx crea\n ')"
+    xdotool sleep 4 type "$1"
+}
+
+show-current-window() {
+    #category: glasses gnome gnome-shell
+    dbus-send --session --type=method_call --print-reply --dest=org.gnome.Shell /org/gnome/Shell org.gnome.Shell.Eval string:'global.display.get_tab_list(Meta.TabList.NORMAL_ALL, global.workspace_manager.get_active_workspace()).map(x => x.wm_class)'  | grep -Po "\[.*\]"
 }

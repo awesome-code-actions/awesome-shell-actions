@@ -132,3 +132,11 @@ function k-replace-to-tail() {
     `)
     echo $patch_json
 }
+
+func k-config-delete() {
+    kubectl config get-contexts -o name|fzf -m |xargs -i{} kubectl config delete-context {}
+}
+
+function k-config-use() {
+    kubectl config use-context $(kubectl config get-contexts -o name|fzf -m)
+}

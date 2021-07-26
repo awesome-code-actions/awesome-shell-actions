@@ -41,6 +41,10 @@ tmux-list-pane() {
    tmux list-panes -s -F "#{session_name}:#{window_name}:#{window_index}:#{pane_title}:#{pane_index}" 
 }
 
+tmux-attach-dt() {
+   tmux attach -dt $(tmux ls |cut -d ':' -f 1|fzf)
+}
+
 tmux-jumpto-panel-by-regex() {
     name=$1
     pane=$(tmux-list-panel |grep $name)
