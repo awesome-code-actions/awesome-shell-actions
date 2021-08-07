@@ -140,3 +140,5 @@ func k-config-delete() {
 function k-config-use() {
     kubectl config use-context $(kubectl config get-contexts -o name|fzf -m)
 }
+
+alias k-switch=k-config-use

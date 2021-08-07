@@ -21,3 +21,23 @@ export AWESOME_SHELL_ACTION_DIR=YOU_PATH_HERE
 awesome-shell-actions-load $AWESOME_SHELL_ACTION_DIR
 
 ```
+## protocol
+* 所有的脚本用bash暴露interface,*建议*以前缀做namespace的隔离
+* *建议*所有脚本使用普通用户权限 在脚本中自己sudo
+* scripts下存在所有的脚本,递归所有文件夹层级遍历
+* 使用`,xm`做呼出快捷键
+* 一个脚本文件*只能* 描绘一个namespace下的action
+* 使用前*必需*自己安装fzf等依赖项
+* scripts/awesome-shell-actions.sh 中存放一些元actions 如`load` `list` `edit`
+* 目前支持的装饰器
+	* 带参指令标识 位置: 函数名下 语法: `# @arg-len: NotZeroNumber` 标识action需要参数,此时eval action时不会直接执行,而是会把action写入到zsh LBUFFER上(可以理解为终端上)
+	* TODO 指令类型标识 位置: 函数名下 语法: `# @catalog: warapp` 标识action会修改LBUFFER,*只会*在LBUFFER不为空时出现
+	* TODO 语义指令集  位置: 文件开始处 语法 `# @interface: app(APP)` 标识此脚本中*存在* app interface的指令集,即存在`APP-is-install` `APP-install` `APP-uninstall`等指令 详细协议见下
+	* TODO discover 自动检测出是否可执行当前指令
+
+
+### interface
+#### app
+TODO
+### term
+LBUFFER: 存放着用户当前输入到终端的指令

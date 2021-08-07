@@ -6,6 +6,9 @@ source_it() {
         if [[ $p == *.sh ]]; then
             echo "source file $p"
             . $p
+            if [[ $? -ne 0 ]]; then
+             echo "source $p fail"
+            fi
         fi
     fi
 
@@ -19,11 +22,15 @@ source_it() {
 }
 
 awesome-shell-actions-load() {
+    echo "load start"
     awesome_shell_actions_path=$1
     if [ -d $awesome_shell_actions_path ] 
     then 
         echo "find awesome-shell-actions in ${awesome_shell_actions_path} start load"
         source_it $awesome_shell_actions_path/scripts
+        if [[ $? -ne 0 ]]; then
+            echo "source actions fail"
+        fi
         for action in $(print -rl ${(k)functions_source[(R)*awesome*]});do 
             short=$(echo $action | sed 's/-//g')
             alias $short=$action
@@ -31,6 +38,7 @@ awesome-shell-actions-load() {
     else
         echo "cloud not find awesome-shell-actions in $awesome_shell_actions_path ignore"
     fi
+    echo "load over"
 }
 
 edit-x-actions() {

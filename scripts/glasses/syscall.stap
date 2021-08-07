@@ -1,0 +1,25 @@
+#! /usr/bin/env stap
+
+#
+# Print the system call count by process name in descending order.
+#
+
+global syscalls
+
+probe begin {
+  print ("Collecting data... Type Ctrl-C to exit and display results\n")
+}
+
+probe kernel.trace("sys_*") {
+  syscalls[execname()]++
+}
+
+probe end {
+  printf ("%s %-s\n\n", "ProcessName", "#SysCalls")
+  summary = 0
+  foreach (procname in syscalls-) {
+    printf("%s %-10d\n", procname, syscalls[procname])
+    summary = summary + syscalls[procname]
+  }
+  printf ("\n%-20s %-d\n", "Total", summary)
+}

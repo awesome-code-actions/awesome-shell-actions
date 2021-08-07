@@ -81,3 +81,13 @@ show-current-window() {
     #category: glasses gnome gnome-shell
     dbus-send --session --type=method_call --print-reply --dest=org.gnome.Shell /org/gnome/Shell org.gnome.Shell.Eval string:'global.display.get_tab_list(Meta.TabList.NORMAL_ALL, global.workspace_manager.get_active_workspace()).map(x => x.wm_class)'  | grep -Po "\[.*\]"
 }
+
+swap() {
+    # @arg-len:2
+    local left=$1
+    local right=$2
+    cp $left $left.swap.temp
+    mv $right $left
+    mv $left.swap.temp $right
+}
+

@@ -1,0 +1,24 @@
+#!/usr/bin/env bpftrace 
+/*
+统计每个cpu上的systemcall的分布状态
+*/
+BEGIN
+{
+	printf("Counting syscalls... Hit Ctrl-C to end.\n");
+	@start = nsecs;
+}
+
+tracepoint:raw_syscalls:sys_enter
+{
+	@syscall[cpu] = count();
+	@total+=1;
+}
+
+END
+{
+	$s = (nsecs-@start)/1000000000;
+	printf("syscall in %d s ",$s);
+	print(@total);
+	printf("\n");
+	printf("per %d each s ",@total/$s);
+}

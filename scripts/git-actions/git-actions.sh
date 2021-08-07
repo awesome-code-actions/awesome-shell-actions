@@ -87,3 +87,9 @@ git-add-modify-files-commit-no-edit-and-force-push-origin() {
     git status
     git-force-push-origin
 }
+
+git-reset-all() {
+    zd
+    git reset --hard HEAD
+    git clean -fxd
+}

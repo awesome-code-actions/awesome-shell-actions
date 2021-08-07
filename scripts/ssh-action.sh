@@ -19,5 +19,5 @@ ssh-to-vps() {
 }
 
 to-vps() {
-    mosh root@144.202.89.37 
+   LC_ALL=en_US.UTF-8  mosh root@144.202.89.37 
 }
