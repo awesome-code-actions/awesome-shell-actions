@@ -81,8 +81,9 @@ function k-desc() {
 function k-log() {
     pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
     ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
+    container=$(kubectl get po -n $ns $pod -o json |jq -r ".spec.containers|.[].name"|fzf)
     echo $pod $ns
-    kubectl logs -f $pod -n $ns 
+    kubectl logs -f $pod -c $container -n $ns 
 }
 
 function k-edit-deployment(){
@@ -139,6 +140,17 @@ func k-config-delete() {
 
 function k-config-use() {
     kubectl config use-context $(kubectl config get-contexts -o name|fzf -m)
+}
+
+function k-eval-in-all-pod() {
+    #@ arg-len:4
+    local ns=$1
+    local label=$2
+    local container=$3
+    local cmd=$4
+    echo n $ns l $label c $container c $cmd
+    kubectl get po -n $ns -l $label -o wide |tail -n +2 |awk '{print $1}' |xargs -I{} kubectl exec {} -c $container -n $ns -- sh -c  "$cmd"
+    
 }
 
 alias k-switch=k-config-use
