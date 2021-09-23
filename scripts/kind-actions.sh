@@ -71,7 +71,7 @@ function kind-list-image() {
 }
 
 function kind-load-image() {
-	# arg-len: 1
+	# @arg-len: 1
 	local image=$1
 	docker pull $image
 	kind load docker-image $image --name $(kind get clusters |fzf --prompt="select cluster you image load for")

@@ -32,7 +32,7 @@ cat /etc/docker/daemon.json |jq '.["registry-mirrors"]'
 
 
 docker-export-x86-image-to-dir() {
-    # arg-len: 2
+    # @arg-len: 2
     image=$1
     docker pull $image
     name=$(echo $image | cut -d '/' -f 3 | tr -d '\n\r')
@@ -47,16 +47,16 @@ docker-export-x86-image-to-dir() {
 }
 
 docker-pull-arm() {
-    # arg-len: 1
-    # arg: image no-empty-string
+    # @arg-len: 1
+    # @arg1: image no-empty-string
     image=$1
     docker-pull-with-platform $image 
 }
 
 docker-pull-with-platform() {
-    # arg-len: 2
-    # arg: image no-empty-string
-    # arg: platform no-empty-string
+    # @arg-len: 2
+    # @arg1: image no-empty-string
+    # @arg2: platform no-empty-string
 
     local image=$1
     local platform=$2

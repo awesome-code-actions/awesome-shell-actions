@@ -118,7 +118,7 @@ function k-version() {
 }
 
 function k-replace-to-tail() {
-    # arg-len: 2
+    # @arg-len: 2
     # 将pod里的container的command替换成tail 并将原始的deployment dump成json 保存下来
 
     local deployment=$1
@@ -143,7 +143,7 @@ function k-config-use() {
 }
 
 function k-eval-in-all-pod() {
-    #@ arg-len:4
+    # @arg-len:4
     local ns=$1
     local label=$2
     local container=$3

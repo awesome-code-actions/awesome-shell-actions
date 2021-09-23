@@ -60,6 +60,10 @@ list-x-actions() {
     print -rl ${(k)functions_source[(R)*awesome*]}
 }
 
+count-actions() {
+    print -rl ${(k)functions_source[(R)*awesome*]} |wc -l
+}
+
 random() {
     local size=$1
     echo ${RANDOM:0:$size}

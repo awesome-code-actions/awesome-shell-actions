@@ -60,7 +60,7 @@ copy-current-name-to-clipboard() {
 }
 
 while-true() {
-    # arg-len: 1
+    # @arg-len: 1
     cmd=$1
     while true; do eval $cmd ;sleep 1;echo "-----\n";done
 }

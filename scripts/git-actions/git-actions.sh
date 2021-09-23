@@ -20,7 +20,7 @@ git-check-current-info() {
 }
 
 git-set-origin() {
-    # arg-len: 1
+    # @arg-len: 1
     url=$1
     git remote set-url origin $url
 }
