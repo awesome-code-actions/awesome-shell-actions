@@ -5,6 +5,10 @@ function _prepare_kind_cluster_config() {
 cat > $file <<EOL
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: dual
+  apiServerAddress: "127.0.0.1"
+  apiServerPort: 6443
 kubeadmConfigPatches:
 - |
   apiVersion: kubeadm.k8s.io/v1beta2
@@ -43,9 +47,14 @@ function kind-create-1.16.5() {
 	kind create cluster  --config /tmp/cluster.yaml --name k-16-15 --image=kindest/node:v1.16.15
 }
 
-function kind-create-20() {
+function kind-create-1.22.1() {
 	_prepare_kind_cluster_config /tmp/cluster.yaml
-	kind create cluster --config /tmp/cluster.yaml --name k-16-2 --image=kindest/node:v1.16.15
+	kind create cluster --config /tmp/cluster.yaml --name k-1-22-1 --image=kindest/node:v1.22.1
+}
+
+function kind-create-1.21.1() {
+	_prepare_kind_cluster_config /tmp/cluster.yaml
+	kind create cluster --config /tmp/cluster.yaml --name k-1-21-1 --image=kindest/node:v1.21.1
 }
 
 function default-cluster-config() {

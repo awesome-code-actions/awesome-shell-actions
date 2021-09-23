@@ -4,6 +4,14 @@ git-pull-current-remote-branch() {
     git pull
 }
 
+git-force-pull() {
+    current_branch=$(git branch --show-current |tr -d '\n\r')
+    git checkout -b "$current_branch"-bak-$(date '+%Y-%m-%d-%H-%M-%S')
+    git checkout master
+    git branch -D $current_branch
+    git checkout $current_branch
+}
+
 # 检查当前的repo的帐号用户信息
 git-check-current-info() {
     echo "current info"
@@ -68,6 +76,12 @@ git-contributor-by() {
 git-show-commit-by-user() {
     user=$1
     git log --oneline  --author="$user"
+}
+
+git-push-origin() {
+    # @tag: git-get-current_branch-name
+    current_branch=$(git branch --show-current |tr -d '\n\r')
+    git push origin $current_branch 
 }
 
 git-force-push-origin() {

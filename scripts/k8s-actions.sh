@@ -154,3 +154,10 @@ function k-eval-in-all-pod() {
 }
 
 alias k-switch=k-config-use
+
+
+function k-get-cert-info() {
+    local ns=$1
+    local name=$2
+    kubectl get secret -n $ns $name  -o jsonpath="{.data['tls\.crt']}"|base64 -d |openssl x509 -text |grep CN
+}
