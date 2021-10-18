@@ -161,3 +161,7 @@ function k-get-cert-info() {
     local name=$2
     kubectl get secret -n $ns $name  -o jsonpath="{.data['tls\.crt']}"|base64 -d |openssl x509 -text |grep CN
 }
+
+k-get-all-po-containerid(){
+    kubectl get pods -A -o jsonpath='{range .items[*]}{@.metadata.name}{" "}{@.metadata.namespace}{"  "}{@.status.containerStatuses[*].containerID}{"\n"}{end}'
+}

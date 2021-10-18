@@ -14,7 +14,7 @@ tmux-split-down-panel() {
 
 tmux-set-panel-title() {
     title=$1
-    printf '\033]2;%s\033\\' $title
+    tmux select-pane -T $title
 }
 
 tmux-edit-config-file() {
