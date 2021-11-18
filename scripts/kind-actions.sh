@@ -65,6 +65,10 @@ function kind-delete() {
 	kind delete cluster --name $(kind get clusters |fzf --prompt="select cluster you want to delete")
 }
 
+function kind-delete-all() {
+    kind get clusters | xargs -I{} kind delete cluster --name {}
+}
+
 function kind-list-image() {
 	# category: glasses
 	dockerhub-list-tags kindest/node
@@ -75,4 +79,10 @@ function kind-load-image() {
 	local image=$1
 	docker pull $image
 	kind load docker-image $image --name $(kind get clusters |fzf --prompt="select cluster you image load for")
+}
+
+function kind-source-kubeconfig() {
+    cluster=$( kind get clusters |fzf)
+    kind get kubeconfig --name=$cluster > ~/.kube/$cluster
+    export KUBECONFIG=~/.kube/$cluster
 }

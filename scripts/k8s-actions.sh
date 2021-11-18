@@ -165,3 +165,34 @@ function k-get-cert-info() {
 k-get-all-po-containerid(){
     kubectl get pods -A -o jsonpath='{range .items[*]}{@.metadata.name}{" "}{@.metadata.namespace}{"  "}{@.status.containerStatuses[*].containerID}{"\n"}{end}'
 }
+
+k-create-ingress() {
+    local ingressName=$1
+    local backendNs=$2
+    local backendSvc=$3
+    local port=$4
+    local url=$5
+
+ingressYaml=$(cat <<EOF
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: $ingressName
+    namespace: $backendNs
+spec:
+  rules:
+  - http:
+      paths:
+      - path: $url
+        pathType: Prefix
+        backend:
+          service:
+            name: $backendSvc
+            port:
+              number: $port
+
+EOF
+)
+echo "$ingressYaml"
+echo "$ingressYaml" | kubectl apply -f -
+}

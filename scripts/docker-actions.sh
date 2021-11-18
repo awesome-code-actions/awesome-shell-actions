@@ -24,7 +24,9 @@ docker-set-mirror() {
     sudo systemctl daemon-reload
     sudo systemctl restart docker
 }
-
+docker-get-proxy() {
+    cat /etc/systemd/system/docker.service.d/http-proxy.conf
+}
 # require: jq
 docker-get-mirror() {
 cat /etc/docker/daemon.json |jq '.["registry-mirrors"]'
