@@ -78,7 +78,7 @@ type-it() {
 }
 
 type-clipboard() {
-    ext=$(xclip -selection c -o)
+    text=$(xclip -selection c -o)
     echo "wait 3s and type -- $text --"
     xdotool sleep 3 type "$text"
 }
