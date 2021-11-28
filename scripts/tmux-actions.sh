@@ -4,6 +4,10 @@ tmux-kill-other-panel() {
     tmux kill-pane -a
 }
 
+tmux-kill-server() {
+    tmux kill-server
+}
+
 tmux-split-right-panel() {
     tmux split-window -h
 }
