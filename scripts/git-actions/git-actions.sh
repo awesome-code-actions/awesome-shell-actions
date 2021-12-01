@@ -107,3 +107,12 @@ git-reset-all() {
     git reset --hard HEAD
     git clean -fxd
 }
+
+git-search-all-history() {
+    local msg=$1
+    git rev-list --all | (
+        while read revision; do
+            git grep -F "$msg" $revision
+        done
+    )
+}
