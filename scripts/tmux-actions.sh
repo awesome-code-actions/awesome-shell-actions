@@ -40,13 +40,33 @@ tmux-rename-current-window() {
 }
 
 tmux-list-pane() {
-    ## use by tmux-jumpto-panel-by-regex
-    ## -s show all window's panel -F show as format
-   tmux list-panes -s -F "#{session_name}:#{window_name}:#{window_index}:#{pane_title}:#{pane_index}" 
+    tmux list-panes -s -F "#{session_name}:#{window_name}:#{window_index}:#{pane_title}:#{pane_index}" 
+}
+
+tmux-list-pane-current-window() {
+    tmux list-panes -s -F "#{session_name}:#{window_name}:#{window_index}:#{pane_title}:#{pane_index}"
+}
+
+tmux-send-key-to-pane() {
+    local title="$1"
+    shift
+    local pane_index=$(tmux-get-paneid $title)
+	echo tmux send-keys -t $pane_index "$@"
+    tmux send-keys -t $pane_index $@
+}
+
+tmux-get-paneid() {
+    local title=$1
+    tmux list-panes -t $(tmux-get-current-window-id)  -F "#{pane_title}:#{pane_index}" |grep $title | cut -d ':' -f 2 | tr -d '\n\r'
+}
+
+tmux-get-current-window-id() {
+    local id=$(tmux list-windows |grep active| cut -d ':' -f 1 |tr -d '\n\r')
+    echo $id
 }
 
 tmux-attach-dt() {
-   tmux attach -dt $(tmux ls |cut -d ':' -f 1|fzf)
+    tmux attach -dt $(tmux ls |cut -d ':' -f 1|fzf)
 }
 
 tmux-jumpto-panel-by-regex() {
