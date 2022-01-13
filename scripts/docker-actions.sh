@@ -75,3 +75,7 @@ docker-exec() {
 docker-delte() {
     docker ps |tail -n+2 |fzf -m --prompt="select docker you want to kill(tab to mutli select)"|awk '{print $1}' |xargs -i{} docker rm -f {}
 }
+
+docker-list-ip() {
+    docker ps |tail -n+2 |awk '{print $1}' |xargs -I{} sh -c "echo '{} ' |tr -d '\n\r' &&  docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' {} | tr -d '\n\r' &&echo -n ' ' && docker inspect -f '{{.Name}}' {}"
+}

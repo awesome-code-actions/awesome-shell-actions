@@ -97,6 +97,10 @@ swap() {
     mv $left.swap.temp $right
 }
 
-list-all-ssh-host() {
+ssh-list-all-host() {
     rg -L '^Host\s*.*$' /etc/ssh 2>/dev/null |grep -v '\*' |grep -v 'error'
+}
+
+ssh2() {
+    ssh $(rg -L '^Host\s*.*$' /etc/ssh 2>/dev/null |grep -v '\*' |grep -v 'error'|awk '{print $2}' |fzf)
 }

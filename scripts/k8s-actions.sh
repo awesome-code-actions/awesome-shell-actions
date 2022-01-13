@@ -67,8 +67,9 @@ function see-net-connection() {
 function k-exec() {
     pod=$(kubectl get po -A |tail -n +2 |fzf --prompt='select a pod >:'|awk '{print $2}')
     ns=$( kubectl get po -A |grep $pod |awk '{print $1}' |tr -d '\n\r')
-    echo $pod $ns
-    kubectl exec -it $pod -n $ns sh
+    c=$(kubectl get pod -n $ns $pod -o jsonpath="{.spec.containers[*].name}" |tr -s '[[:space:]]' '\n'|fzf --prompt='select a container>:')
+    echo $pod $ns $c
+    kubectl exec -it $pod -n $ns -c $c sh
 }
 
 function k-desc() {

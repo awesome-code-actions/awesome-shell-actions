@@ -21,12 +21,13 @@ tmux-set-panel-title() {
     tmux select-pane -T $title
 }
 
-tmux-edit-config-file() {
-    vim ~/.tmux.conf
+tmux-set-window-title() {
+    title=$1
+    tmux rename-window $title
 }
 
-tmux-move-panel-to-other-window() {
-    # prefix break-panel
+tmux-edit-config-file() {
+    vim ~/.tmux.conf
 }
 
 tmux-rename-current-session() {

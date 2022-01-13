@@ -81,7 +81,7 @@ git-show-commit-by-user() {
 git-push-origin() {
     # @tag: git-get-current_branch-name
     current_branch=$(git branch --show-current |tr -d '\n\r')
-    git push origin $current_branch 
+    git push origin $current_branch  $@
 }
 
 git-force-push-origin() {
