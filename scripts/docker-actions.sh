@@ -79,3 +79,18 @@ docker-delte() {
 docker-list-ip() {
     docker ps |tail -n+2 |awk '{print $1}' |xargs -I{} sh -c "echo '{} ' |tr -d '\n\r' &&  docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' {} | tr -d '\n\r' &&echo -n ' ' && docker inspect -f '{{.Name}}' {}"
 }
+
+docker-install-buildx() {
+    mkdir -p  ~/.docker/cli-plugins/
+    curl -L https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+    chmod +x ~/.docker/cli-plugins/docker-buildx
+    # edit config
+    jq . ~/.docker/config.json
+    cp ~/.docker/config.json ~/.docker/config.json.bak
+    cat <<< $(jq '.experimental="enable"' ~/.docker/config.json) > ~/.docker/config.json
+    jq . ~/.docker/config.json
+    if ! echo $PATH |grep -q 'docker/cli-plugin' ; then
+        echo "YOU MUST PUT  ~/.docker/cli-plugins IN YOUR PATH"
+    fi
+    docker buildx version
+}

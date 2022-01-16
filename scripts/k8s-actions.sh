@@ -115,24 +115,107 @@ function k-get-po-json() {
 ## description: 获取当前k8s版本
 ## category: glasses
 function k-version() {
-
+    kubectl version
 }
 
 function k-replace-to-tail() {
     # @arg-len: 2
     # 将pod里的container的command替换成tail 并将原始的deployment dump成json 保存下来
-
-    local deployment=$1
     local ns=$1
+    local deployment=$2
+    local container=$3
+    if [ "$#" -eq 0 ]; then
+        deployment=$(kubectl get deployment -A |tail -n +2 |fzf --prompt='select a deployment >:'|awk '{print $2}')
+        ns=$( kubectl get deployment -A |grep $deployment |awk '{print $1}' |tr -d '\n\r')
+        container=$(kubectl get deployment -n $ns $deployment -o jsonpath="{.spec.template.spec.containers[*].name}" |tr -s '[[:space:]]' '\n'|fzf --prompt='select a container>:')
+    fi
+    echo "ns $ns  deployment $deployment container $container"
+    # get args
+    local liveness=$(kubectl get deployments.apps -n kube-system kube-ovn-controller -o json  | jq ".spec.template.spec.containers[$index].livenessProbe")
+    local readiness=$(kubectl get deployments.apps -n kube-system kube-ovn-controller -o json  | jq ".spec.template.spec.containers[$index].readinessProbe")
+    local command=$(kubectl get deployments.apps -n kube-system kube-ovn-controller -o json  | jq ".spec.template.spec.containers[$index].command")
+    local args=$(kubectl get deployments.apps -n kube-system kube-ovn-controller -o json  | jq ".spec.template.spec.containers[$index].args")
+    # index of this container in deployment 
+    local index=$(kubectl get deployments.apps -n $ns $deployment -o yaml  | yq  e ".spec.template.spec.containers|to_entries|.[]|select(.value.name=\"$container\").key" -)
+    local id=${RANDOM:0:7}
+    local deployment_backup_path=./deploymen-$ns-$deployment-backup-$id.yaml
+    local patch_path=./deploymentpatch-$ns-$deployment-$container-tail_mode-$id.json-merge-patch.json
+    local recover_patch_path=./deploymentpatch-$ns-$deployment-$container-tail_mode-$id.recover.json-merge-patch.json
 
-    local pod="echo-resty-68c79c758f-ttlpv"
-    local ns="alb-wc"
-    local pod_json=$(kubectl get po -n $ns $pod -o json)
-    node_s $pod_json
-    local patch_json=$(node_s `
-        console.log(`$pod_json`)
-    `)
-    echo $patch_json
+    kubectl get deployments.apps -n $ns $deployment -o yaml > $deployment_backup_path
+    # generate patch
+read -r -d "" patch <<EOF
+[
+  {
+    "op": "remove",
+    "path": "/spec/template/spec/containers/$index/readinessProbe"
+  },
+  {
+    "op": "remove",
+    "path": "/spec/template/spec/containers/$index/livenessProbe"
+  },
+  {
+    "op": "remove",
+    "path": "/spec/template/spec/containers/$index/args"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/$index/command",
+    "value": [
+      "tail",
+      "-f",
+      "/dev/null"
+    ]
+  }
+]
+EOF
+    echo "$patch" >  $patch_path
+    if ! jq empty $patch_path 2>/dev/null; then
+        echo "invalid json $patch_path"
+        jq . $patch_path
+        return 1
+    fi
+    # generate recover patch
+read -r -d "" recover_patch <<EOF
+[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/$index/livenessProbe",
+    "value": $liveness
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/$index/readinessProbe",
+    "value": $readiness
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/$index/args",
+    "value": $args
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/$index/command",
+    "value": $command
+  }
+]
+EOF
+    echo "$recover_patch" > $recover_patch_path 
+    if ! jq empty $recover_patch_path 2>/dev/null; then
+        echo "invalid json $recover_patch_path"
+        jq . $recover_patch_path
+        return 1
+    fi
+
+
+    echo $patch_path
+    echo $recover_patch_path
+    kubectl patch deployment $deployment -n $ns --type json --patch-file $patch_path 
+    echo "recover with: kubectl patch deployment $deployment -n $ns --type json --patch-file  $recover_patch_path"
+    # generate run.sh
+    local run=$(jq -r --argjson cmd "$command" --argjson args "$args" -n '$cmd+$args' | jq -r '.[]' | tr '\n' ' ')
+    echo "run already copy to you clipboard: $run"
+    echo $run | xclip -selection c
 }
 
 func k-config-delete() {
