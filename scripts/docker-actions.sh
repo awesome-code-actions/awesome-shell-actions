@@ -94,3 +94,10 @@ docker-install-buildx() {
     fi
     docker buildx version
 }
+
+docker-save() {
+    local image=$1
+    local tar=$(echo $image | sed 's/\//_/g')
+    echo "$tar"
+    docker save "$image" -o "$tar.docker.image.tar"
+}
