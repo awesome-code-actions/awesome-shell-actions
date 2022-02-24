@@ -65,6 +65,10 @@ function kind-delete() {
 	kind delete cluster --name $(kind get clusters |fzf --prompt="select cluster you want to delete")
 }
 
+function kind-list() {
+  kind get clusters
+}
+
 function kind-delete-all() {
     kind get clusters | xargs -I{} kind delete cluster --name {}
 }
@@ -85,4 +89,5 @@ function kind-source-kubeconfig() {
     cluster=$( kind get clusters |fzf)
     kind get kubeconfig --name=$cluster > ~/.kube/$cluster
     export KUBECONFIG=~/.kube/$cluster
+    echo $KUBECONFIG
 }

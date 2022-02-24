@@ -122,3 +122,10 @@ docker-eyes() {
     local vethid=$(sudo nsenter -t $pid -n ip addr show |grep eth0 | python -c 'import sys;print(sys.stdin.readlines()[0].split(" ")[1].split("@if")[1].split(":")[0])')
     echo "veth in host:" $(ip link |grep $vethid)
 }
+
+docker-save() {
+    local image=$1
+    local tar=$(echo $image | sed 's/\//_/g')
+    echo "$tar"
+    docker save "$image" -o "$tar.docker.image.tar"
+}
