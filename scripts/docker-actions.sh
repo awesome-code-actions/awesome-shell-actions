@@ -72,6 +72,20 @@ docker-exec() {
     docker exec -it $(docker ps | fzf --prompt="select docker you want to exec"| awk '{print $1}') sh
 }
 
+docker-select-id() {
+    docker ps | tail -n+2| fzf --prompt="select a docker"|  awk '{print $1}' | tr -d '\n\r'
+}
+
+docker-get-pid-by-id() {
+    local id=$1
+    docker inspect $id | jq '.[0].State.Pid' 
+}
+
+docker-get-name-by-id() {
+    local id=$1
+    docker inspect $id | jq '.[0].Name' 
+}
+
 docker-delte() {
     docker ps |tail -n+2 |fzf -m --prompt="select docker you want to kill(tab to mutli select)"|awk '{print $1}' |xargs -i{} docker rm -f {}
 }
@@ -93,4 +107,18 @@ docker-install-buildx() {
         echo "YOU MUST PUT  ~/.docker/cli-plugins IN YOUR PATH"
     fi
     docker buildx version
+}
+
+docker-eyes() {
+    local id=$(docker-select-id)
+    echo id $id
+    local name=$(docker-get-name-by-id $id)
+    local pid=$(docker-get-pid-by-id $id)
+
+    echo "name:" $name
+    echo "pid:"  $pid
+    
+    echo "veth in docker: " $(sudo nsenter -t $pid -n ip addr show |grep eth0)
+    local vethid=$(sudo nsenter -t $pid -n ip addr show |grep eth0 | python -c 'import sys;print(sys.stdin.readlines()[0].split(" ")[1].split("@if")[1].split(":")[0])')
+    echo "veth in host:" $(ip link |grep $vethid)
 }

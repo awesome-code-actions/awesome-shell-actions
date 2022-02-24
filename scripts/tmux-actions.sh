@@ -13,7 +13,7 @@ tmux-split-right-panel() {
 }
 
 tmux-split-down-panel() {
-    tmux split-window 
+    tmux split-window
 }
 
 tmux-set-panel-title() {
@@ -41,7 +41,7 @@ tmux-rename-current-window() {
 }
 
 tmux-list-pane() {
-    tmux list-panes -s -F "#{session_name}:#{window_name}:#{window_index}:#{pane_title}:#{pane_index}" 
+    tmux list-panes -s -F "#{session_name}:#{window_name}:#{window_index}:#{pane_title}:#{pane_index}"
 }
 
 tmux-list-pane-current-window() {
@@ -52,7 +52,7 @@ tmux-send-key-to-pane() {
     local title="$1"
     shift
     local pane_index=$(tmux-get-paneid $title)
-	echo tmux send-keys -t $pane_index "$@"
+    echo tmux send-keys -t $pane_index "$@"
     tmux send-keys -t $pane_index $@
 }
 
@@ -70,11 +70,22 @@ tmux-attach-dt() {
     tmux attach -dt $(tmux ls |cut -d ':' -f 1|fzf)
 }
 
+tmux-kill-this-session() {
+    local current_session=$(tmux list-panes -t "$TMUX_PANE" -F '#S' | head -n1 | tr -d '\n\r')
+    tmux kill-session -t $current_session
+}
+
+tmux-kill-session() {
+    local session=$(tmux ls | cut -d ':' -f 1|awk '{print $1}'| fzf)
+    tmux kill-session -t $session
+}
+
+
 tmux-jumpto-panel-by-regex() {
     name=$1
     pane=$(tmux-list-panel |grep $name)
     pane_index=${pane##*-}
-    target_window_index=$(tmux-list-pane |grep $name |cut -d ':' -f 3) 
+    target_window_index=$(tmux-list-pane |grep $name |cut -d ':' -f 3)
     current_window_index=$(tmux list-windows|grep '*' |cut -d ':' -f 1)
     # if we are in different window jumpto it first
     if [[ $target_window_index == $current_window_index ]] then
@@ -88,9 +99,6 @@ edit-tmux-config() {
     vim ~/.tmux.conf
 }
 
-tmux-switch-session() {
-    
-}
 
 tmux-list-all-key() {
     tmux list-keys
@@ -98,4 +106,9 @@ tmux-list-all-key() {
 
 tmux-zoom-current-panel() {
     tmux resize-pane -Z
+}
+
+tmux-create-inside-tmux() {
+    local name=$1
+    tmux new -s "$name" -d
 }

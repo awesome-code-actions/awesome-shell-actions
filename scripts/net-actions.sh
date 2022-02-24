@@ -1,3 +1,5 @@
+# action-category: network
+
 find-pid-by-port() {
     port=$1
     netstat -ltnp|grep $port
@@ -15,3 +17,6 @@ kill-process-by-port() {
    lsof -i:${port}|sed -n '2p'|awk '{print $2}' |tr -d '\n'|xargs -i{} kill -9 {}
 }
 
+# network-eyes() {
+
+# }

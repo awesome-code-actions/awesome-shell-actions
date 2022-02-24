@@ -13,3 +13,7 @@ bpf-list-all-uprobe-of-file() {
 	echo bin_path is $bin_path
 	sudo bpftrace -lv "uprobe:$bin_path:*" 2>&1 
 }
+
+which-dns() { 
+ nmcli dev show |grep DNS
+}
