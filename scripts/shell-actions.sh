@@ -45,7 +45,7 @@ grant-run-permissions() {
 }
 
 
-atuin_fzf() {
+function atuin_fzf {
     cmd=$(atuin h l --cmd-only | fzf )
     echo "eval " $cmd
     eval $cmd
@@ -88,7 +88,7 @@ show-current-window() {
     dbus-send --session --type=method_call --print-reply --dest=org.gnome.Shell /org/gnome/Shell org.gnome.Shell.Eval string:'global.display.get_tab_list(Meta.TabList.NORMAL_ALL, global.workspace_manager.get_active_workspace()).map(x => x.wm_class)'  | grep -Po "\[.*\]"
 }
 
-swap() {
+function swap {
     # @arg-len:2
     local left=$1
     local right=$2
@@ -101,16 +101,16 @@ ssh-list-all-host() {
     rg -L '^Host\s*.*$' /etc/ssh 2>/dev/null |grep -v '\*' |grep -v 'error'
 }
 
-ssh2() {
+function ssh2 {
     ssh $(rg -L '^Host\s*.*$' /etc/ssh 2>/dev/null |grep -v '\*' |grep -v 'error'|awk '{print $2}' |fzf)
 }
 
 
-function date-ms() {
+function date-ms {
 	date +"%Y %m %e %T.%6N"
 }
 
-function time-diff-ms() {
+function time-diff-ms {
 	local start=$1
 	local end=$2
 

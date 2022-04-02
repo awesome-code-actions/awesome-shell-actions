@@ -218,7 +218,7 @@ EOF
     echo $run | xclip -selection c
 }
 
-func k-config-delete() {
+function k-config-delete() {
     kubectl config get-contexts -o name|fzf -m |xargs -i{} kubectl config delete-context {}
 }
 

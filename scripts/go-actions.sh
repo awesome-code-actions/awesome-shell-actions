@@ -16,7 +16,9 @@ go-run-one-test() {
 	local t=$(echo $test | cut -f1 -d' ')
 	local p=$(echo $test | cut -f2 -d' ')
 	echo "$t" "$p"
+	add-history go test -v -run "$t" "$p"
 	go test -v -run "$t" "$p"
+
 }
 
 go-list-test() {
