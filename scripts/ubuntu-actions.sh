@@ -12,6 +12,8 @@ function random-wallpapaer {
 function set-wallpapaer {
 	local p=$1
 	local abs_path=$(realpath $1)
-	echo "abs path $abs_path"
-	gsettings set org.gnome.desktop.background picture-uri file:///"$abs_path"
+	local p="$abs_path"
+	echo "abs path $p"
+
+	gsettings set org.gnome.desktop.background picture-uri "$p"
 }
