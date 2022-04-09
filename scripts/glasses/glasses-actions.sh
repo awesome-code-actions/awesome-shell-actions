@@ -15,5 +15,5 @@ bpf-list-all-uprobe-of-file() {
 }
 
 which-dns() { 
- nmcli dev show |grep DNS
+	nmcli dev show |grep DNS
 }
