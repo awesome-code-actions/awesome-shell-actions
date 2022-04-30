@@ -18,8 +18,7 @@ add below code to you zshrc/bashrc
 ```bash
 export AWESOME_SHELL_ACTION_DIR=YOU_PATH_HERE
 . $AWESOME_SHELL_ACTION_DIR/scripts/awesome-shell-actions.sh
-awesome-shell-actions-load $AWESOME_SHELL_ACTION_DIR
-
+zmx-load-shell-action $AWESOME_SHELL_ACTION_DIR
 ```
 ## protocol
 * 所有的脚本用bash暴露interface,*建议*以前缀做namespace的隔离
