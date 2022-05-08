@@ -120,7 +120,8 @@ docker-eyes() {
     
     echo "veth in docker: " $(sudo nsenter -t $pid -n ip addr show |grep eth0)
     local vethid=$(sudo nsenter -t $pid -n ip addr show |grep eth0 | python -c 'import sys;print(sys.stdin.readlines()[0].split(" ")[1].split("@if")[1].split(":")[0])')
-    echo "veth in host:" $(ip link |grep $vethid)
+	echo "vethid $vethid"
+    echo "veth in host:" $(ip link |grep "$vethid: " )
 }
 
 docker-save() {
