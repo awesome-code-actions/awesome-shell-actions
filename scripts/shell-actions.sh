@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 shell-reload-zsh() {
     source ~/.zshrc
     if [ -f "~/.zshrc.zwc" ]; then
@@ -132,4 +134,8 @@ function add-history {
         local full_cmd="$@"
         local atuin_id=$(atuin history start "$full_cmd")
         atuin history end $atuin_id --exit "0"
+}
+
+function turn-screen-off () {
+	xset dpms force off
 }
