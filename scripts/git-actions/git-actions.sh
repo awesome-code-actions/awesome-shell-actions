@@ -116,3 +116,11 @@ git-search-all-history() {
         done
     )
 }
+
+git-sync() {
+	local p=$1
+	local base=$(dirname $(zmx-find-path-of-action))
+	echo $base
+	echo "--$p--"
+	$base/git-sync $p
+}

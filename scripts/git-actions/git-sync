@@ -1,0 +1,80 @@
+#!/bin/bash
+
+function log {
+	echo "$@" | systemd-cat -t git-sync
+	echo "$@"
+	return
+}
+
+function notify {
+	notify-send "git-sync $(pwd) $@"
+	return
+}
+
+function remote-commmit {
+	echo $(git ls-remote --sort=committerdate 2>&1|grep master | awk '{print $1}' | tr -d '\n')
+}
+
+function local-commit {
+	echo $(git log --pretty=format:'%H' -n 1 |xargs | tr -d '\n')
+}
+
+function worktree-clean() {
+	[[ -z $(git status -s) ]] 
+}
+
+function is-safe-to-pull() {
+	git  pull origin master -v  --dry-run  2>&1 |grep -q '= \[up to date\]'
+}
+
+function commit-contains() {
+	# if right is ancestor of left, then left contains right
+	local left=$1
+	local right=$2
+	git merge-base --is-ancestor "$right" "$left" 
+}
+
+
+function git-sync {
+	local p=$1
+	echo "-$p-"
+	cd $p
+	log "state: pwd is " "$PWD"
+	git remote update
+	if ! worktree-clean ; then
+		log "dirty"
+		return
+	fi
+	log "worktree clean"
+	git status
+	log "fetching" $(git remote update)
+	local lc="$(local-commit)"
+	local rc="$(remote-commmit)"
+	log "lc $lc rc $rc"
+	if [[  "$lc" == "$rc" ]] ;then
+		log "same commit ignore"
+		return
+	fi
+
+	if $(commit-contains "$lc" "$rc") ; then
+		log "lc contains rc just push"
+		notify "push to origin"
+		git push origin master
+		return
+	fi
+
+	# maybe we should pull 	
+	if $(is-safe-to-pull) ; then
+		log "safe to pull"
+		notify "pull from origin"
+		git pull origin master --no-edit
+		git push origin master
+		return
+	fi
+
+	# unknown scenario 	
+	log "unknown"	
+	return 
+}
+
+git-sync $1
