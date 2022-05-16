@@ -34,20 +34,61 @@ function bridge-eyes() {
 
 function bridge-show() {
 	local b=$1
-	local veths=$(ip --json link show master $b | jq -r '.[].ifname')
-	echo "$veths" | while read veth; do
-		if [ -z "$veth" ]; then
+	local ifnames=$(ip --json link show master $b | jq -r '.[].ifname')
+	echo "$ifnames" | while read ifname; do
+		if [ -z "$ifname" ]; then
 			continue
 		fi
-		echo "  show info of veth $veth"
-		veth-show $veth
+		echo "  show info of $ifname"
+		bridge-if-show $ifname
 	done
 }
 
+function docker-list-veth() {
+	local containers=$(docker ps --format '{{.Names}}')
+	echo "$containers" | while read dk; do
+		local pid=$(docker inspect --format '{{.State.Pid}}' "$dk")
+		local ifindex=$(sudo nsenter -t $pid -n ip link | sed -n -e 's/.*eth0@if\([0-9]*\):.*/\1/p')
+		if [ -z "$ifindex" ]; then
+			veth="not found"
+		else
+			veth=$(ip -o link | grep ^$ifindex | sed -n -e 's/.*\(veth[[:alnum:]]*@if[[:digit:]]*\).*/\1/p')
+		fi
+		echo $veth $dk
+	done
+}
+
+function docker-find-veth() {
+	local veth_id=$1
+	local containers=$(docker ps --format '{{.Names}}')
+	echo "$containers" | while read dk; do
+		local pid=$(docker inspect --format '{{.State.Pid}}' "$dk")
+		local ifindex=$(sudo nsenter -t $pid -n ip link | sed -n -e 's/.*eth0@if\([0-9]*\):.*/\1/p')
+		if [ -z "$ifindex" ]; then
+			veth="not found"
+		else
+			veth=$(ip -o link | grep ^$ifindex | sed -n -e 's/.*\(veth[[:alnum:]]*@if[[:digit:]]*\).*/\1/p')
+		fi
+		if echo "$veth" | grep -q "$veth_id"; then
+			echo $veth $dk
+		fi
+	done
+}
+
+function bridge-if-show() {
+	local ifname=$1
+	if echo "$ifname" | grep '^veth' ; then
+		veth-show $ifname
+		return
+	fi
+	local eth_type=$(ethtool -i  $ifname |grep 'driver')
+	echo "    eth_type $eth_type"
+}
+
 function veth-show() {
-	# TODO
+	# TODO just iter all docker ns
 	local veth=$1
-	local vethinfo=$(ip link show dev $veth)
-	echo "    $vethinfo"
+	local docker=$(docker-list-veth | grep "$veth")
+	echo "  used in docker $docker"
 	return
 }
