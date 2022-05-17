@@ -88,6 +88,10 @@ function kind-load-image() {
 function kind-source-kubeconfig() {
     cluster=$( kind get clusters |fzf)
     kind get kubeconfig --name=$cluster > ~/.kube/$cluster
+	local ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cluster-control-plane)
+	echo $cluster $ip
     export KUBECONFIG=~/.kube/$cluster
+    cat $KUBECONFIG |grep server
+	sed -i "s|server.*|server: https://$ip:6443|g" ~/.kube/$cluster
     echo $KUBECONFIG
 }

@@ -132,6 +132,7 @@ function time-diff-ms {
 
 function add-history {
         local full_cmd="$@"
+		echo "full_cmd $full_cmd"
         local atuin_id=$(atuin history start "$full_cmd")
         atuin history end $atuin_id --exit "0"
 }
