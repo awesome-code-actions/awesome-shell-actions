@@ -81,6 +81,12 @@ docker-get-pid-by-id() {
     docker inspect $id | jq '.[0].State.Pid' 
 }
 
+docker-get-pidns-by-id() {
+    local id=$1
+	local pid=$(docker-get-pid-by-id $id)
+	sudo ls -alh /proc/$pid/ns/pid|rg -o '\[(.*)\]' -r '$1'
+}
+
 docker-get-name-by-id() {
     local id=$1
     docker inspect $id | jq '.[0].Name' 

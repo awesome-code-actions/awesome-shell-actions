@@ -1,0 +1,81 @@
+#! /usr/bin/env stap
+
+function get_task_nsproxy_count:long (task:long) %{ /* pure */
+    struct task_struct *p = (struct task_struct *)((long)STAP_ARG_task);
+    int count;
+    STAP_RETVALUE = atomic_read(&p->nsproxy->count);
+%}
+
+function get_pid_in_ns_from_task:long (task:long) %{ /* pure */
+    struct task_struct *p = (struct task_struct *)((long)STAP_ARG_task);
+    STAP_RETVALUE =  task_tgid_vnr(p);
+%}
+
+function get_pidns:long  (task:long) %{ /* pure */
+    struct task_struct *p = (struct task_struct *)((long)STAP_ARG_task);
+    STAP_RETVALUE =  p->nsproxy->pid_ns_for_children->ns.inum;
+%}
+
+global call_map
+probe syscall.connect {
+    task = task_current();
+    if (uaddr_af != "AF_INET" ) {
+        next;
+    }
+    if (!is_target_docker(task)) {
+        next;
+    }
+
+    id = task_id(task);
+
+    now = gettimeofday_ns()
+    call_map[id] = now;
+
+    info = task_info(task);
+    printf("connect %s\n",info)
+    printf("---> %d %s |%s|  %s %s %s\n",sockfd,name,argstr,uaddr_af,uaddr_ip,uaddr_ip_port)
+}
+
+probe syscall.connect.return {
+   task = task_current();
+   id = task_id(task);
+   // printf("r id %s\n",id);
+   if (!call_map[id]) {
+       next;
+   }
+   start = call_map[id] ;
+   now = gettimeofday_ns();
+   delete call_map[id];
+
+   info = task_info(task);
+   printf("connect-ret %s\n",info);
+   printf(" ---> %s %s %s diff %d ms\n",name,argstr,retstr,(now-start)/1000);
+}
+
+function is_target_docker:long(task:long) {
+    expect_pidns=$1
+    task = task_current() 
+    pidns = get_pidns(task)
+    return pidns == expect_pidns
+}
+
+function task_info:string(task:long) {
+    pid = task_pid(task)
+    pidns = get_pidns(task)
+    pid_in_docker = get_pid_in_ns_from_task(task);
+    pid_in_ns = task_ns_pid(task);
+    cid = cpu()
+    tid  = task_tid(task)
+    tid_in_ns  = task_ns_tid(task)
+    now = gettimeofday_ns()
+    id = task_id(task)
+    return sprintf("id %s now %d pidns %d pid %d docker-pid %d ns_pid %d tid %d ns_tid %d exename %s",id,now,pidns,pid,pid_in_docker,ns_pid,tid,ns_tid,execname());
+}
+
+
+function task_id:string(task: long){
+    task = task_current();
+    pid = task_pid(task);
+    tid = task_tid(task);
+    return sprintf("%d-%d-%d",cpu(),pid,tid)
+}
