@@ -1,5 +1,5 @@
 to-kuku() {
-    mosh cong@172.29.175.252
+    mosh cong@172.29.249.69
 }
 
 to-kaka() {
