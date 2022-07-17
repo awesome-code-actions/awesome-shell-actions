@@ -1,0 +1,17 @@
+#!/stap
+
+probe module("ip_vs").function("ip_vs_bind_xmit") {
+	print_backtrace()
+}
+probe module("ip_vs").function("ip_vs_conn_in_get") {
+	next
+	caddr = ip_ntop($p->caddr->ip)
+	cport = ntohs($p->cport)
+	vport = ntohs($p->vport)
+	vaddr = ip_ntop($p->vaddr->ip)
+	if (!(caddr == "10.0.0.250" || vaddr == "10.0.0.250") ) {
+		next
+	}
+	print_backtrace()
+	printf("c-v %s:%d %s:%d\n",caddr,cport,vaddr ,vport); 
+}
