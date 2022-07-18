@@ -13,7 +13,7 @@ check-proxy() {
 }
 
 set-proxy() {
-    URL=$1
+    local URL=$1
     export HTTPS_PROXY=$URL
     export HTTP_PROXY=$URL
     export https_proxy=$URL
