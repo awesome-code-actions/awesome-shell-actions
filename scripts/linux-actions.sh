@@ -5,6 +5,8 @@ openfile-get-limit() {
 	ulimit -n
 	echo "all"
 	ulimit -aH
+	ulimit -nH
+	ulimit -nS
 }
 
 openfile-set-limit() {

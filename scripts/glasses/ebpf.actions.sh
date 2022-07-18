@@ -4,6 +4,10 @@ function ebpf-hello-world() {
 	sudo bpftrace -v -e 'BEGIN { printf("hello world\n"); }'
 }
 
+function ebpf-kprobe-hello() {
+ 	sudo bpftrace -e 'kprobe:ip_vs_reply4 {printf("%s\n",comm);}'
+}
+
 how-many-systemcall-each-cpu() {
 	local base=$(dirname $(zmx-find-path-of-action))
 	echo $base
