@@ -24,3 +24,7 @@ function ps-mem-human {
 	# while true;do sleep 1s ;(date;ps aux |grep alb | /root/cong/numfmt  --from-unit=1024 --to=iec --field 5,6   --padding 6) | tee -a ./mem.log;done
 	ps aux | numfmt  --from-unit=1024 --to=iec --field 5,6   --padding 6
 }
+
+function has-config() {
+ grep $1 /boot/config-$(uname -r)
+}
