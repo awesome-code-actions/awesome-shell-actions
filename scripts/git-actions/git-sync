@@ -42,7 +42,7 @@ function git-sync {
 	log "state: pwd is " "$PWD"
 	git remote update
 	if ! worktree-clean ; then
-		log "dirty"
+		log "ret $p dirty"
 		return
 	fi
 	log "worktree clean"
@@ -52,12 +52,12 @@ function git-sync {
 	local rc="$(remote-commmit)"
 	log "lc $lc rc $rc"
 	if [[  "$lc" == "$rc" ]] ;then
-		log "same commit ignore"
+		log "ret $p same commit ignore"
 		return
 	fi
 
 	if $(commit-contains "$lc" "$rc") ; then
-		log "lc contains rc just push"
+		log "ret $p lc contains rc just push"
 		notify "push to origin"
 		git push origin master
 		return
@@ -65,7 +65,7 @@ function git-sync {
 
 	# maybe we should pull 	
 	if $(is-safe-to-pull) ; then
-		log "safe to pull"
+		log "ret $p safe to pull"
 		notify "pull from origin"
 		git pull origin master --no-edit
 		git push origin master
@@ -73,7 +73,7 @@ function git-sync {
 	fi
 
 	# unknown scenario 	
-	log "unknown"	
+	log "ret $p unknown"	
 	return 
 }
 
