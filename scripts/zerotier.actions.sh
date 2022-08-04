@@ -8,10 +8,8 @@ function zerotier-list-the-link {
 	node - <<-START
 		let obj=JSON.parse('$json')
 		for (let mem of obj) {
-			if (mem.name =="") {
-				continue
-			}
-			console.log(mem.name,mem.online,mem.config.ipAssignments)
+            mem.name = mem.name||"unknow"
+			console.log(mem.name,mem.online,mem.config.ipAssignments[0])
 		}
 	START
 	EOF
