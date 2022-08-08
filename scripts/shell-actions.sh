@@ -140,3 +140,7 @@ function add-history {
 function turn-screen-off () {
 	xset dpms force off
 }
+
+function count-code () {
+    tokei ./
+}
