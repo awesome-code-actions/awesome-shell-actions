@@ -1,9 +1,7 @@
 #!/bin/bash
 
 function etcdctl-use-kind() {
-    set -x
-    local cluster="k-1-24-3"
-    # local cluster=$( kind get clusters |fzf)
+    local cluster=$( kind get clusters |fzf)
     local container="$cluster-control-plane"
     echo "container: $container"
     local base=$HOME/.etcdctl
