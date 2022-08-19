@@ -57,6 +57,16 @@ function kind-create-1.21.1() {
 	kind create cluster --config /tmp/cluster.yaml --name k-1-21-1 --image=kindest/node:v1.21.1
 }
 
+function kind-create-1.21.1() {
+	_prepare_kind_cluster_config /tmp/cluster.yaml
+	kind create cluster --config /tmp/cluster.yaml --name k-1-21-1 --image=kindest/node:v1.21.1
+}
+
+function kind-create-1.24.3() {
+	_prepare_kind_cluster_config /tmp/cluster.yaml
+	kind create cluster --config /tmp/cluster.yaml --name k-1-24-3 --image=kindest/node:v1.24.3
+}
+
 function default-cluster-config() {
 	p=/${RANDOM:0:2}
 }

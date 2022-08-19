@@ -92,3 +92,8 @@ function veth-show() {
 	echo "  used in docker $docker"
 	return
 }
+
+function ip-range() {
+    ip=$1; mask=$2
+    ipcalc "$ip/$mask"
+}
