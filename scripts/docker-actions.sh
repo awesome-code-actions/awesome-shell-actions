@@ -99,6 +99,10 @@ docker-delte() {
 docker-list-ip() {
     docker ps |tail -n+2 |awk '{print $1}' |xargs -I{} sh -c "echo '{} ' |tr -d '\n\r' &&  docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' {} | tr -d '\n\r' &&echo -n ' ' && docker inspect -f '{{.Name}}' {}"
 }
+docker-get-ip() {
+    local c=$1
+    docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $c
+}
 
 docker-install-buildx() {
     mkdir -p  ~/.docker/cli-plugins/

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function etcdctl-use-kind() {
-    local cluster=$( kind get clusters |fzf)
+    local cluster=$(kind get clusters | fzf)
     local container="$cluster-control-plane"
     echo "container: $container"
     local base=$HOME/.etcdctl
@@ -18,13 +18,15 @@ function etcdctl-use-kind() {
     etcdctl-list-ns
 }
 
-#etcdctl-list-ns |jq -r '.kvs[].key'
 function etcdctl-list-ns() {
-    etcdctl-get "/registry/namespaces"
+    etcdctl-get "/registry/namespaces" | jq -r '.kvs[].key'
 }
 
 function etcdctl-get() {
+    etcdctl-get-raw $1 | jq -r '.kvs|=map(.key|=@base64d) | .kvs|=map(.value|=@base64d)'
+}
 
+function etcdctl-get-raw() {
     local get="$1"
     local base=$HOME/.etcdctl
     local cert_dir=$base/etcd
@@ -32,7 +34,7 @@ function etcdctl-get() {
     local ep=$(cat $base/ep)
     local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep:2379  get $get --prefix -w=json|python3 -m json.tool > $base/out.json"
     eval "$cmd"
-    jq -r '.kvs|=map(.key|=@base64d) | .kvs|=map(.value|=@base64d)' <$base/out.json
+    cat $base/out.json
 }
 
 function etcdctl-list-all-key() {
