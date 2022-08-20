@@ -18,6 +18,8 @@ set-proxy() {
     export HTTP_PROXY=$URL
     export https_proxy=$URL
     export http_proxy=$URL
+    export NO_PROXY=localhost,127.0.0.0,127.0.1.1,127.0.1.1,local.home
+
 }
 
 default-proxy() {
