@@ -19,11 +19,26 @@ function etcdctl-use-kind() {
 }
 
 function etcdctl-list-ns() {
-    etcdctl-get "/registry/namespaces" | jq -r '.kvs[].key'
+    etcdctl-get-dumper "/registry/namespaces"  |yq '.kvs[].key'
+}
+
+function etcdctl-list-all-key() {
+    etcdctl-get-dumper "/"  |yq '.kvs[].key'
 }
 
 function etcdctl-get() {
-    etcdctl-get-raw $1 | jq -r '.kvs|=map(.key|=@base64d) | .kvs|=map(.value|=@base64d)'
+    etcdctl-get-dumper $1
+}
+
+function etcdctl-get-dumper() {
+    local get="$1"
+    local base=$HOME/.etcdctl
+    local cert_dir=$base/etcd
+    local cert_opt="--cacert=$cert_dir/ca.crt --cert=$cert_dir/peer.crt --key=$cert_dir/peer.key"
+    local ep=$(cat $base/ep)
+    local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep:2379  get $get --prefix -w=json|python3 -m json.tool > $base/out.json"
+    eval "$cmd"
+    etcd-dumper $base/out.json
 }
 
 function etcdctl-get-raw() {
@@ -36,7 +51,12 @@ function etcdctl-get-raw() {
     eval "$cmd"
     cat $base/out.json
 }
-
-function etcdctl-list-all-key() {
-    etcdctl-get "/" | jq -r '.kvs[].key'
+function etcdctl-get-auger() {
+    local get="$1"
+    local base=$HOME/.etcdctl
+    local cert_dir=$base/etcd
+    local cert_opt="--cacert=$cert_dir/ca.crt --cert=$cert_dir/peer.crt --key=$cert_dir/peer.key"
+    local ep=$(cat $base/ep)
+    local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep:2379  get $get --prefix --print-value-only | auger decode"
+    eval "$cmd"
 }
