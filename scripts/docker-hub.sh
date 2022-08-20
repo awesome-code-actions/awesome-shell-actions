@@ -1,7 +1,9 @@
-dockerhub-list-tags() {
-	# @arg-len: 1
-	# @category: glasses
+#!/usr/bin/env bash
 
-	local name=$1
-	wget -q https://registry.hub.docker.com/v1/repositories/$name/tags -O -  | jq -r '.[].name'
+function dockerhub-list-tags() {
+    # @arg-len: 1
+    # @category: glasses
+
+    local name=$1
+    wget -q https://registry.hub.docker.com/v1/repositories/$name/tags -O - | jq -r '.[].name'
 }

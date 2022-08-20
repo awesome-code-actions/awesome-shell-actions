@@ -1,6 +1,5 @@
-screen-lock() {
-	gnome-screensaver-command -l
-}
+#!/usr/bin/env bash
 
-screen-unlock() {
+function screen-lock() {
+    gnome-screensaver-command -l
 }

@@ -1,30 +1,31 @@
-go-test-all() {
+#!/usr/bin/env bash
+
+function go-test-all() {
     go test -v ./...
 }
 
-go-use-china-proxy() {
+function go-use-china-proxy() {
     go env -w GOPROXY=https://goproxy.cn,direct
 }
 
-go-unset-go-proxy() {
+function go-unset-go-proxy() {
     unset GOPROXY
 }
 
-
-go-run-one-test() {
-	local test=$(go-list-test | fzf)
-	local t=$(echo $test | cut -f1 -d' ')
-	local p=$(echo $test | cut -f2 -d' ')
-	echo "$t" "$p"
-	add-history go test -v -run "$t" "$p"
-	go test -v -run "$t" "$p"
+function go-run-one-test() {
+    local test=$(go-list-test | fzf)
+    local t=$(echo $test | cut -f1 -d' ')
+    local p=$(echo $test | cut -f2 -d' ')
+    echo "$t" "$p"
+    add-history go test -v -run "$t" "$p"
+    go test -v -run "$t" "$p"
 
 }
 
-go-list-test() {
-	local testlist=$(go test ./...  -list=. |grep -v '?')
-	exec 3<<< "$testlist"
-	python3  - <<-'START'
+function go-list-test() {
+    local testlist=$(go test ./... -list=. | grep -v '?')
+    exec 3<<<"$testlist"
+    python3 - <<-'START'
 	import sys
 	import os
 	data=os.read(3,10240).decode("utf-8")

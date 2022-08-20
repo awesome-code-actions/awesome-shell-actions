@@ -1,7 +1,8 @@
-vagrant-up() {
-	vagrant up
+#!/usr/bin/env bash
+function vagrant-up() {
+    vagrant up
 }
 
-vagrant-force-destroy() {
-	vagrant destroy -f
+function vagrant-force-destroy() {
+    vagrant destroy -f
 }

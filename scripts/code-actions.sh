@@ -1,8 +1,10 @@
-code-list-installed-package() {
+#!/usr/bin/env bash
+
+function code-list-installed-package() {
     code --list-extensions
 }
 
-code-install-package() {
+function code-install-package() {
     package=$1
-    code --install-extension  $package
+    code --install-extension $package
 }

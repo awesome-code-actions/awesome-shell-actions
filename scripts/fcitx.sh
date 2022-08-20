@@ -1,4 +1,5 @@
-fcitx-status() {
+#!/usr/bin/env bash
+function fcitx-status() {
     # version
     fcitx -v
     # is running
@@ -6,16 +7,16 @@ fcitx-status() {
     # current input method
 }
 
-fcitx-reload-config() {
+function fcitx-reload-config() {
     fcitx-remote -r
 }
 
-fcitx-run-status() {
-if [[ $(fcitx-remote) == "0" ]]; then
- echo "close"
-elif   [[ $(fcitx-remote) == "1" ]]; then
- echo "inactive"
-elif   [[ $(fcitx-remote) == "1" ]]; then
- echo "active"
-fi
+function fcitx-run-status() {
+    if [[ $(fcitx-remote) == "0" ]]; then
+        echo "close"
+    elif [[ $(fcitx-remote) == "1" ]]; then
+        echo "inactive"
+    elif [[ $(fcitx-remote) == "1" ]]; then
+        echo "active"
+    fi
 }
