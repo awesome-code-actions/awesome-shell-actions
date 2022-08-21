@@ -146,3 +146,7 @@ function turn-screen-off () {
 function count-code () {
     tokei ./
 }
+
+function env-path-list () {
+    echo $PATH | sed 's/:/\n/g'
+}
