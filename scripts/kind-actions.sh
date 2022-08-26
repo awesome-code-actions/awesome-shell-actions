@@ -9,36 +9,18 @@ networking:
   ipFamily: dual
   apiServerAddress: "127.0.0.1"
   apiServerPort: 6443
+nodes:
+- role: control-plane
 kubeadmConfigPatches:
 - |
-  apiVersion: kubeadm.k8s.io/v1beta2
+  apiVersion: kubeadm.k8s.io/v1beta3
   kind: ClusterConfiguration
   metadata:
     name: config
-  apiServer:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-  scheduler:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-  controllerManager:
-    extraArgs:
-      "feature-gates": "EphemeralContainers=true"
-- |
-  apiVersion: kubeproxy.config.k8s.io/v1alpha1
-  kind: KubeProxyConfiguration
-  conntrack:
-    maxPerCore: 0
-- |
-  apiVersion: kubeadm.k8s.io/v1beta2
-  kind: InitConfiguration
-  metadata:
-    name: config
-  nodeRegistration:
-    kubeletExtraArgs:
-      "feature-gates": "EphemeralContainers=true"
-nodes:
-- role: control-plane
+  etcd:
+    local:
+      extraArgs:
+        listen-metrics-urls: "http://0.0.0.0:2381"
 EOL
 }
 
