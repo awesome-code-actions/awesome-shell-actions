@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function etcd-dumper-install() {
+    go install github.com/woodgear/etcd-dumper@latest
+    which etcd-dumper
+}
+
 function etcdctl-use-kind() {
     local cluster=$(kind get clusters | fzf)
     local container="$cluster-control-plane"
@@ -19,11 +24,16 @@ function etcdctl-use-kind() {
 }
 
 function etcdctl-list-ns() {
-    etcdctl-get-dumper "/registry/namespaces"  |yq '.kvs[].key'
+    etcdctl-get-dumper "/registry/namespaces" | yq '.kvs[].key'
 }
 
 function etcdctl-list-all-key() {
-    etcdctl-get-dumper "/"  |yq '.kvs[].key'
+    etcdctl-get-raw / | jq -r '.kvs|=map(.key|=@base64d) | .kvs[].key'
+}
+
+function etcdctl-peek-a-key() {
+    local key=$(etcdctl-list-all-key | fzf)
+    etcdctl-get-dumper "$key"
 }
 
 function etcdctl-get() {
@@ -51,6 +61,12 @@ function etcdctl-get-raw() {
     eval "$cmd"
     cat $base/out.json
 }
+
+function etcdctl-get-raw-debase64() {
+    local key="$1"
+    etcdctl-get-raw $key | jq -r '.kvs|=map(.key|=@base64d) | .kvs|=map(.value|=@base64d)'
+}
+
 function etcdctl-get-auger() {
     local get="$1"
     local base=$HOME/.etcdctl
