@@ -11,7 +11,8 @@ function gnome-shell-eval() {
     local out=$(echo "$raw" | sed "s/(true, //g" | sed "s/)$//g")
     local out=$(echo "$out" | sed 's|\\"|"|g')
     local out=$(echo "$out" | sed "s/\"'//g" | sed "s/'\"//g")
-    local out=$(echo "$out" | sed "s/\"\"//g")
+    local out=$(echo "$out" | sed "s/\"\"\[/\[/g")
+    local out=$(echo "$out" | sed "s/\]\"\"\[/\]/g")
     echo $out | jq
 }
 
