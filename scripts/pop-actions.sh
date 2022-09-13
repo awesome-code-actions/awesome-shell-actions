@@ -4,7 +4,18 @@ function pop-start() {
   if [[ "$(pop-ami-focus)" == "true" ]]; then
     pop-on-focus
   else
+    pop-run
     pop-on-unfocus
+  fi
+}
+
+function pop-shell() {
+  if [[ "$(pop-ami-focus)" == "true" ]]; then
+    pop-on-focus
+  else
+    pop-on-unfocus
+    local session=~/.kitty-room/custom
+    kitty @ --to unix:$session send-text "\x03"
   fi
 }
 
@@ -17,21 +28,18 @@ function pop-ami-focus() {
 }
 
 function pop-on-focus() {
-  notify-send "focus"
   xdotool getactivewindow windowminimize
 }
 
 function pop-on-unfocus() {
-  notify-send "un focus"
   wmctrl -a custom
   wmctrl -r custom -e 1,4000,500,2000,2000
-  pop-run
 }
 
 function pop-run() {
   local session=~/.kitty-room/custom
   kitty @ --to unix:$session send-text "\x03"
-#   kitty @ --to unix:$session send-text "zsh \x0d"
+  #   kitty @ --to unix:$session send-text "zsh \x0d"
   kitty @ --to unix:$session send-text "pop-cmds \x0d"
 }
 
@@ -60,5 +68,5 @@ function pop-cmds() {
   local cmd=$(eval "$lister" | fzf)
   gnome-focus $id
   eval "$cmd"
-  xdotool  windowminimize $pop_id
+  xdotool windowminimize $pop_id
 }
