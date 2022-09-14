@@ -6,21 +6,12 @@ cat > $file <<EOL
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 networking:
-  ipFamily: dual
+  ipFamily: ipv4
   apiServerAddress: "127.0.0.1"
-  apiServerPort: 6443
 nodes:
 - role: control-plane
-kubeadmConfigPatches:
-- |
-  apiVersion: kubeadm.k8s.io/v1beta3
-  kind: ClusterConfiguration
-  metadata:
-    name: config
-  etcd:
-    local:
-      extraArgs:
-        listen-metrics-urls: "http://0.0.0.0:2381"
+- role: worker
+- role: worker
 EOL
 }
 
@@ -47,6 +38,11 @@ function kind-create-1.21.1() {
 function kind-create-1.24.3() {
 	_prepare_kind_cluster_config /tmp/cluster.yaml
 	kind create cluster --config /tmp/cluster.yaml --name k-1-24-3 --image=kindest/node:v1.24.3
+}
+
+function kind-create-1.19.11() {
+	_prepare_kind_cluster_config /tmp/cluster.yaml
+	kind create cluster --config /tmp/cluster.yaml --name k-1-19-11 --image=kindest/node:v1.19.11
 }
 
 function default-cluster-config() {

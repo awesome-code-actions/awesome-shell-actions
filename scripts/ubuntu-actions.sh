@@ -17,3 +17,8 @@ function set-wallpapaer {
 
 	gsettings set org.gnome.desktop.background picture-uri "$p"
 }
+
+function ubuntu-21.10-use-mirror {
+    sudo sed -i "s@http://.*archive.ubuntu.com@https://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list
+    sudo sed -i "s@http://.*security.ubuntu.com@https://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list
+}
