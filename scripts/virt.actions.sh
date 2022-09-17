@@ -14,7 +14,9 @@ function virt-install-vm() {
 }
 
 function virt-list-host() {
-	virsh net-dhcp-leases default
+    while read -r net;do
+        virsh net-dhcp-leases $net |tail -n+3 |grep .
+    done < <(virsh net-list |tail -n+3 | awk '{print $1}'|grep .)
 }
 
 function virt-ssh() {
