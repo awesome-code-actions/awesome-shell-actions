@@ -28,7 +28,7 @@ function virt-ssh() {
 
 function virt-start() {
     local vm=$1
-    virsh start $vim
+    virsh start $vm
 }
 
 function virt-destory-vm() {
