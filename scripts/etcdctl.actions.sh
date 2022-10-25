@@ -50,7 +50,6 @@ function etcdctl-get() {
     etcdctl-get-dumper $1
 }
 
-
 function etcdctl-get-raw() {
     local get="$1"
     local base=$HOME/.etcdctl
