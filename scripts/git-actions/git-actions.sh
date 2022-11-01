@@ -93,6 +93,12 @@ function git-commit-no-edit-and-force-push-origin() {
     git-force-push-origin
 }
 
+function git-commit-no-edit-and-force-push-origin-no-verify() {
+    git-commit-no-edit
+    current_branch=$(git branch --show-current | tr -d '\n\r')
+    git push origin $current_branch -f --no-verify
+}
+
 function git-add-modify-files-commit-no-edit-and-force-push-origin() {
     git add -u
     git status
