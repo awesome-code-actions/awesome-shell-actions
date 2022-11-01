@@ -24,6 +24,7 @@ function docker-set-mirror() {
     sudo systemctl daemon-reload
     sudo systemctl restart docker
 }
+
 function docker-get-proxy() {
     cat /etc/systemd/system/docker.service.d/http-proxy.conf
 }
