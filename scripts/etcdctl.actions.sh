@@ -24,6 +24,9 @@ function etcdctl-use-kind() {
     etcdctl-list-ns
 }
 
+function etcdctl-use-vagrant() {
+}
+
 function etcdctl-use-http() {
     local url=$1
     local base=$HOME/.etcdctl
