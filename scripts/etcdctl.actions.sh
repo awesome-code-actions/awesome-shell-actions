@@ -89,9 +89,8 @@ function etcdctl-do() {
     cert_opt="--cacert=$cert_dir/ca.crt --cert=$cert_dir/peer.crt --key=$cert_dir/peer.key"
   fi
   local ep=$(cat $base/ep)
-  local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep  get $get --prefix -w=json|python3 -m json.tool > $base/out.json"
+  local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep $@"
   eval "$cmd"
-  cat $base/out.json
 }
 
 function etcdctl-get-dumper() {
