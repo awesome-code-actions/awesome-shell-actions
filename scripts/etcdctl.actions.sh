@@ -80,6 +80,20 @@ function etcdctl-get-raw() {
   cat $base/out.json
 }
 
+function etcdctl-do() {
+  local get="$1"
+  local base=$HOME/.etcdctl
+  local cert_dir=$base/etcd
+  local cert_opt=""
+  if [ -f "$base/https" ]; then
+    cert_opt="--cacert=$cert_dir/ca.crt --cert=$cert_dir/peer.crt --key=$cert_dir/peer.key"
+  fi
+  local ep=$(cat $base/ep)
+  local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep  get $get --prefix -w=json|python3 -m json.tool > $base/out.json"
+  eval "$cmd"
+  cat $base/out.json
+}
+
 function etcdctl-get-dumper() {
   local base=$HOME/.etcdctl
   rm -f $base/out.json
