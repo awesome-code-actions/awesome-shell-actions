@@ -94,7 +94,8 @@ function etcdctl-do() {
 }
 
 function etcdctl-do-cmpact() {
-    etcdctl-do endpoint status --write-out=json
+  local version=$(etcdctl-do endpoint status --write-out=json | jq '.[0].Status.header.revision')
+  etcdctl-do compact $version
 }
 
 function etcdctl-get-dumper() {
