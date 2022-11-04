@@ -93,6 +93,10 @@ function etcdctl-do() {
   eval "$cmd"
 }
 
+function etcdctl-do-cmpact() {
+    etcdctl-do endpoint status --write-out=json
+}
+
 function etcdctl-get-dumper() {
   local base=$HOME/.etcdctl
   rm -f $base/out.json
