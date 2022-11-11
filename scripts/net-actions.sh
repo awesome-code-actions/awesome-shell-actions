@@ -99,6 +99,15 @@ function subnet-range() {
   ipcalc "$ip/$mask"
 }
 
+function route-show() {
+  while read route; do
+    echo "$route"
+    read -r dest gateway mask iface <<<$route
+    echo "$dest | $gateway | $iface"
+    ipcalc "$dest/$mask"
+  done <<<$(route -n | tail -n +3 | awk '{print $1,$2,$3,$8}')
+}
+
 function ip-range() {
   ip=$1
   mask=$2
