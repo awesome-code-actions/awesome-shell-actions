@@ -100,12 +100,16 @@ function subnet-range() {
 }
 
 function route-show() {
-  while read route; do
-    echo "$route"
-    read -r dest gateway mask iface <<<$route
-    echo "$dest | $gateway | $iface"
-    ipcalc "$dest/$mask"
-  done <<<$(route -n | tail -n +3 | awk '{print $1,$2,$3,$8}')
+  local routes=$(route -n | tail -n +3 | awk '{print $1,$2,$3,$8}')
+  local output=$(
+    bash <<-EOF
+	python3 - <<-START
+        routes=`$routes`
+		print(routes)
+	START
+	EOF
+  )
+  echo $output
 }
 
 function ip-range() {
