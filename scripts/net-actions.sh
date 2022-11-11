@@ -103,19 +103,23 @@ function route-show() {
   local routes=$(route -n | tail -n +3 | awk '{print $1,$2,$3,$8}')
   local output=$(
     bash <<-EOF
-	python3 - <<-START
+python3 - <<-START
 import ipcalc
 routes="""
 $routes
 """
+net={}
 for route in  routes.splitlines():
     if route.strip()=="":
         continue
     dest,gateway,mask,iface = route.split(" ")
     print(dest,gateway,mask,iface)
-    print(ipcalc.Network(dest,mask))
+    subnet=ipcalc.Network(dest,mask)
+    net[route]=subnet
 
-	START
+for route in  routes.splitlines():
+pass
+START
 	EOF
   )
   echo $output
