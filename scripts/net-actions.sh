@@ -107,8 +107,11 @@ function route-show() {
 routes="""
 $routes
 """
-
-print(routes.splitlines())
+for route in  routes.splitlines():
+    if route.strip()=="":
+        continue
+    
+    print(route)
 	START
 	EOF
   )
