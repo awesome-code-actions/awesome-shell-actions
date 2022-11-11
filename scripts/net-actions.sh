@@ -95,6 +95,7 @@ function veth-show() {
 function subnet-range() {
   ip=$1
   mask=$2
+  echo "$ip $mask"
   ipcalc "$ip/$mask"
 }
 
