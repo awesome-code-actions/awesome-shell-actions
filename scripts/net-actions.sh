@@ -110,7 +110,8 @@ $routes
 for route in  routes.splitlines():
     if route.strip()=="":
         continue
-    print(route.split(" "))
+    dest,gateway,mask,iface = route.split(" ")
+    print(dest,gateway,mask,iface)
 	START
 	EOF
   )
