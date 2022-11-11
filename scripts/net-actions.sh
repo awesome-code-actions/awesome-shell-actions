@@ -115,10 +115,14 @@ for route in  routes.splitlines():
     dest,gateway,mask,iface = route.split(" ")
     subnet=ipcalc.Network(dest,mask)
     net[route]={"subnet":subnet,"dest":dest,"gateway":gateway,"mask":mask,"iface":iface}
-for route,net in  net.items():
-    subnet=net["subnet"]
-    dest=net["dest"]
-    print("xx",dest,subnet.host_first(),subnet.host_last())
+for routei,neti in  net.items():
+    for routej,netj in  net.items():
+        subneti=neti["subnet"]
+        desti=neti["dest"]
+        subnetj=netj["subnet"]
+        destj=netj["dest"]
+        print("xx",desti,subneti.host_first(),subneti.host_last())
+        pass
     pass
 START
 	EOF
