@@ -113,11 +113,11 @@ for route in  routes.splitlines():
     if route.strip()=="":
         continue
     dest,gateway,mask,iface = route.split(" ")
-    print(dest,gateway,mask,iface)
     subnet=ipcalc.Network(dest,mask)
     net[route]=subnet
-
 for route in  routes.splitlines():
+    subnet=net[route]
+    print(subnet.host_firt(),subnet.host_last())
 pass
 START
 	EOF
