@@ -104,8 +104,11 @@ function route-show() {
   local output=$(
     bash <<-EOF
 	python3 - <<-START
-        routes=`$routes`
-		print(routes)
+routes="""
+$routes
+"""
+
+print(routes.splitlines())
 	START
 	EOF
   )
