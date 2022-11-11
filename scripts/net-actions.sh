@@ -104,6 +104,7 @@ function route-show() {
   local output=$(
     bash <<-EOF
 	python3 - <<-START
+import ipcalc
 routes="""
 $routes
 """
@@ -112,6 +113,8 @@ for route in  routes.splitlines():
         continue
     dest,gateway,mask,iface = route.split(" ")
     print(dest,gateway,mask,iface)
+    print(ipcalc.Network(dest,mask))
+
 	START
 	EOF
   )
