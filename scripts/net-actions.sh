@@ -110,8 +110,7 @@ $routes
 for route in  routes.splitlines():
     if route.strip()=="":
         continue
-    
-    print(route)
+    print(route.split(" "))
 	START
 	EOF
   )
