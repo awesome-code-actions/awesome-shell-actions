@@ -92,6 +92,58 @@ function veth-show() {
   return
 }
 
+function subnet-range() {
+  ip=$1
+  mask=$2
+  echo "$ip $mask"
+  ipcalc "$ip/$mask"
+}
+
+function route-show() {
+  local routes=$(route -n | tail -n +3 | awk '{print $1,$2,$3,$8}')
+  local output=$(
+    bash <<-EOF
+python3 - <<-START
+import ipcalc
+routes="""
+$routes
+"""
+net={}
+for route in  routes.splitlines():
+    if route.strip()=="":
+        continue
+    dest,gateway,mask,iface = route.split(" ")
+    subnet=ipcalc.Network(dest,mask)
+    net[route]={"subnet":subnet,"dest":dest,"gateway":gateway,"mask":mask,"iface":iface}
+
+for routei,neti in  net.items():
+    subneti=neti["subnet"]
+    desti=neti["dest"]
+    print("xx",desti,subneti.host_first(),subneti.host_last())
+    pass
+for routei,neti in  net.items():
+    for routej,netj in  net.items():
+        if routei==routej:
+            continue
+        subneti=neti["subnet"]
+        desti=neti["dest"]
+        subnetj=netj["subnet"]
+        destj=netj["dest"]
+        if subneti.host_first()>= subnetj.host_first() and subneti.host_first()<= subnetj.host_last():
+            print("coll",routei,routej)
+            continue
+        pass
+        if subneti.host_last()>= subnetj.host_first() and subneti.host_last()<= subnetj.host_last():
+            print("coll",routei,routej)
+            continue
+        pass
+    pass
+START
+	EOF
+  )
+  echo $output
+}
+
 function ip-range() {
   ip=$1
   mask=$2
