@@ -28,3 +28,7 @@ function ebpf-list-all-uprobe-of-file() {
 function ebpf-ami-btf() {
   cat /boot/config-$(uname -r) | grep BTF
 }
+
+function ebpf-dump-btf() {
+    bpftool btf dump file $1
+}
