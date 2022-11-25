@@ -96,4 +96,5 @@ function tmux-zoom-current-panel() {
 function tmux-create-inside-tmux() {
     local name=$1
     tmux new -s "$name" -d
+    tmux switch -t $name
 }
