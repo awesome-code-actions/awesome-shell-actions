@@ -10,8 +10,6 @@ networking:
   apiServerAddress: "127.0.0.1"
 nodes:
 - role: control-plane
-- role: worker
-- role: worker
 EOL
 }
 
