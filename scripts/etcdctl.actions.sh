@@ -5,7 +5,6 @@ function etcdctl-init() {
   go install github.com/woodgear/etcd-dumper@latest
   which etcd-dumper
   yum install etcdclient
-  
 }
 
 function etcdctl-use-local-k8s() {
