@@ -40,6 +40,6 @@ function go-list-test() {
     	temp.append(line)
 	for p, ts in m.items():
     	for t in ts:
-        	print(t, p)
+        	print("go test -v -run ",t, p)
 	START
 }
