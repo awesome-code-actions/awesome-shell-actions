@@ -1,8 +1,19 @@
 #!/bin/bash
+errcho() { echo >&2 $@; }
 
-function etcd-dumper-install() {
+function etcdctl-init() {
   go install github.com/woodgear/etcd-dumper@latest
   which etcd-dumper
+  yum install etcdclient
+}
+
+function etcdctl-use-local-k8s() {
+  local base=$HOME/.etcdctl
+  mkdir -p $base
+  cp -r /etcd/kubernetes/pki/etcd $base
+  echo "127.0.0.1:2379" >$base/ep
+  touch $base/https
+  etcdctl-list-ns
 }
 
 function etcdctl-use-kind() {
@@ -18,7 +29,9 @@ function etcdctl-use-kind() {
   # steal cert
   docker cp $container:/etc/kubernetes/pki/etcd/ $base
   local ep=$(docker-get-ip $container)
-  echo "127.0.0.1:2379" >$base/ep
+  #   echo "127.0.0.1:2379" >$base/ep
+  errcho "ep is $ep"
+  echo "$ep:2379" >$base/ep
   touch $base/https
   # take a shot
   etcdctl-list-ns
@@ -50,11 +63,11 @@ function etcdctl-use-http() {
 }
 
 function etcdctl-list-ns() {
-  etcdctl-get-dumper "/registry/namespaces" | yq '.kvs[].key'
+  etcdctl-get-dumper "/registry/namespaces --keys-only" | yq '.kvs[].key'
 }
 
 function etcdctl-list-all-key() {
-  etcdctl-get-raw / | jq -r '.kvs|=map(.key|=@base64d) | .kvs[].key'
+  etcdctl-get-raw-json-show / --keys-only | jq -r '.kvs|=map(.key|=@base64d) | .kvs[].key'
 }
 
 function etcdctl-peek-a-key() {
@@ -62,22 +75,45 @@ function etcdctl-peek-a-key() {
   etcdctl-get-dumper "$key"
 }
 
+
 function etcdctl-get() {
   etcdctl-get-dumper $1
 }
 
-function etcdctl-get-raw() {
-  local get="$1"
+function etcdctl-get-raw-json-show() {
+  etcdctl-get-raw-json $@
+  local base=$HOME/.etcdctl
+  cat $base/out.json
+}
+
+function etcdctl-get-raw-json() {
+  local get="$@"
   local base=$HOME/.etcdctl
   local cert_dir=$base/etcd
   local cert_opt=""
-  if [ -f "$base/https" ]; then
+  if [ -d $cert_dir ]; then
+    # echo "https://127.0.0.1:2379" >$base/ep
     cert_opt="--cacert=$cert_dir/ca.crt --cert=$cert_dir/peer.crt --key=$cert_dir/peer.key"
   fi
   local ep=$(cat $base/ep)
-  local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep  get $get --prefix -w=json|python3 -m json.tool > $base/out.json"
+  #   local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep  get $get --prefix -w=json|python3 -m json.tool > $base/out.json"
+  local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep  get $get --prefix -w=json|jq . > $base/out.json"
+  errcho "$cmd"
   eval "$cmd"
-  cat $base/out.json
+}
+
+function etcdctl-get-raw-yaml() {
+  local get="$@"
+  local base=$HOME/.etcdctl
+  local cert_dir=$base/etcd
+  local cert_opt=""
+  if [ -d $cert_dir ]; then
+    cert_opt="--cacert=$cert_dir/ca.crt --cert=$cert_dir/peer.crt --key=$cert_dir/peer.key"
+  fi
+  local ep=$(cat $base/ep)
+  local cmd="ETCDCTL_API=3 etcdctl $cert_opt --endpoints=$ep  get $get --prefix -w=yaml |yq . > $base/out.yaml"
+  errcho "$cmd"
+  eval "$cmd"
 }
 
 function etcdctl-do() {
@@ -101,11 +137,12 @@ function etcdctl-do-cmpact() {
 function etcdctl-get-dumper() {
   local base=$HOME/.etcdctl
   rm -f $base/out.json
-  etcdctl-get-raw $1 >$base/out.json
+  etcdctl-get-raw-json $@
   etcd-dumper $base/out.json
 }
 
-function etcdctl-get-raw-debase64() {
+function etcdctl-get-raw-json-debase64() {
   local key="$1"
-  etcdctl-get-raw $key | jq -r '.kvs|=map(.key|=@base64d) | .kvs|=map(.value|=@base64d)'
+  etcdctl-get-raw-json $key
+  jq -r '.kvs|=map(.key|=@base64d) | .kvs|=map(.value|=@base64d)' ~/.etcdctl/out.json
 }

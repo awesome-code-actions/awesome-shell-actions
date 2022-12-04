@@ -8,10 +8,6 @@ function virt-list-vm() {
 	virsh list --all
 }
 
-function virt-install-vm() {
-    qemu-img create -f qcow2 -o preallocation=off ubuntu-base-22-04.qcow2 20G
-    virt-install   --name ubuntu-base-22-04 --memory 8096  --vcpus 4  --disk ./ubuntu-base-22-04.qcow2  --cdrom  ~/Downloads/ubuntu-22.04.1-desktop-amd64.iso 
-}
 
 function virt-list-host() {
     while read -r net;do

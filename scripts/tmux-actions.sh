@@ -1,18 +1,7 @@
 #!/bin/bash
-function tmux-kill-other-panel() {
-    tmux kill-pane -a
-}
 
 function tmux-kill-server() {
     tmux kill-server
-}
-
-function tmux-split-right-panel() {
-    tmux split-window -h
-}
-
-function tmux-split-down-panel() {
-    tmux split-window
 }
 
 function tmux-set-panel-title() {
@@ -25,9 +14,6 @@ function tmux-set-window-title() {
     tmux rename-window $title
 }
 
-function tmux-edit-config-file() {
-    vim ~/.tmux.conf
-}
 
 function tmux-rename-current-session() {
     name=$1
@@ -110,4 +96,5 @@ function tmux-zoom-current-panel() {
 function tmux-create-inside-tmux() {
     local name=$1
     tmux new -s "$name" -d
+    tmux switch -t $name
 }
