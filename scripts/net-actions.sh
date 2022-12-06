@@ -150,6 +150,7 @@ function ip-range() {
   ipcalc "$ip/$mask"
 }
 
+# scan unused ip
 function find-free-ip() {
-  sudo nmap -v -sn -n 192.168.1.0/24 -oG - | awk '/Status: Down/{print $2}'
+  sudo nmap -v -sn -n $1 -oG - | awk '/Status: Down/{print $2}'
 }
