@@ -144,7 +144,6 @@ function docker-mems {
   numfmt --field=2 --from-unit=1024 --to=iec-i --suffix B </proc/meminfo | sed 's/ kB//'
   numfmt --field=2 --from-unit=1024 --to=iec-i --suffix B </sys/fs/cgroup/memory/memory.stat | sed 's/ kB//'
 }
-
 function docker-build-with-proxy {
   set -x
   if [ -n "$HTTP_PROXY" ]; then
