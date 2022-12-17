@@ -17,28 +17,75 @@ function vbox-create-box() {
     wget https://raw.githubusercontent.com/vagrant-libvirt/vagrant-libvirt/master/tools/create_box.sh
     chmod a+x ./create_box.sh
   fi
-  sudo ./create_box.sh ./$name.qcow2
-  vagrant box add $name.box --force --name $name
+#   sudo ./create_box.sh ./$name.qcow2
+#   vagrant box add $name.box --force --name $name
   local demo=$(
     cat <<EOF
 Vagrant.configure("2") do |config|
-  name = "shell-$name"
-    config.vm.define name do |node|
+  (1..2).each do |i|
+    vmname="test-#{i}"
+    config.vm.define vmname do |node|
       node.vm.box = "$name"
-      node.vm.hostname = "#{name}"
+      node.vm.hostname = "#{vmname}"
       node.nfs.verify_installed = false
       node.vm.synced_folder '.', '/vagrant', disabled: true
       node.vm.provider :libvirt do |domain|
-          domain.default_prefix = name
           domain.memory = 8096
           domain.cpus = 4
     end
    end
+  end
 end
 EOF
   )
   echo "$demo" >./Vagrantfile
+  vagrant up
 }
+
+function vbox-init-ubuntu() {
+  local mode=$1
+  if [[ "$mode" == "OUTVM" ]]; then
+    local vm=$(virsh list --all | tail -n +3 | fzf | awk '{print $2}')
+    local ip=$(virsh domifaddr --domain $vm | tail -n +3 | head | awk '{print $4}' | awk -F / '{print $1}')
+    echo "outvm"
+    wget https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant
+    wget https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
+    sshpass -p vagrant ssh-copy-id -i vagrant.pub vagrant@$ip
+    sshpass -p vagrant ssh-copy-id -i vagrant.pub root@$ip
+    sshpass -p vagrant ssh root@$ip "echo vagrant ALL=NOPASSWD:ALL >/etc/sudoers.d/vagrant"
+    sshpass -p vagrant ssh vagrant@$ip <<EOF
+    $(typeset -f vbox-init-ubuntu);
+    vbox-init-ubuntu INVM
+EOF
+    return
+  fi
+  if [[ "$mode" != "INVM" ]]; then
+    echo "invalid $mode"
+    return
+  fi
+  ip addr
+  whoami
+  sudo apt install vim tmux -y
+  sudo cat /etc/sudoers.d/vagrant
+  sudo rm /etc/machine-id
+  sudo touch /etc/machine-id
+  local netcfg=$(
+    cat <<EOF
+network:
+  ethernets:
+    all-en:
+      match:
+        name: "ens*"
+      dhcp4: true
+      dhcp-identifier: mac
+  version: 2
+EOF
+  )
+  echo "$netcfg" | sudo tee /etc/netplan/02-use-mac-when-dhcp.yaml
+  cat /etc/netplan/02-use-mac-when-dhcp.yaml
+  sudo poweroff
+}
+
 function vbox-init-centos7() {
   local mode=$1
   local ip=$2
