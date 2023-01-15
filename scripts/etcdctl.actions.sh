@@ -2,6 +2,7 @@
 errcho() { echo >&2 $@; }
 
 function etcdctl-init() {
+    # you need go etcdctl jq
   go install github.com/woodgear/etcd-dumper@latest
   which etcd-dumper
   yum install etcdclient
