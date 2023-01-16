@@ -9,10 +9,12 @@ function zerotier-list-the-link {
 		let obj=JSON.parse('$json')
 		for (let mem of obj) {
             mem.name = mem.name||"unknow"
-			console.log(mem.name,mem.online,mem.config.ipAssignments[0])
+			console.log(mem.config.id,mem.name,mem.online,mem.config.ipAssignments[0],mem.description)
 		}
 	START
 	EOF
 	)
-	echo $output
+	echo "$output"
+  sudo zerotier-cli peers | sudo tail -n +3
+
 }
