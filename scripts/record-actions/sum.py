@@ -17,3 +17,5 @@ for line in lines:
 for group, moneys in m.items():
     groupSum = sum(moneys)
     print("{},{:.2f},{:.2f}%".format(group, groupSum, groupSum/total*100))
+
+# get sum off array
