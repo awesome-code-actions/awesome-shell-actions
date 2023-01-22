@@ -13,7 +13,6 @@ for line in lines:
     money = float(moneyStr)
     m[group].append(money)
     total += money
-
 for group, moneys in m.items():
     groupSum = sum(moneys)
     print("{},{:.2f},{:.2f}%".format(group, groupSum, groupSum/total*100))
