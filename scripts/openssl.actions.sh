@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 function openssl-gen-cert () {
-    local key=$1
-    local cert=$2
-    openssl req -x509 -newkey rsa:4096 -keyout $key -out $cert -sha256 -days 365 -subj "/C=US/ST=Oregon/L=Portland/O=Company Name/OU=Org/CN=www.example.com"
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+  -keyout example.key -out example.crt -subj "/CN=example.com" \
+  -addext "subjectAltName=DNS:example.com,DNS:www.example.net,IP:10.0.0.1"
+openssl rsa -in example.key  -out example-rsa.key
 }
 
