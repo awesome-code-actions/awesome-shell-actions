@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# note zmx depend on zext
 
 function shell-reload-zsh() {
   source ~/.zshrc
@@ -110,29 +111,6 @@ function ssh-list-all-host() {
 
 function ssh2 {
   ssh $(rg -L '^Host\s*.*$' /etc/ssh 2>/dev/null | grep -v '\*' | grep -v 'error' | awk '{print $2}' | fzf)
-}
-
-function date-ms {
-  date +"%Y %m %e %T.%6N"
-}
-
-function time-diff-ms {
-  local start=$1
-  local end=$2
-
-  local output=$(
-    bash <<-EOF
-	python3 - <<-START
-		from datetime import datetime
-		import humanize
-		start = datetime.strptime("$start","%Y %m %d %H:%M:%S.%f")
-		end = datetime.strptime("$end","%Y %m %d %H:%M:%S.%f")
-		print(humanize.precisedelta(end-start, minimum_unit="microseconds"))
-	START
-	EOF
-  )
-  echo $output
-
 }
 
 function add-history {
