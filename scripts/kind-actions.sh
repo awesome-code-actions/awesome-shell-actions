@@ -12,6 +12,22 @@ nodes:
 EOL
 }
 
+function _prepare_kind_cluster_config_3() {
+  local file=${1:-"/tmp/cluster.yaml"}
+  echo $file
+  cat >$file <<EOL
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: ipv4
+  apiServerAddress: "127.0.0.1"
+nodes:
+- role: control-plane
+- role: worker
+- role: worker 
+EOL
+}
+
 function kind-create-1.16.5() {
   local name=${1:-"k-1-19-11"}
   _prepare_kind_cluster_config /tmp/cluster.yaml
@@ -32,7 +48,13 @@ function kind-create-1.21.1() {
 
 function kind-create-1.24.3() {
   local name=${1:-"k-1-24-3"}
-  _prepare_kind_cluster_config /tmp/cluster.yaml
+  local node=$2
+  if [ -z "$node" ]; then
+    _prepare_kind_cluster_config /tmp/cluster.yaml
+  else
+    _prepare_kind_cluster_config_3 /tmp/cluster.yaml
+  fi
+
   kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.24.3
 }
 
@@ -58,14 +80,15 @@ function kind-list-image() {
 }
 
 function kind-load-image() {
-  # @arg-len: 1
+  # @arg-len: 2
+  # @fzf-backup
   local image=$1
   local cluster=$2
   if [ -z "$cluster" ]; then
     cluster=$(kind get clusters | fzf)
   fi
 
-  docker pull $image
+  #   docker pull $image
   kind load docker-image $image --name $cluster
 }
 

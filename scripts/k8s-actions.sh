@@ -213,14 +213,6 @@ EOF
     echo $run | xclip -selection c
 }
 
-function k-config-delete() {
-    kubectl config get-contexts -o name | fzf -m | xargs -i{} kubectl config delete-context {}
-}
-
-function k-config-use() {
-    kubectl config use-context $(kubectl config get-contexts -o name | fzf -m)
-}
-
 function k-eval-in-all-pod() {
     # @arg-len:4
     local ns=$1
@@ -232,7 +224,6 @@ function k-eval-in-all-pod() {
 
 }
 
-alias k-switch=k-config-use
 
 function k-get-cert-info() {
     local ns=$1
