@@ -99,6 +99,14 @@ function git-commit-no-edit-and-force-push-origin-no-verify() {
     git push origin $current_branch -f --no-verify
 }
 
+function git-add-modify-files-commit-update-and-push-origin() {
+    git add -u
+    git status
+    git commit -m "update"
+    git status
+    git push origin
+}
+
 function git-add-modify-files-commit-no-edit-and-force-push-origin() {
     git add -u
     git status
@@ -128,4 +136,8 @@ function git-sync() {
     echo $base
     echo "--$p--"
     $base/git-sync $p
+}
+
+function git-default-proxy() {
+    git config --global http.proxy http://127.0.0.1:20172
 }
