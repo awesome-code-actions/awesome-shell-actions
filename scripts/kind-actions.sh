@@ -108,3 +108,13 @@ function kind-source-kubeconfig() {
   sed -i "s|server.*|server: https://$ip:6443|g" ~/.kube/$cluster
   echo $KUBECONFIG
 }
+
+# 将kind的kubectl设置为默认的config ~/.kube/config
+function kind-default-kubeconfig() {
+  local cluster=$1
+  if [ -z "$cluster" ]; then
+    cluster=$(kind get clusters | fzf)
+  fi
+  kind-source-kubeconfig $cluster
+  cp ~/.kube/$cluster ~/.kube/config
+}
