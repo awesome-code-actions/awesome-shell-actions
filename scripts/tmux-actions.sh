@@ -43,7 +43,11 @@ function tmux-send-key-to-pane() {
 
 function tmux-get-paneid() {
     local title=$1
-    tmux list-panes -t $(tmux-get-current-window-id)  -F "#{pane_title}:#{pane_index}" |grep $title | cut -d ':' -f 2 | tr -d '\n\r'
+    tmux-list-current-window-panel |grep $title | cut -d '~' -f 2 | tr -d '\n\r'
+}
+
+function tmux-list-current-window-panel() {
+    tmux list-panes -t $(tmux-get-current-window-id)  -F "#{pane_title}#{pane_index}" |grep '~'
 }
 
 function tmux-get-current-window-id() {

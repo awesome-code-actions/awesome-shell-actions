@@ -8,6 +8,16 @@ function ebpf-kprobe-hello() {
   sudo bpftrace -e 'kprobe:ip_vs_reply4 {printf("%s\n",comm);}'
 }
 
+function ebpf-on-func-call() {
+  set -x
+  sudo bpftrace -e "kprobe:$1 {printf(\"call me %s\\n\",probe);}"
+  set +x
+}
+
+function ebpf-list-all-probe() {
+  sudo bpftrace -l
+}
+
 function how-many-systemcall-each-cpu() {
   local base=$(dirname $(zmx-find-path-of-action))
   echo $base
@@ -30,5 +40,5 @@ function ebpf-ami-btf() {
 }
 
 function ebpf-dump-btf() {
-    bpftool btf dump file $1
+  bpftool btf dump file $1
 }
