@@ -144,6 +144,7 @@ function docker-mems {
   numfmt --field=2 --from-unit=1024 --to=iec-i --suffix B </proc/meminfo | sed 's/ kB//'
   numfmt --field=2 --from-unit=1024 --to=iec-i --suffix B </sys/fs/cgroup/memory/memory.stat | sed 's/ kB//'
 }
+
 function docker-build-with-proxy {
   set -x
   if [ -n "$HTTP_PROXY" ]; then
@@ -151,4 +152,18 @@ function docker-build-with-proxy {
   fi
   local cmd="docker build $arg $@"
   eval $cmd
+}
+
+function docker-image-exist {
+  # TODO
+}
+
+function docker-pull-if-not-exist {
+  # TODO
+  local image=$1
+  if [[ $(docker-image-exist $image) == "true" ]]; then
+    echo "$image exist"
+    return
+  fi
+  docker pull $image
 }

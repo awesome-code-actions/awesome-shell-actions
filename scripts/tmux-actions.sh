@@ -8,6 +8,10 @@ function tmux-set-panel-title() {
     title=$1
     tmux select-pane -T $title
 }
+function tmux-echo-panel-title() {
+    title=$1
+    echo -ne "\033]0;"$title"\007"
+}
 
 function tmux-set-window-title() {
     title=$1
@@ -101,4 +105,26 @@ function tmux-create-inside-tmux() {
     local name=$1
     tmux new -s "$name" -d
     tmux switch -t $name
+}
+
+
+function tmuxc-kill-other-panel() {
+  tmux kill-pane -a
+}
+
+function tmuxc-split-right-panel() {
+  tmux split-window -h
+}
+
+function tmuxc-split-down-panel() {
+  tmux split-window
+}
+
+function tmuxc-edit-config-file() {
+  vim ~/.tmux.conf
+}
+
+function tmuxc-select-sessions() {
+  local n=$(tmux ls | awk '{print $1}' | tr -d ':' | fzf)
+  tmux switch-client -t $n
 }
