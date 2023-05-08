@@ -5,7 +5,7 @@ function _prepare_kind_cluster_config() {
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 networking:
-  ipFamily: ipv4
+  ipFamily: dual
   apiServerAddress: "127.0.0.1"
 nodes:
 - role: control-plane
@@ -19,7 +19,7 @@ function _prepare_kind_cluster_config_3() {
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 networking:
-  ipFamily: ipv4
+  ipFamily: dual
   apiServerAddress: "127.0.0.1"
 nodes:
 - role: control-plane
@@ -44,6 +44,18 @@ function kind-create-1.21.1() {
   local name=${1:-"k-1-21-1"}
   _prepare_kind_cluster_config /tmp/cluster.yaml
   kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.21.1
+}
+
+function kind-create-1.24.3-ipv6() {
+  local name=${1:-"k-1-24-3"}
+  local node=$2
+  if [ -z "$node" ]; then
+    _prepare_kind_cluster_config /tmp/cluster.yaml
+  else
+    _prepare_kind_cluster_config_3 /tmp/cluster.yaml
+  fi
+
+  kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.24.3
 }
 
 function kind-create-1.24.3() {
@@ -79,6 +91,11 @@ function kind-list-image() {
   dockerhub-list-tags kindest/node
 }
 
+function kind-load-image-in-current() {
+  local cluster=$(cat ~/.kube/kind.current)
+  local image=$1
+  kind load docker-image $image --name $cluster
+}
 function kind-load-image() {
   # @arg-len: 2
   # @fzf-backup
@@ -101,6 +118,7 @@ function kind-source-kubeconfig() {
     cluster=$(kind get clusters | fzf)
   fi
   kind get kubeconfig --name=$cluster >~/.kube/$cluster
+  echo "$cluster" >~/.kube/kind.current
   local ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cluster-control-plane)
   echo $cluster $ip
   export KUBECONFIG=~/.kube/$cluster
