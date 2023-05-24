@@ -147,7 +147,11 @@ START
 function ip-range() {
   ip=$1
   mask=$2
-  ipcalc "$ip/$mask"
+  if [ -z "$mask" ]; then
+    ipcalc "$ip"
+  else
+    ipcalc "$ip/$mask"
+  fi
 }
 
 # scan unused ip
