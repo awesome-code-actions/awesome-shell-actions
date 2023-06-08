@@ -106,13 +106,6 @@ function veth-show() {
   return
 }
 
-function subnet-range() {
-  ip=$1
-  mask=$2
-  echo "$ip $mask"
-  ipcalc "$ip/$mask"
-}
-
 function route-show() {
   local routes=$(route -n | tail -n +3 | awk '{print $1,$2,$3,$8}')
   local output=$(
