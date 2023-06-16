@@ -27,4 +27,6 @@ function openssl-check-cert() {
   set -x
   local domain=$1
   openssl s_client -servername $domain -connect $domain:443 | openssl x509 -noout -dates
+  #  kubectl get secret dex.tls -n cpaas-system -o jsonpath="{.data.tls\.crt}" | base64 --decode | openssl x509 -noout -text  -fingerprint -sha256 -inform pem  |grep Fin
+  #  echo | openssl s_client -servername 192.168.128.27/v2/ -connect 192.168.128.27:443 |openssl x509 -noout -text  -fingerprint -sha256 -inform pem
 }
