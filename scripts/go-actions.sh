@@ -1,31 +1,31 @@
 #!/usr/bin/env bash
 
 function go-test-all() {
-    go test -v ./...
+  go test -v ./...
 }
 
 function go-use-china-proxy() {
-    go env -w GOPROXY=https://goproxy.cn,direct
+  go env -w GOPROXY=https://goproxy.cn,direct
 }
 
 function go-unset-go-proxy() {
-    unset GOPROXY
+  unset GOPROXY
 }
 
 function go-run-one-test() {
-    local test=$(go-list-test | fzf)
-    local t=$(echo $test | cut -f1 -d' ')
-    local p=$(echo $test | cut -f2 -d' ')
-    echo "$t" "$p"
-    add-history go test -v -run "$t" "$p"
-    go test -v -run "$t" "$p"
+  local test=$(go-list-test | fzf)
+  local t=$(echo $test | cut -f1 -d' ')
+  local p=$(echo $test | cut -f2 -d' ')
+  echo "$t" "$p"
+  add-history go test -v -run "$t" "$p"
+  go test -v -run "$t" "$p"
 
 }
 
 function go-list-test() {
-    local testlist=$(go test ./... -list=. | grep -v '?')
-    exec 3<<<"$testlist"
-    python3 - <<-'START'
+  local testlist=$(go test ./... -list=. | grep -v '?')
+  exec 3<<<"$testlist"
+  python3 - <<-'START'
 	import sys
 	import os
 	data=os.read(3,10240).decode("utf-8")
@@ -43,3 +43,13 @@ function go-list-test() {
         	print("go test -v -run ",t, p)
 	START
 }
+
+function go-static-build() (
+  rm ./main && CC=/usr/bin/musl-gcc CGO_ENABLED=1 go build -v -ldflags '-linkmode=external -extldflags=-static' -v main.go && ldd ./main
+)
+
+function go-pprof-cpu-flamegraph() (
+  local url=$1
+  go tool pprof -raw -output=cpu.txt "$url/profile?seconds=20"
+
+)

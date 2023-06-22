@@ -22,10 +22,24 @@ function test-tcp-connect {
   nc -z -v $ip $port
 }
 
+function docker-bridge-info() (
+  local name=$1
+  if [[ "$name" == "docker0" ]]; then
+    echo "(default docker bridge)"
+    return
+  fi
+  if echo "$name" | grep -q 'br-'; then
+    local id=$(echo $name | awk -F '-' '{print $2}')
+    local network=$(docker network ls | grep $id | awk '{print $2}')
+    echo "(docker bridge $network)"
+    return
+  fi
+)
 function bridge-eyes() {
   local all_bridges=$(ip --json link show type bridge | jq -r '.[].ifname')
   echo "$all_bridges" | while read bridge; do
-    echo "show info of bridge $bridge"
+    local docker_bridge_info=$(docker-bridge-info $bridge)
+    echo "show info of bridge $bridge $docker_bridge_info"
     bridge-show $bridge
   done
   return
@@ -41,6 +55,16 @@ function bridge-show() {
     echo "  show info of $ifname"
     bridge-if-show $ifname
   done
+}
+
+function bridge-if-show() {
+  local ifname=$1
+  if echo "$ifname" | grep -q '^veth'; then
+    veth-show $ifname
+    return
+  fi
+  local eth_type=$(ethtool -i $ifname | grep 'driver')
+  echo "    eth_type $eth_type"
 }
 
 function docker-list-veth() {
@@ -74,29 +98,12 @@ function docker-find-veth() {
   done
 }
 
-function bridge-if-show() {
-  local ifname=$1
-  if echo "$ifname" | grep '^veth'; then
-    veth-show $ifname
-    return
-  fi
-  local eth_type=$(ethtool -i $ifname | grep 'driver')
-  echo "    eth_type $eth_type"
-}
-
 function veth-show() {
   # TODO just iter all docker ns
   local veth=$1
   local docker=$(docker-list-veth | grep "$veth")
-  echo "  used in docker $docker"
+  echo "    used in docker $docker"
   return
-}
-
-function subnet-range() {
-  ip=$1
-  mask=$2
-  echo "$ip $mask"
-  ipcalc "$ip/$mask"
 }
 
 function route-show() {
@@ -147,7 +154,11 @@ START
 function ip-range() {
   ip=$1
   mask=$2
-  ipcalc "$ip/$mask"
+  if [ -z "$mask" ]; then
+    ipcalc "$ip"
+  else
+    ipcalc "$ip/$mask"
+  fi
 }
 
 # scan unused ip
