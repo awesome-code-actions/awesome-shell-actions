@@ -27,6 +27,17 @@ function default-proxy() {
   set-proxy http://127.0.0.1:20172
 }
 
+function default-proxy-kuku() {
+  set-proxy http://172.29.230.34:20172
+}
+function default-proxy-baba() {
+  set-proxy http://47.122.17.109:2017
+}
+
+function default-proxy-no-rule() {
+  set-proxy http://127.0.0.1:20171
+}
+
 function unset-all-proxy() {
   unset HTTP_PROXY
   unset HTTPS_PROXY
