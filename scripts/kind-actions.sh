@@ -79,7 +79,7 @@ function kind-create-1.24.3() {
     _prepare_kind_cluster_config_3 /tmp/cluster.yaml
   fi
 
-  kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.24.3
+  kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.27.3
 }
 
 function default-cluster-config() {
