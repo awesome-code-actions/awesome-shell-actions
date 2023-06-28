@@ -115,10 +115,9 @@ function git-add-modify-files-commit-no-edit-and-force-push-origin() {
     git-force-push-origin
 }
 
-function git-reset-all() {
-    zd
-    git reset --hard HEAD
-    git clean -fxd
+function git-unset-http-proxy() {
+    git config --global --unset http.proxy
+    git config --global --unset https.proxy
 }
 
 function git-reset-all() {
