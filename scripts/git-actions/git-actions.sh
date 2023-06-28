@@ -121,6 +121,12 @@ function git-reset-all() {
     git clean -fxd
 }
 
+function git-reset-all() {
+    zd
+    git reset --hard HEAD
+    git clean -fxd
+}
+
 function git-search-all-history() {
     local msg=$1
     git rev-list --all | (
