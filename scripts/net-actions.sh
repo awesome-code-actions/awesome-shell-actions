@@ -51,8 +51,8 @@ function bridge-eyes() {
   return
 }
 
-function bridge-show() {
-    }
+function virt-bridge-show() {
+}
 function bridge-show() {
   local b=$1
   local ifnames=$(ip --json link show master $b | jq -r '.[].ifname')
