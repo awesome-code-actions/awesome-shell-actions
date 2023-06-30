@@ -40,10 +40,13 @@ function bridge-eyes() {
   local all_bridges=$(ip --json link show type bridge | jq -r '.[].ifname')
   echo "$all_bridges" | while read bridge; do
     local docker_bridge_info=$(docker-bridge-info $bridge)
-    echo "show info of bridge $bridge $docker_bridge_info"
     if [ "$bridge" == "virbr0" ]; then
+      echo "show info of libvirt bridge $bridge"
+      bridge-show $bridge
+    else
+      echo "show info of bridge $bridge $docker_bridge_info"
+      bridge-show $bridge
     fi
-    bridge-show $bridge
   done
   return
 }
