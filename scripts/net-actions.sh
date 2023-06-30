@@ -66,10 +66,6 @@ function bridge-if-show() {
   fi
   local eth_type=$(ethtool -i $ifname | grep 'driver')
   echo "    eth_type $eth_type"
-  if [[ "tun" == "$eth_type" and "" ]]; then
-    local mac=$(ip link show $ifname | grep 'link/ether' | awk '{print $2}')
-    echo "    mac $mac"
-  fi
 }
 
 function docker-list-veth() {
