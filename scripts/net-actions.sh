@@ -35,6 +35,7 @@ function docker-bridge-info() (
     return
   fi
 )
+
 function bridge-eyes() {
   local all_bridges=$(ip --json link show type bridge | jq -r '.[].ifname')
   echo "$all_bridges" | while read bridge; do
