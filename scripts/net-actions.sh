@@ -41,6 +41,8 @@ function bridge-eyes() {
   echo "$all_bridges" | while read bridge; do
     local docker_bridge_info=$(docker-bridge-info $bridge)
     echo "show info of bridge $bridge $docker_bridge_info"
+    if [ "$bridge" == "virbr0" ]; then
+    fi
     bridge-show $bridge
   done
   return
