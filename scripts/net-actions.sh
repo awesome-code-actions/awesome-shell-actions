@@ -52,7 +52,16 @@ function bridge-eyes() {
 }
 
 function virt-bridge-show() {
+  local b=$1
+  local ifnames=$(ip --json link show master $b | jq -r '.[].ifname')
+  echo "$ifnames" | while read ifname; do
+    if [ -z "$ifname" ]; then
+      continue
+    fi
+    virt-bridge-if-show $ifname
+  done
 }
+
 function bridge-show() {
   local b=$1
   local ifnames=$(ip --json link show master $b | jq -r '.[].ifname')
