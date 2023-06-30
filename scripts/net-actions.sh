@@ -78,7 +78,8 @@ function virt-bridge-if-show() {
   local ifname=$1
   local eth_type=$(ethtool -i $ifname | grep 'driver')
   echo "  $ifname eth_type $eth_type"
-  
+virsh list |grep runn | awk '{print $2}' | xargs -I{} virsh domiflist  {} | grep network | awk '{print $1}'
+
 }
 function bridge-if-show() {
   local ifname=$1
