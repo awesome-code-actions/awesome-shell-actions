@@ -53,7 +53,7 @@ function bridge-show() {
     if [ -z "$ifname" ]; then
       continue
     fi
-    echo "  show info of $ifname"
+    echo "  show info of $ifname xx $b"
     bridge-if-show $ifname
   done
 }
