@@ -77,7 +77,8 @@ function bridge-show() {
 function virt-bridge-if-show() {
   local ifname=$1
   local eth_type=$(ethtool -i $ifname | grep 'driver')
-  echo "$ifname eth_type $eth_type"
+  echo "  $ifname eth_type $eth_type"
+  
 }
 function bridge-if-show() {
   local ifname=$1
