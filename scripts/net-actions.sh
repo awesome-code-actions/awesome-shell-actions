@@ -77,10 +77,10 @@ function bridge-show() {
 function virt-bridge-if-show() {
   local ifname=$1
   local eth_type=$(ethtool -i $ifname | grep 'driver')
-  echo "  $ifname eth_type $eth_type"
+  echo "  show info of $ifname eth_type $eth_type"
   for dom in $(virsh list |grep runn | awk '{print $2}') ; do
     if virsh domiflist $dom | grep -q $ifname; then
-      echo "   used in vm $dom"
+      echo "      used in vm $dom"
     fi
   done
 
