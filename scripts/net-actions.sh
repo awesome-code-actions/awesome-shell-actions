@@ -66,6 +66,7 @@ function bridge-if-show() {
   fi
   local eth_type=$(ethtool -i $ifname | grep 'driver')
   echo "    eth_type $eth_type"
+  echo "    eth_type $eth_type"
 }
 
 function docker-list-veth() {
