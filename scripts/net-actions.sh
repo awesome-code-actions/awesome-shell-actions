@@ -82,7 +82,6 @@ function virt-bridge-if-show() {
     if virsh domiflist $dom | grep -q $ifname; then
       echo "   used in vm $dom"
     fi
-    echo "   used in vm $dom mac"
   done
 
 }
