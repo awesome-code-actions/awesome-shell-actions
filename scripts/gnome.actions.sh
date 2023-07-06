@@ -11,6 +11,7 @@ function gnome-shell-eval() {
 }
 
 function gnome-shell-eval-json() {
+  # TODO buged
   local cmd="$@"
   local raw=$(gdbus call -e -d org.gnome.Shell -o /org/gnome/Shell -m org.gnome.Shell.Eval "$cmd")
   echo "$raw" >/tmp/alt-tab.raw
@@ -75,7 +76,6 @@ function gnome-raise() {
   )"
 }
 
-
 function gnome-alt-tab() {
   gnome-shell-eval-json "$(
     cat <<\EOF
@@ -129,7 +129,7 @@ EOF
 }
 
 function gnome-focus-sel() {
-    local id=$(gnome-alt-tab  | jq -r '.[]|"\(.)"' | fzf | jq -r '.id')
-    echo $id
-    gnome-focus $id
+  local id=$(gnome-alt-tab | jq -r '.[]|"\(.)"' | fzf | jq -r '.id')
+  echo $id
+  gnome-focus $id
 }
