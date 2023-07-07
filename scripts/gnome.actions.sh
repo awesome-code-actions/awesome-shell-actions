@@ -71,11 +71,6 @@ function gnome-nth-focused-window() {
   gnome-alt-tab | jq ".[]|select(.index==$1)"
 }
 
-function gnome-raise() {
-  gnome-shell-eval "$(
-  )"
-}
-
 function gnome-alt-tab() {
   gnome-shell-eval-json "$(
     cat <<\EOF
