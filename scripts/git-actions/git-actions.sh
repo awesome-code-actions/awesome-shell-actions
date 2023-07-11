@@ -61,9 +61,9 @@ function git-which-tag-contains-this-file-and-text() {
 
 function git-which-tag-contains-this-text() {
   # 获取当前存储库的分支列表
-  local branches=
   # 遍历每个分支
   while read -r branch ;do
+    echo "$branch"
   done <<< $(git branch --list | grep -v '*')
 #   for branch in $branches; do
 #     # 切换到分支
