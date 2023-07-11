@@ -61,20 +61,22 @@ function git-which-tag-contains-this-file-and-text() {
 
 function git-which-tag-contains-this-text() {
   # 获取当前存储库的分支列表
-  local branches=$(git branch --list | grep -v '*')
+  local branches=
   # 遍历每个分支
-  for branch in $branches; do
-    # 切换到分支
-    git checkout $branch &>/dev/null
+  while read -r branch ;do
+  done <<< $(git branch --list | grep -v '*')
+#   for branch in $branches; do
+#     # 切换到分支
+#     git checkout $branch &>/dev/null
 
-    # 搜索字符串
-    echo "Searching in branch: $branch"
-    local out=$(git grep $1)
-    if [[ -z "$out" ]]; then
-      echo "Not found"
-    else
-      echo " -- $out --"
-    fi
+#     # 搜索字符串
+#     echo "Searching in branch: $branch"
+#     local out=$(git grep $1)
+#     if [[ -z "$out" ]]; then
+#       echo "Not found"
+#     else
+#       echo " -- $out --"
+#     fi
   done
 
 }
