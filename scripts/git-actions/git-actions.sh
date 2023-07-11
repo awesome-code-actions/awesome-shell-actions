@@ -53,10 +53,29 @@ function git-which-branch-contains-this-commit() {
 }
 
 # 查看包含某个特定文件 且文件内含有特定字符串的tag
-function git-which-tag-contains-this-text() {
+function git-which-tag-contains-this-file-and-text() {
     file=$1
     text=$2
     ~/.zsh/awesome-shell-actions/scripts/git-actions/git-which-tag-contains-this-text.cr $file $text
+}
+
+function git-which-tag-contains-this-text() {
+    #!/bin/bash
+
+# 获取当前存储库的分支列表
+branches=$(git branch --list | cut -c 3-)
+
+# 遍历每个分支
+for branch in $branches
+do
+  # 切换到分支
+  git checkout $branch &> /dev/null
+  
+  # 搜索字符串
+  echo "Searching in branch: $branch"
+  git grep <search-string>
+done
+
 }
 
 function git-commit-no-edit() {
