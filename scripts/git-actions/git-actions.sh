@@ -69,7 +69,7 @@ function git-which-tag-contains-this-text() {
 
     # 搜索字符串
     echo "Searching in branch: $branch"
-    git grep $1
+    local git grep $1
   done
 
 }
