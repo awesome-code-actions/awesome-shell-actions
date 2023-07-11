@@ -73,7 +73,7 @@ function git-which-tag-contains-this-text() {
     if [[ -z "$out" ]]; then
       echo "Not found"
     else
-      echo "$out"
+      echo " -- $out --"
     fi
   done
 
