@@ -64,19 +64,19 @@ function git-which-tag-contains-this-text() {
   # 遍历每个分支
   while read -r branch; do
     echo "$branch"
+    git checkout $branch &>/dev/null
+
+    # 搜索字符串
+    echo "Searching in branch: $branch"
+    local out=$(git grep $1)
+    if [[ -z "$out" ]]; then
+      echo "Not found"
+    else
+      echo " -- $out --"
+    fi
   done <<<$(git branch --list | grep -v '*')
   #   for branch in $branches; do
   #     # 切换到分支
-  #     git checkout $branch &>/dev/null
-
-  #     # 搜索字符串
-  #     echo "Searching in branch: $branch"
-  #     local out=$(git grep $1)
-  #     if [[ -z "$out" ]]; then
-  #       echo "Not found"
-  #     else
-  #       echo " -- $out --"
-  #     fi
   #   done
 
 }
