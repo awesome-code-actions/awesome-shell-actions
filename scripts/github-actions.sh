@@ -4,6 +4,6 @@ function git-clone-my-repo() {
 }
 
 function git-() {
-  # TODO
-  echo ""
+    local cfg=$(cat <<EOF
+EOF)
 }
