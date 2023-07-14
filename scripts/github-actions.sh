@@ -15,4 +15,6 @@ EOF
   echo "$cfg" > ~/.ssh/config.d/github-ssh-over-https
 }
 
-function github-enable-ssh-over-https() {
+function github-disable-ssh-over-https() {
+  rm  ~/.ssh/config.d/github-ssh-over-https || true
+}
