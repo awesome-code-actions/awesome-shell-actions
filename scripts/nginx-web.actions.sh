@@ -1,2 +1,4 @@
 #!/bin/bash
-function nginx-open-directives
+function nginx-open-directives(){
+
+}
