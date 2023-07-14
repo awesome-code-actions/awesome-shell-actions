@@ -5,5 +5,7 @@ function git-clone-my-repo() {
 
 function git-() {
     local cfg=$(cat <<EOF
-EOF)
+EOF
+)
+
 }
