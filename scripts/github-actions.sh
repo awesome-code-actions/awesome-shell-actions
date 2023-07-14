@@ -3,7 +3,7 @@ function git-clone-my-repo() {
   echo ""
 }
 
-function git-() {
+function github-use-ssh-over-https() {
   local cfg=$(
     cat <<EOF
 Host github.com
@@ -12,6 +12,6 @@ Host github.com
     User git
 EOF
   )
-  echo $cfg
+  echo $cfg > ~/.ssh/config
 
 }
