@@ -6,3 +6,7 @@ function virt-view() {
     virt-start $vm
     virt-viewer --connect qemu:///system $vm &!
 }
+
+function virt-connect-local() {
+
+}
