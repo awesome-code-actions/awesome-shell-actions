@@ -71,6 +71,19 @@ function gnome-nth-focused-window() {
   gnome-alt-tab | jq ".[]|select(.index==$1)"
 }
 
+function gnome-screen() {
+   local out=/home/cong/Pictures/shoot.$(date +%s).jpg
+    gnome-screenshot -a  -f $out
+    while true;do
+    if [ -f "$out" ];then
+            sleep 1
+            QT_QPA_PLATFORM=wayland ksnip -e $out &!
+            break
+    fi
+    sleep 1
+    done
+}
+
 function gnome-alt-tab() {
   gnome-shell-eval-json "$(
     cat <<\EOF
