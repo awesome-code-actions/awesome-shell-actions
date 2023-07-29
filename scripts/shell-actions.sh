@@ -23,7 +23,7 @@ function set-proxy() {
 
 }
 
-function default-proxy() {
+function default-gpt-proxy() {
   set-proxy http://127.0.0.1:20172
 }
 

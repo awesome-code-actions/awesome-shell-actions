@@ -165,6 +165,3 @@ function git-sync() {
   $base/git-sync $p
 }
 
-function git-default-proxy() {
-  git config --global http.proxy http://127.0.0.1:20172
-}
