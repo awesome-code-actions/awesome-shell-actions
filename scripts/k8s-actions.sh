@@ -322,7 +322,7 @@ function k-list-deployment-cpu-req() {
   for ns in $namespaces; do
     local deployments=$(kubectl -n $ns get deploy -o jsonpath="{.items[*].metadata.name}")
     for deploy in $deployments; do
-      cpu_requests=$(kubectl -n $ns get deploy $deploy -o json | jq -r '.spec.template.spec.containers[].resources.requests.cpu')
+      local cpu_requests=$(kubectl -n $ns get deploy $deploy -o json | jq -r '.spec.template.spec.containers[].resources.requests.cpu')
       printf "$ns | $deploy | $cpu_requests |\n"
     done
   done
