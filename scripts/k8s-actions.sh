@@ -316,3 +316,6 @@ function kubectl-fetch-logs() {
     kubectl logs -n $ns $po --previous >$po.previous.log
   done < <(kubectl get po -n $ns | grep $name | awk '{print $1}')
 }
+
+functonk-create-ingress() {
+}
