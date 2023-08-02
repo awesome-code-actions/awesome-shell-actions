@@ -317,5 +317,13 @@ function kubectl-fetch-logs() {
   done < <(kubectl get po -n $ns | grep $name | awk '{print $1}')
 }
 
-functonk-create-ingress() {
+function k-list-deployment-cpu-req() {
+  local namespaces=$(kubectl get ns -o jsonpath="{.items[*].metadata.name}")
+  for ns in $namespaces; do
+    local deployments=$(kubectl -n $ns get deploy -o jsonpath="{.items[*].metadata.name}")
+    for deploy in $deployments; do
+      cpu_requests=$(kubectl -n $ns get deploy $deploy -o json | jq -r '.spec.template.spec.containers[].resources.requests.cpu')
+      printf "$ns | $deploy | $cpu_requests |\n"
+    done
+  done
 }
