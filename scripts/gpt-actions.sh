@@ -1,5 +1,10 @@
 #!/bin/bash
 function gpt-install() {
- pip install shell-gpt
+  python3 -m pip install shell-gpt
   return
 }
+
+function g() (
+  default-gpt-proxy
+  return
+)
