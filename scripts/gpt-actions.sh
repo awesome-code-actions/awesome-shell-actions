@@ -6,5 +6,6 @@ function gpt-install() {
 
 function g() (
   default-gpt-proxy
+  sgpt "$@"
   return
 )
