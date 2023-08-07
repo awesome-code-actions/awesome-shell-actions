@@ -108,6 +108,14 @@ function kind-load-image-in-current() {
   local image=$1
   kind load docker-image $image --name $cluster
 }
+
+function kind-pull-andload-image-in-current() {
+    docker pull 
+  local cluster=$(cat ~/.kube/kind.current)
+  local image=$1
+  kind load docker-image $image --name $cluster
+}
+
 function kind-load-image() {
   # @arg-len: 2
   # @fzf-backup
