@@ -110,9 +110,9 @@ function kind-load-image-in-current() {
 }
 
 function kind-pull-andload-image-in-current() {
-    docker pull 
   local cluster=$(cat ~/.kube/kind.current)
   local image=$1
+  docker pull $image
   kind load docker-image $image --name $cluster
 }
 
