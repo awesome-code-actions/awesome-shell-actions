@@ -1,16 +1,6 @@
 #!/bin/bash
 
-function gnome-init-extensions() {
-    # current gnome shell version 44.3
-    # https://extensions.gnome.org/extension/5090/space-bar/ # 在topbar听过命名空间的增删改查功能
-    # https://extensions.gnome.org/extension/841/freon/     #显示cpu/磁盘温度
-    # https://extensions.gnome.org/extension/3724/net-speed-simplified/ # 显示网速
-    # https://extensions.gnome.org/extension/4630/no-titlebar-when-maximized/  # 隐藏title bra
-    # https://extensions.gnome.org/extension/1287/unite/                       # 也是隐藏title bar 但有的时候不好用
-    #  https://extensions.gnome.org/extension/3960/transparent-top-bar-adjustable-transparency/ #透明topbar
-    # https://extensions.gnome.org/extension/615/appindicator-support/        # 在topbar上显示icon
-    return
-}
+
 function gnome-cur-version() {
   gnome-shell --version
 }
