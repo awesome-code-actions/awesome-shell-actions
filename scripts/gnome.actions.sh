@@ -7,6 +7,7 @@ function gnome-init-extensions() {
     # https://extensions.gnome.org/extension/3724/net-speed-simplified/ # 显示网速
     # https://extensions.gnome.org/extension/4630/no-titlebar-when-maximized/  # 隐藏title bra
     # https://extensions.gnome.org/extension/1287/unite/                       # 也是隐藏title bar 但有的时候不好用
+    #  https://extensions.gnome.org/extension/3960/transparent-top-bar-adjustable-transparency/ #透明topbar
     # 
     return
 }
