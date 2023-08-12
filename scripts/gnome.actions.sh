@@ -141,3 +141,8 @@ function gnome-focus-sel() {
   echo $id
   gnome-focus $id
 }
+
+function gnome-init-extensions() {
+    # 
+    return
+}
