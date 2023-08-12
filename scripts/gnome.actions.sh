@@ -6,7 +6,7 @@ function gnome-init-extensions() {
     # https://extensions.gnome.org/extension/841/freon/     #显示cpu/磁盘温度
     # https://extensions.gnome.org/extension/3724/net-speed-simplified/ # 显示网速
     # https://extensions.gnome.org/extension/4630/no-titlebar-when-maximized/  # 隐藏title bra
-    # 
+    # https://extensions.gnome.org/extension/1287/unite/                       # 也是 
     # 
     return
 }
