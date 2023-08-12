@@ -1,7 +1,8 @@
 #!/bin/bash
 
 function gnome-init-extensions() {
-    # https://extensions.gnome.org/extension/5090/space-bar/ # 在topbar听过命名空间的增删gai cha
+    # https://extensions.gnome.org/extension/5090/space-bar/ # 在topbar听过命名空间的增删改查功能
+    # 
     return
 }
 function gnome-cur-version() {
