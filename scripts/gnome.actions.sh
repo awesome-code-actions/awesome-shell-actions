@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function gnome-init-extensions() {
+    # https://extensions.gnome.org/extension/5090/space-bar/ # 
+    return
+}
 function gnome-cur-version() {
   gnome-shell --version
 }
@@ -140,9 +144,4 @@ function gnome-focus-sel() {
   local id=$(gnome-alt-tab | jq -r '.[]|"\(.)"' | fzf | jq -r '.id')
   echo $id
   gnome-focus $id
-}
-
-function gnome-init-extensions() {
-    # 
-    return
 }
