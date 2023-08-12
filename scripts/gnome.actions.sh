@@ -4,7 +4,8 @@ function gnome-init-extensions() {
     # current gnome shell version 44.3
     # https://extensions.gnome.org/extension/5090/space-bar/ # 在topbar听过命名空间的增删改查功能
     # https://extensions.gnome.org/extension/841/freon/     #显示cpu/磁盘温度
-    # https://extensions.gnome.org/extension/3724/net-speed-simplified/ #
+    # https://extensions.gnome.org/extension/3724/net-speed-simplified/ # 显示网速
+    # 
     # 
     return
 }
