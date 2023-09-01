@@ -31,5 +31,6 @@ function openssl-check-cert() {
   #  echo | openssl s_client -servername 192.168.128.27/v2/ -connect 192.168.128.27:443 |openssl x509 -noout -text  -fingerprint -sha256 -inform pem
 }
 
-function openssl-prive() {
+function openssl-privatekey-to-ras-privatekey() {
+
 }
