@@ -5,6 +5,7 @@ function openssl-gen-cert() {
     -keyout example.key -out example.crt -subj "/CN=example.com" \
     -addext "subjectAltName=DNS:example.com,DNS:www.example.net,IP:10.0.0.1"
   openssl rsa -in example.key -out example-rsa.key
+  openssl rsa -in example.key -traditional -out example-rsa.key
 }
 
 function openssl-gen-cert-expired() {
