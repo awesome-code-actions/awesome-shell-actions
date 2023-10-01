@@ -176,14 +176,15 @@ function git-rever-book-zero() {
     git checkout $commit
 }
 
-function git-reverse-book-next-switch() {
+function git-reverse-book-next-checkout() {
 
 }
+
 function git-reverse-book-next() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
     local next=$(cat $change|grep $cur -B 1)
     local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
     echo "$cur $next $nextnext"
-    git checkout $next
+    git reset --hard $next
 }
