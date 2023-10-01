@@ -170,7 +170,8 @@ function git-reverse-book-init() {
     git log --pretty-format="%H"  --follow xx > xx.change
 }
 
-function git-rever-book-() {
+function git-rever-book-zero() {
+    
 }
 function git-reverse-book-next() {
     local change=$1
