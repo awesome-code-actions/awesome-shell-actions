@@ -165,60 +165,61 @@ function git-sync() {
   $base/git-sync $p
 }
 
-
 function git-reverse-book-init() {
-    git log --pretty-format="%H"  --follow xx > xx.change
+  git log --pretty-format="%H" --follow xx >xx.change
 }
 
 function git-rever-book-zero() {
-    local change=$1
-    local commit=$(cat "$change" | tail -n 1)
-    echo "zero $commit"
-    git reset --hard $commit
+  local change=$1
+  local commit=$(cat "$change" | tail -n 1)
+  echo "zero $commit"
+  git reset --hard $commit
 }
 
 function git-reverse-book-pre-soft() {
-    local change=$1
-    local cur=$(git log --pretty=format:'%H'  |head -n 1)
-    local pre=$(cat $change|grep $cur -A 1)
-    echo "soft $cur $pre"
-    git reset --soft $pre
+  local change=$1
+  local cur=$(git log --pretty=format:'%H' | head -n 1)
+  local pre=$(cat $change | grep $cur -A 1)
+  echo "soft $cur $pre"
+  git reset --soft $pre
 }
 
 function git-reverse-book-pre-hard() {
-    local change=$1
-    local cur=$(git log --pretty=format:'%H'  |head -n 1)
-    local pre=$(cat $change|grep $cur -A 1)
-    echo "hard $cur $pre"
-    git reset --hard $pre
+  local change=$1
+  local cur=$(git log --pretty=format:'%H' | head -n 1)
+  local pre=$(cat $change | grep $cur -A 1)
+  echo "hard $cur $pre"
+  git reset --hard $pre
 }
 
 function git-reverse-book-next-soft() {
-    set -x
-    local change=$1
-    local cur=$(git log --pretty=format:'%H'  |head -n 1)
-    local next=$(cat $change|grep $cur -B 1 | head -n 1)
-    # local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
-    echo "soft $cur $next"
-    git reset --soft $next
+  set -x
+  local change=$1
+  local cur=$(git log --pretty=format:'%H' | head -n 1)
+  local next=$(cat $change | grep $cur -B 1 | head -n 1)
+  # local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
+  echo "soft $cur $next"
+  git reset --soft $next
 }
 
 function git-reverse-book-cur-hard() {
-    set -x
-    local cur=$(git log --pretty=format:'%H'  |head -n 1)
-    git reset --hard "$cur"
+  set -x
+  local cur=$(git log --pretty=format:'%H' | head -n 1)
+  git reset --hard "$cur"
 }
 
 function git-reverse-book-next() {
-
+  git-reverse-book-cur-hard
+  git-reverse-book-next-soft ./grammar.js.change
+  git log -n 1
 }
 
 function git-reverse-book-next-hard() {
-    set -x
-    local change=$1
-    local cur=$(git log --pretty=format:'%H'  |head -n 1)
-    local next=$(cat $change|grep $cur -B 1|head -n 1)
-    local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
-    echo "hard |$cur |$next| "
-    git reset --hard "$next"
+  set -x
+  local change=$1
+  local cur=$(git log --pretty=format:'%H' | head -n 1)
+  local next=$(cat $change | grep $cur -B 1 | head -n 1)
+  local nextnext=$(cat $change | grep $cur -B 2 | tail -n 1)
+  echo "hard |$cur |$next| "
+  git reset --hard "$next"
 }
