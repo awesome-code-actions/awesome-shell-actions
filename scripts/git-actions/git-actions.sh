@@ -208,6 +208,6 @@ function git-reverse-book-next-hard() {
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
     local next=$(cat $change|grep $cur -B 1)
     local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
-    echo "hard |$cur $next| "
+    echo "hard |$cur |$next| "
     git reset --hard "$next"
 }
