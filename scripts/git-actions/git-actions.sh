@@ -213,8 +213,7 @@ function git-reverse-book-next() {
   git log -n 1
   local cur=$(git log --pretty=format:'%H' | head -n 1)
   local progress=$(cat -n $1 | grep $cur)
-  echo "$progress/$(cat ./)"
-  
+  echo "$progress/$(cat $1 | wc -l)"
 }
 
 function git-reverse-book-next-hard() {
