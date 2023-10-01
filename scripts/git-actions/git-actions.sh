@@ -181,10 +181,18 @@ function git-reverse-book-pre-soft() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
     local pre=$(cat $change|grep $cur -A 1)
-    # local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
-    echo "soft $cur $nre"
-    git reset --soft $next
+    echo "soft $cur $pre"
+    git reset --soft $pre
 }
+
+function git-reverse-book-pre-hard() {
+    local change=$1
+    local cur=$(git log --pretty=format:'%H'  |head -n 1)
+    local pre=$(cat $change|grep $cur -A 1)
+    echo "hard $cur $pre"
+    git reset --soft $pre
+}
+
 function git-reverse-book-next-soft() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
