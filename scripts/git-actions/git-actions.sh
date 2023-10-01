@@ -203,6 +203,11 @@ function git-reverse-book-next-soft() {
     git reset --soft $next
 }
 
+function git-reverse-book-cur-hard() {
+    set -x
+    local cur=$(git log --pretty=format:'%H'  |head -n 1)
+    git reset --hard "$next"
+}
 function git-reverse-book-next-hard() {
     set -x
     local change=$1
