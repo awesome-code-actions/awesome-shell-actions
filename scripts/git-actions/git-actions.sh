@@ -165,3 +165,6 @@ function git-sync() {
   $base/git-sync $p
 }
 
+
+function git-sync() {
+}
