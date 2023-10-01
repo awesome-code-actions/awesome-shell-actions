@@ -209,6 +209,10 @@ function git-reverse-book-cur-hard() {
     git reset --hard "$cur"
 }
 
+function git-reverse-book-next() {
+
+}
+
 function git-reverse-book-next-hard() {
     set -x
     local change=$1
