@@ -176,6 +176,15 @@ function git-rever-book-zero() {
   git reset --hard $commit
 }
 
+function git-reverse-book-next() {
+  git-reverse-book-cur-hard
+  git-reverse-book-next-soft $1
+  git log -n 1
+  local cur=$(git log --pretty=format:'%H' | head -n 1)
+  local progress=$(cat $1 | tac | cat -n | grep $cur | awk '{print $1}')
+  echo "$progress/$(cat $1 | wc -l)"
+}
+
 function git-reverse-book-next-soft() {
   local change=$1
   local cur=$(git log --pretty=format:'%H' | head -n 1)
@@ -187,15 +196,6 @@ function git-reverse-book-next-soft() {
 function git-reverse-book-cur-hard() {
   local cur=$(git log --pretty=format:'%H' | head -n 1)
   git reset --hard "$cur"
-}
-
-function git-reverse-book-next() {
-  git-reverse-book-cur-hard
-  git-reverse-book-next-soft $1
-  git log -n 1
-  local cur=$(git log --pretty=format:'%H' | head -n 1)
-  local progress=$(cat $1 | tac | cat -n | grep $cur | awk '{print $1}')
-  echo "$progress/$(cat $1 | wc -l)"
 }
 
 function git-reverse-book-next-hard() {
