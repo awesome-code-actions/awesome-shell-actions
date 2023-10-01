@@ -193,7 +193,6 @@ function git-reverse-book-pre-hard() {
 }
 
 function git-reverse-book-next-soft() {
-  set -x
   local change=$1
   local cur=$(git log --pretty=format:'%H' | head -n 1)
   local next=$(cat $change | grep $cur -B 1 | head -n 1)
@@ -202,7 +201,6 @@ function git-reverse-book-next-soft() {
 }
 
 function git-reverse-book-cur-hard() {
-  set -x
   local cur=$(git log --pretty=format:'%H' | head -n 1)
   git reset --hard "$cur"
 }
