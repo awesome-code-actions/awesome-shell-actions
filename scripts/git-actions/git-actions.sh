@@ -173,7 +173,7 @@ function git-reverse-book-init() {
 function git-rever-book-zero() {
     local change=$1
     local commit=$(cat "$change" | tail -n 1)
-    git checkout
+    git checkout $commit
 }
 
 function git-reverse-book-next() {
