@@ -170,4 +170,5 @@ function git-reverse-book-init() {
     git log --pretty-format="%H"  --follow xx > xx.change
 }
 function git-reverse-book-next() {
+    local cur=
 }
