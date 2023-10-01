@@ -173,23 +173,23 @@ function git-reverse-book-init() {
 function git-rever-book-zero() {
     local change=$1
     local commit=$(cat "$change" | tail -n 1)
-    git checkout $commit
+    git reset --hard $commit
 }
 
-function git-reverse-book-next-checkout() {
+function git-reverse-book-next-soft() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
     local next=$(cat $change|grep $cur -B 1)
     # local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
-    echo "$cur $next"
+    echo "soft $cur $next"
     git reset --soft $next
 }
 
-function git-reverse-book-next() {
+function git-reverse-book-next-hard() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
     local next=$(cat $change|grep $cur -B 1)
     local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
-    echo "$cur $next "
+    echo "hard $cur $next "
     git reset --hard $next
 }
