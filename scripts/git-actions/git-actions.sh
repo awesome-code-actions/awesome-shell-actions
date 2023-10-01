@@ -177,6 +177,14 @@ function git-rever-book-zero() {
     git reset --hard $commit
 }
 
+function git-reverse-book-pre-soft() {
+    local change=$1
+    local cur=$(git log --pretty=format:'%H'  |head -n 1)
+    local pre=$(cat $change|grep $cur -A 1)
+    # local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
+    echo "soft $cur $nre"
+    git reset --soft $next
+}
 function git-reverse-book-next-soft() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
