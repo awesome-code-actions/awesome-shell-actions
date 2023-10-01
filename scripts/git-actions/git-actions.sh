@@ -210,7 +210,7 @@ function git-reverse-book-cur-hard() {
 
 function git-reverse-book-next() {
   git-reverse-book-cur-hard
-  git-reverse-book-next-soft ./grammar.js.change
+  git-reverse-book-next-soft $1
   git log -n 1
 }
 
