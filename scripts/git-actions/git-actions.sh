@@ -166,5 +166,7 @@ function git-sync() {
 }
 
 
-function git-sync() {
+function git-reverse-book-init() {
+}
+function git-reverse-book-next() {
 }
