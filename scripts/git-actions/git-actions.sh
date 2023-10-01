@@ -166,7 +166,7 @@ function git-sync() {
 }
 
 function git-reverse-book-init() {
-  git log --pretty-format="%H" --follow xx >xx.change
+  git log --pretty-format="%H" --follow $1 >$1.change
 }
 
 function git-rever-book-zero() {
@@ -174,22 +174,6 @@ function git-rever-book-zero() {
   local commit=$(cat "$change" | tail -n 1)
   echo "zero $commit"
   git reset --hard $commit
-}
-
-function git-reverse-book-pre-soft() {
-  local change=$1
-  local cur=$(git log --pretty=format:'%H' | head -n 1)
-  local pre=$(cat $change | grep $cur -A 1)
-  echo "soft $cur $pre"
-  git reset --soft $pre
-}
-
-function git-reverse-book-pre-hard() {
-  local change=$1
-  local cur=$(git log --pretty=format:'%H' | head -n 1)
-  local pre=$(cat $change | grep $cur -A 1)
-  echo "hard $cur $pre"
-  git reset --hard $pre
 }
 
 function git-reverse-book-next-soft() {
@@ -210,7 +194,7 @@ function git-reverse-book-next() {
   git-reverse-book-next-soft $1
   git log -n 1
   local cur=$(git log --pretty=format:'%H' | head -n 1)
-  local progress=$(cat $1 | tac | cat -n | grep $cur | awk '{print $1}' )
+  local progress=$(cat $1 | tac | cat -n | grep $cur | awk '{print $1}')
   echo "$progress/$(cat $1 | wc -l)"
 }
 
