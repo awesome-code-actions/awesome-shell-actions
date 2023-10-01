@@ -176,6 +176,9 @@ function git-rever-book-zero() {
     git checkout $commit
 }
 
+function git-reverse-book-next-switch() {
+
+}
 function git-reverse-book-next() {
     local change=$1
     local cur=$(git log --pretty=format:'%H'  |head -n 1)
