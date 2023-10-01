@@ -167,7 +167,7 @@ function git-sync() {
 
 
 function git-reverse-book-init() {
-    
+    git log --pre 
 }
 function git-reverse-book-next() {
 }
