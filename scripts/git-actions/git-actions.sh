@@ -183,5 +183,4 @@ function git-reverse-book-next() {
     local nextnext=$(cat $change|grep $cur -B 2|tail -n 1)
     echo "$cur $next"
     git checkout $next
-    git checkout $nextnext -- 
 }
