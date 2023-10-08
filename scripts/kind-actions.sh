@@ -29,7 +29,7 @@ EOL
 }
 
 function kind-create-1.16.5() {
-  local name=${1:-"k-1-19-11"}
+  local name=${1:-"k-1-16-5"}
   _prepare_kind_cluster_config /tmp/cluster.yaml
   kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.16.15
 }
