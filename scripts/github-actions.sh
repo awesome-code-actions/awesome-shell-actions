@@ -12,9 +12,9 @@ Host github.com
     User git
 EOF
   )
-  echo "$cfg" > ~/.ssh/config.d/github-ssh-over-https
+  echo "$cfg" | sudo tee /etc/ssh/ssh_config.d/github-ssh-over-https.conf
 }
 
 function github-disable-ssh-over-https() {
-  rm  ~/.ssh/config.d/github-ssh-over-https || true
+  rm /etc/ssh/ssh_config.d/github-ssh-over-https.conf || true
 }
