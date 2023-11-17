@@ -16,8 +16,8 @@ function gnome-shell-eval-json() {
   local cmd="$@"
   local raw=$(gdbus call -e -d org.gnome.Shell -o /org/gnome/Shell -m org.gnome.Shell.Eval "$cmd")
   echo "$raw" >/tmp/alt-tab.raw
-  if [-f /tmp/alt-tab.json ];then
-  rm -rf  || true
+  if [ -f /tmp/alt-tab.json ];then
+    rm -rf  /tmp/alt-tab.json
   fi
 
   python3 - <<-"START"
