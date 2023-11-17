@@ -12,6 +12,8 @@ function gnome-shell-eval() {
 }
 
 function gnome-shell-eval-json() {
+    echo "it-has-bug.jpg"
+    return
   # TODO buged
   local cmd="$@"
   local raw=$(gdbus call -e -d org.gnome.Shell -o /org/gnome/Shell -m org.gnome.Shell.Eval "$cmd")
