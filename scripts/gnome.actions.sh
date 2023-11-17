@@ -13,6 +13,7 @@ function gnome-shell-eval() {
 
 function gnome-shell-eval-json() {
     echo "it-has-bug.jpg"
+    exit
     return
   # TODO buged
   local cmd="$@"
@@ -145,4 +146,8 @@ function gnome-focus-sel() {
   local id=$(gnome-alt-tab | jq -r '.[]|"\(.)"' | fzf | jq -r '.id')
   echo $id
   gnome-focus $id
+}
+
+function test-get-input() {
+    
 }
