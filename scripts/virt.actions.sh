@@ -10,3 +10,7 @@ function virt-view() {
 function virt-connect-local-win10() {
  virt-viewer --connect qemu:///system win10 &!
 }
+
+function virt-connect-local-win10() {
+ virt-viewer --connect qemu:///system win10 &!
+}
