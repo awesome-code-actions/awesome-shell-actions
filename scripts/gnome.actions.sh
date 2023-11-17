@@ -149,7 +149,8 @@ function gnome-focus-sel() {
   gnome-focus $id
 }
 
-function test-get-input() {
+function get-input() {
+  echo $(zenity --entry --text="$1:")
 }
 function test-get-input() {
   TASK=$(zenity --entry --text="Enter task:")
