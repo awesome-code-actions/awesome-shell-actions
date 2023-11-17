@@ -86,6 +86,7 @@ function gnome-screen() {
 }
 
 function gnome-alt-tab() {
+    local json=$
   gnome-shell-eval-json "$(
     cat <<\EOF
 let mode=Meta.TabList.NORMAL_ALL
