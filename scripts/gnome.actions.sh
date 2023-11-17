@@ -86,7 +86,7 @@ function gnome-screen() {
 }
 
 function gnome-alt-tab() {
-    local json=$(cat <<EOF
+    local json=$(cat <<"EOF"
 let mode=Meta.TabList.NORMAL_ALL
 let workspace=global.workspace_manager.get_active_workspace()
 let wins=global.display.get_tab_list(mode,workspace)
