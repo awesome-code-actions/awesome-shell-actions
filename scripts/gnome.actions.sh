@@ -80,8 +80,8 @@ function gnome-nth-focused-window() {
 function gnome-screen() {
    local out=/home/cong/Pictures/shoot.$(date +%s).jpg
     gnome-screenshot -a  -f $out
-    while true;do
-    if [ -f "$out" ];then
+    while true; do
+    if [ -f "$out" ] ; then
             sleep 1
             QT_QPA_PLATFORM=wayland ksnip -e $out &!
             break
@@ -149,5 +149,6 @@ function gnome-focus-sel() {
 }
 
 function test-get-input() {
-    
+TASK=`zenity --entry --text="Enter task:"`
+echo $TASK
 }
