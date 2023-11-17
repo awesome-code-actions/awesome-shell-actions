@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function gnome-cur-version() {
   gnome-shell --version
 }
@@ -12,15 +11,15 @@ function gnome-shell-eval() {
 }
 
 function gnome-shell-eval-json() {
-    echo "it-has-bug.jpg"
-    exit
-    return
+  echo "it-has-bug.jpg"
+  exit
+  return
   # TODO buged
   local cmd="$@"
   local raw=$(gdbus call -e -d org.gnome.Shell -o /org/gnome/Shell -m org.gnome.Shell.Eval "$cmd")
   echo "$raw" >/tmp/alt-tab.raw
-  if [ -f /tmp/alt-tab.json ];then
-    rm -rf  /tmp/alt-tab.json
+  if [ -f /tmp/alt-tab.json ]; then
+    rm -rf /tmp/alt-tab.json
   fi
 
   python3 - <<-"START"
@@ -78,20 +77,22 @@ function gnome-nth-focused-window() {
 }
 
 function gnome-screen() {
-   local out=/home/cong/Pictures/shoot.$(date +%s).jpg
-    gnome-screenshot -a  -f $out
-    while true; do
-    if [ -f "$out" ] ; then
-            sleep 1
-            QT_QPA_PLATFORM=wayland ksnip -e $out &!
-            break
-    fi
-    sleep 1
-    done
+  #    local out=/home/cong/Pictures/shoot.$(date +%s).jpg
+  #     gnome-screenshot -a  -f $out
+  #     while true; do
+  #     if [ -f "$out" ];then
+  #             sleep 1
+  #             QT_QPA_PLATFORM=wayland ksnip -e $out &!
+  #             break
+  #     fi
+  #     sleep 1
+  #     done
+  return
 }
 
 function gnome-alt-tab() {
-    local json=$(cat <<"EOF"
+  local json=$(
+    cat <<"EOF"
 let mode=Meta.TabList.NORMAL_ALL
 let workspace=global.workspace_manager.get_active_workspace()
 let wins=global.display.get_tab_list(mode,workspace)
@@ -117,7 +118,7 @@ for (const [i,c] of Array.from(raw).entries()) {
 }
 hex
 EOF
-)
+  )
   gnome-shell-eval-json "$json"
 }
 
@@ -149,6 +150,6 @@ function gnome-focus-sel() {
 }
 
 function test-get-input() {
-TASK=`zenity --entry --text="Enter task:"`
-echo $TASK
+  TASK=$(zenity --entry --text="Enter task:")
+  echo $TASK
 }
