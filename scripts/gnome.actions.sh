@@ -152,6 +152,7 @@ function gnome-focus-sel() {
 function get-input() {
   echo $(zenity --entry --text="$1:")
 }
+
 function test-get-input() {
     echo $(get-input "test")
 }
