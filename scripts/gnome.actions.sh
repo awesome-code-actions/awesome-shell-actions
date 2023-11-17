@@ -153,6 +153,5 @@ function get-input() {
   echo $(zenity --entry --text="$1:")
 }
 function test-get-input() {
-  TASK=$(zenity --entry --text="Enter task:")
-  echo $TASK
+    echo $(get-input "test")
 }
