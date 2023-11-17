@@ -11,6 +11,7 @@ function virt-connect-local-windows() {
  virt-viewer --connect qemu:///system win10 &!
 }
 
+# 当开了多个virt-view时只有一个的剪切板能用。。
 function virt-kill-other() {
  virt-viewer --connect qemu:///system win10 &!
 }
