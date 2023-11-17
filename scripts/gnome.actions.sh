@@ -86,9 +86,7 @@ function gnome-screen() {
 }
 
 function gnome-alt-tab() {
-    local json=$(cat <<EOF)
-  gnome-shell-eval-json $(
-    cat <<\EOF
+    local json=$(cat <<EOF
 let mode=Meta.TabList.NORMAL_ALL
 let workspace=global.workspace_manager.get_active_workspace()
 let wins=global.display.get_tab_list(mode,workspace)
@@ -115,6 +113,7 @@ for (const [i,c] of Array.from(raw).entries()) {
 hex
 EOF
 )
+  gnome-shell-eval-json "$json"
 }
 
 function gnome-focus() {
