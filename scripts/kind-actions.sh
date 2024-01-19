@@ -82,8 +82,8 @@ function kind-create-1.27.3() {
   kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.27.3
 }
 
-function kind-create-1.28.3() {
-  local name=${1:-"k-1-27-3"}
+function kind-create-1.28.0() {
+  local name=${1:-"k-1-28-0"}
   local node=$2
   if [ -z "$node" ]; then
     _prepare_kind_cluster_config /tmp/cluster.yaml
@@ -91,7 +91,7 @@ function kind-create-1.28.3() {
     _prepare_kind_cluster_config_3 /tmp/cluster.yaml
   fi
 
-  kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.27.3
+  kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.28.0
 }
 
 function default-cluster-config() {
