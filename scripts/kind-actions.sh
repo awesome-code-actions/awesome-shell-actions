@@ -12,6 +12,22 @@ nodes:
 EOL
 }
 
+function _prepare_kind_cluster_config_2() {
+  local file=${1:-"/tmp/cluster.yaml"}
+  echo $file
+  cat >$file <<EOL
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: dual
+  apiServerAddress: "127.0.0.1"
+nodes:
+- role: control-plane
+- role: worker
+- role: worker 
+EOL
+}
+
 function _prepare_kind_cluster_config_3() {
   local file=${1:-"/tmp/cluster.yaml"}
   echo $file
