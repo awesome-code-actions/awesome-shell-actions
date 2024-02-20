@@ -87,6 +87,11 @@ function kind-create-1.24.3() {
 }
 
 function kind-create-1.27.3() {
+  local image=$1
+  local name=$2
+  local 
+}
+function kind-create-1.27.3() {
   local name=${1:-"k-1-27-3"}
   local node=$2
   if [ -z "$node" ]; then
