@@ -156,3 +156,5 @@ function get-input() {
 function test-get-input() {
     echo $(get-input "test")
 }
+
+rofi-dynamic-jump-to
