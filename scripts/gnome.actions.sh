@@ -211,7 +211,7 @@ function gnome-current-workspace-id() (
   wmctrl -d | grep '*' | cut -d ' ' -f1
 )
 
-function gnome-get-winid-via-classa() (
+function gnome-get-winid-via-class() (
   wmctrl -l -x | grep $1 | awk '{print $1}'
 )
 
