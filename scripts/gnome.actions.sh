@@ -184,7 +184,8 @@ function gnome-set-workspace-name() (
 import re
 raw="""$ns"""
 ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
-ws[$id]="""
+ws[$id]="""$name"""
+print(f"[{','.join(ws)}]")
 EOF
   )
   echo "$ns"
