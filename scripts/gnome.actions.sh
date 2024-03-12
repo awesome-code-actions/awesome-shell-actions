@@ -232,8 +232,8 @@ function ui-get-input() (
     echo $(zenity --entry --text="$prompt")
     return
   fi
-  vared -p "$prompt " fname
-  echo $fname
+  a=$(bash -c 'read -e -p "What would you like to do?: " tmp; echo $tmp')
+  echo $a
   return
 )
 
