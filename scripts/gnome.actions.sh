@@ -166,20 +166,12 @@ function gnome-list-workspace() (
 #   done
 #   return
    local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-   local code=$(
-     cat <<EOF
- import re
- raw="""$ns"""
- print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
- EOF
-   )
-   local ns=$(python3 -c "$code")
-   IFS=' ' read -A arr <<<"$ns"
-   for n in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-     local n1=$(($n + 1))
-     echo "$n ${arr[$n1]}"
-   done
-   return
+   python3  <<EOF
+import re
+raw="""$ns"""
+print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
+EOF
+)
 )
 
 function gnome-set-workspace-name() (
