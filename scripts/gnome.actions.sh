@@ -159,6 +159,7 @@ function test-get-input() {
 
 function gnome-list-workspace() (
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
+  python -c <<
   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
   echo "$ns"
   IFS=" " read -r ns_list <<<"${ns:2:-2}"
