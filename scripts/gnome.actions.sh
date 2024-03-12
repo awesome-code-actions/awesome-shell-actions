@@ -203,6 +203,8 @@ function gnome-move-to() (
   echo "$win"
 )
 
+function gnome-current-workspace-name-via-id() (
+)
 function gnome-get-workspace-name-via-id() (
   local id=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
