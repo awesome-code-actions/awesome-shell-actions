@@ -192,6 +192,10 @@ EOF
 )
 
 function gnome-list-win() (
+  wmctrl -l
+)
+
+function gnome-list-win-with-name() (
   while read -r line; do
     local ns=$(echo "$line" | awk '{print $2}')
     local name=$(gnome-get-workspace-name-via-id $ns)
