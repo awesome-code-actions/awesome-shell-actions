@@ -227,8 +227,9 @@ EOF
 )
 
 function ui-get-input() (
+    local prome
   if [ -n "$IN_ROFI" ]; then
-
+    echo $(zenity --entry --text="$1:")
     return
   fi
   return
