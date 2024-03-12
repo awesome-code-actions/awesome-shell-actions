@@ -184,11 +184,11 @@ import re
 raw="""$ns"""
 print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
 EOF
-
 )
 
 function python-call() (
-  echo "$@"
+    echo 'xxx'
+  echo "$1"
 )
 function gnome-create-workspace() (
   local id=$1
