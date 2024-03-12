@@ -168,7 +168,6 @@ EOF
   )
   local ns=$(python3 -c "$code")
   #   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
-  echo "-- $ns --"
   for n in $(echo $ns); do
     echo "-- $n"
   done
