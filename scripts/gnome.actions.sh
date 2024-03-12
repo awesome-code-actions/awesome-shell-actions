@@ -172,7 +172,6 @@ raw="""$ns"""
 [print(f"{x[0]} {x[1]}") for x in enumerate(re.sub(r"""[\[|\]'\,]""",'',raw).split())]
 EOF
 )
-)
 
 function gnome-set-workspace-name() (
   local id=$1
