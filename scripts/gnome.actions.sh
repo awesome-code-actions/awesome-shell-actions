@@ -232,6 +232,7 @@ function ui-get-input() (
 
 function workspace-jump-to() (
   local name=$1
+  echo "$name"
 
 )
 function gnome-create-workspace() (
