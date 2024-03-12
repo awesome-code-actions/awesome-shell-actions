@@ -225,6 +225,9 @@ EOF
 )
 
 function ui-get-input() (
+)
+
+function ui-get-input() (
   local prompt=${1-"name: "}
   env | grep IN_ROFI
   if [ -n "$IN_ROFI" ]; then
