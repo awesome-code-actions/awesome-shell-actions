@@ -158,7 +158,7 @@ function test-get-input() {
 }
 
 function gnome-list-workspace() (
-
+ for  wmctrl -l | awk '{print $2}' | sort | uniq
   return
 )
 
@@ -173,9 +173,9 @@ function gnome-create-workspace() (
 )
 
 function gnome-current-workspace() (
-    return
+  return
 )
 
 function gnome-move-windows-to-workspace() (
-    return
+  return
 )
