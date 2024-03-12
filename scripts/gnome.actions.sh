@@ -211,9 +211,11 @@ function gnome-current-workspace-id() (
   wmctrl -d | grep '*' | cut -d ' ' -f1
 )
 
+function () (
+    local cur=$(gnome-current-workspace-id)
+)
 function logseq-here() (
     local cur=$(gnome-current-workspace-id)
-    
 )
 
 function gnome-get-workspace-name-via-id() (
