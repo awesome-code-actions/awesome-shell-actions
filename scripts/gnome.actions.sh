@@ -159,8 +159,9 @@ function test-get-input() {
 
 function gnome-list-workspace() (
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
+  echo "$ns"
   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-    echo "$ws 
+    echo "$ws"
   done
   return
 )
