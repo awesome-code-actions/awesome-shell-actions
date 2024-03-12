@@ -241,11 +241,3 @@ EOF
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 
 )
-
-function gnome-current-workspace() (
-  return
-)
-
-function gnome-move-windows-to-workspace() (
-  return
-)
