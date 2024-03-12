@@ -213,6 +213,7 @@ ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
 print(ws[$id])
 EOF
 )
+
 function gnome-create-workspace() (
   local name=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
