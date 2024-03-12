@@ -231,7 +231,7 @@ function ui-get-input() (
 )
 
 function workspace-jump-to() (
-    local name=${}
+  local name=$1
 
 )
 function gnome-create-workspace() (
