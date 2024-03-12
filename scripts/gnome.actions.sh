@@ -184,6 +184,8 @@ function gnome-set-workspace-name() (
 function gnome-create-workspace() (
   local id=$1
   local name=$2
+
+  local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
 )
 
 function gnome-current-workspace() (
