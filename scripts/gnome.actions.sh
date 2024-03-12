@@ -194,7 +194,8 @@ EOF
 function gnome-list-win() (
   while read -r line; do
     local ns=$(echo "$line" | awk '{print $2}')
-    echo "$ns $line"
+    local name=$(gnome-get-workspace-name-via-id $ns)
+    echo "$name $line"
   done < <(wmctrl -l)
 )
 function gnome-move-to() (
@@ -205,7 +206,7 @@ function gnome-move-to() (
 function gnome-get-workspace-name-via-id() (
   local id=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-    python <<EOF
+  python <<EOF
 import re
 raw="""$ns"""
 ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
