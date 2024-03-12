@@ -158,7 +158,9 @@ function test-get-input() {
 }
 
 function gnome-list-workspace() (
- for  wmctrl -l | awk '{print $2}' | sort | uniq
+  for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
+
+  done
   return
 )
 
