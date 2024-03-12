@@ -192,8 +192,10 @@ EOF
 )
 
 function gnome-move-to() (
-    local winodw=$(gnome-list-)
+  local win=$(wmctrl -l | fzf)
+  echo "$win"
 )
+
 function gnome-create-workspace() (
   local name=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
@@ -206,7 +208,7 @@ ws.append("""$name""")
 print(f"""[{','.join([f"'{x}'" for x in ws])}]""")
 EOF
   )
-    gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
+  gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 
 )
 
