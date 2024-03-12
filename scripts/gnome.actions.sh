@@ -228,6 +228,8 @@ EOF
 
 function ui-get-input() (
   local prompt=${1-"name: "}
+  echo "asdfadfs"
+  env | grep IN_ROFI
   if [ -n "$IN_ROFI" ]; then
     echo $(zenity --entry --text="$prompt")
     return
