@@ -227,7 +227,7 @@ EOF
 )
 
 function ui-get-input() (
-  local prompt=$1
+  local prompt=${1}
   if [ -n "$IN_ROFI" ]; then
     echo $(zenity --entry --text="$prompt")
     return
