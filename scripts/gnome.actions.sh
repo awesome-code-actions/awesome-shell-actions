@@ -187,7 +187,7 @@ EOF
 )
 
 function python-call() (
-    echo 'xxx'
+  echo 'xxx'
   echo "$1"
 )
 function gnome-create-workspace() (
