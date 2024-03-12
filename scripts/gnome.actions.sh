@@ -178,6 +178,7 @@ EOF
 function gnome-set-workspace-name() (
   local id=$1
   local name=$2
+
 )
 
 function gnome-create-workspace() (
