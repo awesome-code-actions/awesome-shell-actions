@@ -168,16 +168,13 @@ EOF
   )
   local ns=$(python3 -c "$code")
   IFS=' ' read -A arr <<<"$ns"
-  echo $arr
-  echo "xxx ${arr[1]}"
-  echo "asdf ${arr[2]}"
   #   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
   for n in $(echo $ns); do
     echo "-- $n"
   done
-  #   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-  #     echo "$ws"
-  #   done
+  for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
+    echo "$ws ${arr[$ws]}"
+  done
   return
 )
 
