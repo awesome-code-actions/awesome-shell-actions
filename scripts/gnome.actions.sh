@@ -226,7 +226,7 @@ print(ws[$id])
 EOF
 )
 
-function rofi-get-input() (
+function ui-get-input() (
   return
 )
 
