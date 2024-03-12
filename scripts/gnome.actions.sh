@@ -149,14 +149,6 @@ function gnome-focus-sel() {
   gnome-focus $id
 }
 
-function get-input() {
-  echo $(zenity --entry --text="$1:")
-}
-
-function test-get-input() {
-  echo $(get-input "test")
-}
-
 function gnome-list-workspace() (
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
   local code=$(
