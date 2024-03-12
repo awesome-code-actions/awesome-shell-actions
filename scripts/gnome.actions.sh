@@ -182,21 +182,19 @@ function gnome-set-workspace-name() (
 )
 
 function python-call() (
-    echo "$@"
+  echo "$@"
 )
 function gnome-create-workspace() (
   local id=$1
   local name=$2
 
-  local code=$(
-    cat <<EOF
+  python-call <<EOF
 import re
 raw="""$ns"""
 print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
 EOF
-  )
-  local ns=$(python3 -c "$code")
-  local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
+  #   local ns=$(python3 -c "$code")
+  #   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
 )
 
 function gnome-current-workspace() (
