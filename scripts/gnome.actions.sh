@@ -205,16 +205,12 @@ function gnome-move-to() (
 function gnome-get-workspace-name-via-id() (
   local id=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-  local ns=$(
-    python <<EOF
+  python <<EOF
 import re
 raw="""$ns"""
 ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
-ws[$id-1]="""$name"""
-print(f"""[{','.join([f"'{x}'" for x in ws])}]""")
+print(ws[$id])
 EOF
-  )
-
 )
 function gnome-create-workspace() (
   local name=$1
