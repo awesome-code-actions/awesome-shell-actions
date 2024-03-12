@@ -199,11 +199,12 @@ function gnome-create-workspace() (
 import re
 raw="""$ns"""
 ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
-ws[$id-1]="""$name"""
+ws.append("""$name""")
 print(f"""[{','.join([f"'{x}'" for x in ws])}]""")
 EOF
   )
-  gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
+  echo "$ns"
+  #   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 
 )
 
