@@ -212,7 +212,8 @@ function gnome-current-workspace-id() (
 )
 
 function logseq-here() (
-
+    local cur=$(gnome-current-workspace-id)
+    
 )
 
 function gnome-get-workspace-name-via-id() (
