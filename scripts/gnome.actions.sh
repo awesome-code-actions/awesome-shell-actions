@@ -227,11 +227,12 @@ EOF
 )
 
 function ui-get-input() (
-    local prome
+  local prompt=$1
   if [ -n "$IN_ROFI" ]; then
-    echo $(zenity --entry --text="$1:")
+    echo $(zenity --entry --text="$prompt")
     return
   fi
+  read -p "$prompt " fname
   return
 )
 
