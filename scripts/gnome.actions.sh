@@ -158,10 +158,9 @@ function test-get-input() {
 }
 
 function gnome-list-workspace() (
-local ns=$(gnome-shell-eval 'global.workspace_manager.get_n_workspaces()')
-echo "total $ns"
+  local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-    echo "$ws --"
+    echo "$ws 
   done
   return
 )
