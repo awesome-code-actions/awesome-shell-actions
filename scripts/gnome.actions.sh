@@ -199,7 +199,7 @@ function gnome-list-win() (
   done < <(wmctrl -l)
 )
 function gnome-move-to() (
-  local win=$(wmctrl -l | fzf)
+  local win=$(gnome-list-win | fzf)
   echo "$win"
 )
 
