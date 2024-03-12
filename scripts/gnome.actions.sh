@@ -230,6 +230,10 @@ function ui-get-input() (
   return
 )
 
+function workspace-jump-to() (
+    local name=${}
+
+)
 function gnome-create-workspace() (
   local name=${1-"$(ui-get-input \"workspace-name:\")"}
   echo $name
