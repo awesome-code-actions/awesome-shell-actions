@@ -166,17 +166,17 @@ raw="""$ns"""
 print(re.sub(r"""[\[|\]'\,]""",'',raw).split())
 EOF
   )
-  python3 -c "$code"
-#   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
-#   echo "$ns"
-#   IFS=" " read -r ns_list <<<"${ns:2:-2}"
-#   # 访问数组中的元素
-#   echo "第0个元素: ${ns_list[0]}"
-#   echo "第1个元素: ${ns_list[1]}"
-#   echo "第2个元素: ${ns_list[2]}"
-#   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-#     echo "$ws"
-#   done
+  local ns=$(python3 -c "$code")
+  #   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
+  #   echo "$ns"
+  IFS=" " read -r ns_list <<<"${ns}"
+  #   # 访问数组中的元素
+  echo "第0个元素: ${ns_list[0]}"
+  echo "第1个元素: ${ns_list[1]}"
+  echo "第2个元素: ${ns_list[2]}"
+  #   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
+  #     echo "$ws"
+  #   done
   return
 )
 
