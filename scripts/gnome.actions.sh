@@ -169,7 +169,7 @@ function gnome-list-workspace() (
    python3  <<EOF
 import re
 raw="""$ns"""
-print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
+[x for x in re.sub(r"""[\[|\]'\,]""",'',raw).split().items()]
 EOF
 )
 )
