@@ -192,9 +192,10 @@ EOF
 )
 
 function gnome-list-win() (
-    for read -r win in $(wmctrl -l); do
-        echo "$win"
-    done
+  while read -r line; do
+  local ns=
+    echo "$line"
+  done < <(wmctrl -l)
 )
 function gnome-move-to() (
   local win=$(wmctrl -l | fzf)
