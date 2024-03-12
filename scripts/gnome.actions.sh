@@ -193,8 +193,8 @@ EOF
 
 function gnome-list-win() (
   while read -r line; do
-  local ns=
-    echo "$line"
+    local ns=$(echo "$line" | awk '{print $2}')
+    echo "$ns $line"
   done < <(wmctrl -l)
 )
 function gnome-move-to() (
