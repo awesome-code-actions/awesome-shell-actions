@@ -224,7 +224,8 @@ print(ws[$id])
 EOF
 )
 
-function ui-get-input() (
+function rofi-dymanic-workspace-jump-to() (
+  
 )
 
 function ui-get-input() (
