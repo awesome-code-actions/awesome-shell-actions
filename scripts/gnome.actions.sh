@@ -179,7 +179,7 @@ function gnome-set-workspace-name() (
   local id=$1
   local name=$2
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-  python-call <<EOF
+  local python <<EOF
 import re
 raw="""$ns"""
 print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
