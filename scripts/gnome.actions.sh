@@ -191,6 +191,9 @@ EOF
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 )
 
+function gnome-list-win() (
+
+)
 function gnome-move-to() (
   local win=$(wmctrl -l | fzf)
   echo "$win"
