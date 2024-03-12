@@ -192,7 +192,7 @@ EOF
 )
 
 function gnome-list-win() (
-  wmctrl -l
+  wmctrl -l -x
 )
 
 function gnome-list-win-with-name() (
