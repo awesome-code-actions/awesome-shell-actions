@@ -159,7 +159,7 @@ function test-get-input() {
 
 function gnome-list-workspace() (
   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-
+    echo $ws
   done
   return
 )
