@@ -159,7 +159,7 @@ function test-get-input() {
 
 function gnome-list-workspace() (
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-  local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
+  local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g; s/ //g')
   echo "$ns"
   IFS=" " read -r ns_list <<<"${ns:2:-2}"
   # 访问数组中的元素
