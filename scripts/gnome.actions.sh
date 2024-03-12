@@ -150,6 +150,8 @@ function gnome-focus-sel() {
 }
 
 function gnome-list-workspace() (
+)
+function gnome-list-workspace() (
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
   local code=$(
     cat <<EOF
