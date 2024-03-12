@@ -227,7 +227,7 @@ EOF
 )
 
 function rofi-get-input() (
-
+  return
 )
 
 function gnome-create-workspace() (
