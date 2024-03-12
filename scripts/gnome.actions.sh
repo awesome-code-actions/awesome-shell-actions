@@ -227,7 +227,8 @@ EOF
 function rofi-dymanic-workspace-jump-to() (
   while read -r line; do
     local name=$( echo $line | awk '{print $2}')
-    echo "name"
+    echo "workspace-jump-to $name"
+
   done  < <(gnome-list-workspace)
 )
 
