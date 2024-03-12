@@ -234,6 +234,7 @@ function workspace-jump-to() (
   local name=$1
   echo "jump to $name"
   local id=$(gnome-list-workspace | grep "$name" | awk '{print $1}')
+  echo "id $id"
   wmctrl -s $id
 )
 
