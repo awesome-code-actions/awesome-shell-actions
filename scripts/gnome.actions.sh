@@ -161,7 +161,7 @@ EOF
   local ns=$(python3 -c "$code")
   IFS=' ' read -A arr <<<"$ns"
   for n in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-    local n=$(($n + 1))
+    local n=$(($n))
     echo "$n ${arr[$n]}"
   done
   return
