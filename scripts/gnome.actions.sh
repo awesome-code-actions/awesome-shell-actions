@@ -154,15 +154,25 @@ function get-input() {
 }
 
 function test-get-input() {
-    echo $(get-input "test")
+  echo $(get-input "test")
 }
 
 function gnome-list-workspace() (
-
+  return
 )
 
 function gnome-set-workspace-name() (
-    local id=$1
-    local id=$1
+  local id=$1
+  local name=$2
+)
 
+function gnome-create-workspace() (
+  local id=$1
+  local name=$2
+)
+
+function gnome-current-workspace() (
+)
+
+function gnome-current-workspace() (
 )
