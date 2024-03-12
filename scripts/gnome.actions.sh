@@ -235,6 +235,7 @@ function workspace-jump-to() (
   echo "jump to $name"
   local id=$(gnome-list-workspace | grep "$name" | awk '{print $1}')
 
+
 )
 function gnome-create-workspace() (
   local name=${1-"$(ui-get-input \"workspace-name:\")"}
