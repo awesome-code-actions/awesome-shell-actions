@@ -228,7 +228,6 @@ function rofi-dynamic-workspace-jump-to() (
   while read -r line; do
     local name=$( echo $line | awk '{print $2}')
     echo "workspace-jump-to $name"
-
   done  < <(gnome-list-workspace)
 )
 
