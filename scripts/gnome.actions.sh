@@ -217,7 +217,8 @@ function gnome-get-winid-via-classa() (
 
 function logseq-here() (
   local cur_workspace=$(gnome-current-workspace-id)
-  local logseq_winid=$(gnome-get-winid-via-classa logseq)
+  local logseq_winid=$(gnome-get-winid-via-classa logseq.Logseq)
+ wmctrl -i  -r $logseq_winid  -t 0
 )
 
 function gnome-get-workspace-name-via-id() (
