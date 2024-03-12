@@ -169,7 +169,7 @@ EOF
   local ns=$(python3 -c "$code")
   #   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
   echo "-- $ns --"
-  for n in $ns; do
+  for n in $(echo $ns); do
     echo "-- $n"
   done
   #   for ws in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
