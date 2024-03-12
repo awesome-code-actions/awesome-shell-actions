@@ -215,12 +215,6 @@ function gnome-get-winid-via-classa() (
   wmctrl -l -x | grep $1 | awk '{print $1}'
 )
 
-function logseq-here() (
-  local cur_workspace=$(gnome-current-workspace-id)
-  local logseq_winid=$(gnome-get-winid-via-classa "logseq.Logseq")
-  wmctrl -i -r $logseq_winid -t $cur_workspace
-)
-
 function gnome-get-workspace-name-via-id() (
   local id=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
