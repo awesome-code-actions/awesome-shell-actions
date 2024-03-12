@@ -211,8 +211,8 @@ function gnome-current-workspace-id() (
   wmctrl -d | grep '*' | cut -d ' ' -f1
 )
 
-function () (
-    local cur=$(gnome-current-workspace-id)
+function gnome-get-winid-via-classa() (
+wmctrl -l -x  |grep | awk 
 )
 function logseq-here() (
     local cur=$(gnome-current-workspace-id)
