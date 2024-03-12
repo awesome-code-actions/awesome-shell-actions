@@ -185,7 +185,7 @@ import re
 raw="""$ns"""
 ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
 ws[$id]="""$name"""
-print(f"""[{','.join([for x in ws]ws)}]""")
+print(f"""[{','.join([f"x \${x}" for x in ws])}]""")
 EOF
   )
   echo "$ns"
