@@ -157,3 +157,12 @@ function test-get-input() {
     echo $(get-input "test")
 }
 
+function gnome-list-workspace() (
+
+)
+
+function gnome-set-workspace-name() (
+    local id=$1
+    local id=$1
+
+)
