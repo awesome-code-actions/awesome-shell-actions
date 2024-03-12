@@ -192,7 +192,9 @@ EOF
 )
 
 function gnome-list-win() (
-
+  for win in $(wmctrl -l); do
+    echo "$win"
+  done
 )
 function gnome-move-to() (
   local win=$(wmctrl -l | fzf)
