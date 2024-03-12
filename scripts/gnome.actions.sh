@@ -232,7 +232,7 @@ function ui-get-input() (
     echo $(zenity --entry --text="$prompt")
     return
   fi
-  read -P "$prompt " fname
+  vared -P "$prompt " fname
   echo $fname
   return
 )
