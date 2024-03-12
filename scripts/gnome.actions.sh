@@ -251,7 +251,7 @@ ws.append("""$name""")
 print(f"""[{','.join([f"'{x}'" for x in ws])}]""")
 EOF
   )
-  echov $ns
+  echo $ns
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 
 )
