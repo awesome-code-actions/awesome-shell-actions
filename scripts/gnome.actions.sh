@@ -224,7 +224,7 @@ print(ws[$id])
 EOF
 )
 
-function rofi-dymanic-workspace-jump-to() (
+function rofi-dynamic-workspace-jump-to() (
   while read -r line; do
     local name=$( echo $line | awk '{print $2}')
     echo "workspace-jump-to $name"
