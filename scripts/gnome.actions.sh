@@ -158,6 +158,7 @@ function test-get-input() {
 }
 
 function gnome-list-workspace() (
+
   return
 )
 
@@ -172,7 +173,9 @@ function gnome-create-workspace() (
 )
 
 function gnome-current-workspace() (
+    return
 )
 
-function gnome-current-workspace() (
+function gnome-move-windows-to-workspace() (
+    return
 )
