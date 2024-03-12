@@ -192,8 +192,18 @@ EOF
 )
 
 function gnome-create-workspace() (
-  local id=$1
-  local name=$2
+  local name=$1
+  local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
+  local ns=$(
+    python <<EOF
+import re
+raw="""$ns"""
+ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
+ws[$id-1]="""$name"""
+print(f"""[{','.join([f"'{x}'" for x in ws])}]""")
+EOF
+  )
+  gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 
 )
 
