@@ -212,7 +212,7 @@ function gnome-current-workspace-id() (
 )
 
 function gnome-get-winid-via-classa() (
-  wmctrl -l -x | grep $1| awk '{$1}'
+  wmctrl -l -x | grep $1| awk 'print {$1}'
 )
 
 function logseq-here() (
