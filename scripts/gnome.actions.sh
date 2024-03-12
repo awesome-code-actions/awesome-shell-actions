@@ -169,7 +169,8 @@ EOF
   local ns=$(python3 -c "$code")
   IFS=' ' read -A arr <<<"$ns"
   echo $arr
-  
+echo ${arr[2]}
+echo ${ARRAY_NAME[2]}
   #   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
   for n in $(echo $ns); do
     echo "-- $n"
