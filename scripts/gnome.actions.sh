@@ -241,6 +241,7 @@ function ui-get-input() (
 
 function gnome-create-workspace() (
   local name=${1:$(ui-get-input "workspace-name:")}
+  echo $name
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
   local ns=$(
     python <<EOF
