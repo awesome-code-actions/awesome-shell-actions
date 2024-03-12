@@ -228,7 +228,7 @@ function rofi-dymanic-workspace-jump-to() (
   while read -r line; do
     local name=$( echo $line | awk '{print $2}')
     echo "name"
-  done  < <$(gnome-list-workspace)
+  done  < <(gnome-list-workspace)
 )
 
 function ui-get-input() (
