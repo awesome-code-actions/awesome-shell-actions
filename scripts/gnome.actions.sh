@@ -191,6 +191,9 @@ EOF
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
 )
 
+function gnome-move-to() (
+    local winodw=$(gnome-list-)
+)
 function gnome-create-workspace() (
   local name=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
