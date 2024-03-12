@@ -1,2 +1,4 @@
 #!/bin/bash
-wmctrl-list-workspace()
+function wmctrl-list-workspace() (
+  return
+)
