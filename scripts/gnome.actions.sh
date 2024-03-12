@@ -202,6 +202,9 @@ function gnome-move-to() (
   echo "$win"
 )
 
+function gnome-get-workspace-name-via-id() (
+
+)
 function gnome-create-workspace() (
   local name=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
