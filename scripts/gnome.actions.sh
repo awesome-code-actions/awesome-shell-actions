@@ -225,7 +225,13 @@ EOF
 )
 
 function rofi-dymanic-workspace-jump-to() (
-  
+  while true; do
+    local name=$(gnome-list-workspace | fzf | awk '{print $2}')
+    if [ -z "$name" ]; then
+      break
+    fi
+    workspace-jump-to $name
+  done 
 )
 
 function ui-get-input() (
