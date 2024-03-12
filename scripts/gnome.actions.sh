@@ -167,6 +167,8 @@ print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
 EOF
   )
   local ns=$(python3 -c "$code")
+  IFS=' ' read -a arr <<<"$ns"
+  echo $arr
   #   local ns=$(echo "$ns" | sed 's/[^[:alnum:].-]//g')
   for n in $(echo $ns); do
     echo "-- $n"
