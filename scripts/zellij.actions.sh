@@ -1,13 +1,13 @@
 #!/bin/bash
 
-function zellij-ls() {
+function zel-ls() {
   zellij ls
 }
 
-function zellij-attach() {
+function zel-attach() {
   zellij a $(zellij ls -n -s | fzf)
 }
 
-function zellij-new() {
+function zel-new() {
   zellij -s $1
 }
