@@ -5,7 +5,7 @@ function zellij-ls() {
 }
 
 function zellij-attach() {
-  zellij a $(zellij ls | fzf)
+  zellij a $(zellij ls -n -s | fzf)
 }
 
 function zellij-new() {
