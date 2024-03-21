@@ -1,0 +1,6 @@
+(as-> *input* $
+  (group-by #(second (re-find #".*RJ([0-9]*)\s*.*" %)) $) ; {rjxx: [f1,f2],}
+  (update-vals $ rest) ; {rjxx: [f2]} ; only keeps the duplicate file
+  (flatten (vals $))   ; join
+  (doseq [x $] (println x)) ; print
+  )
