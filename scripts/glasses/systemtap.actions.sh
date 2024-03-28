@@ -36,6 +36,9 @@ function stap-list-all-module-function {
   stap -L 'module("*").function("*")' 2>&1
   return
 }
+function stap-list-statement {
+  return
+}
 
 function list-all-syscall() (
   return
