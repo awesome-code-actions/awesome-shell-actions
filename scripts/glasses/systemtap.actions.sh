@@ -34,7 +34,7 @@ function list-all-vfs-file-operation {
     return
 }
 
-function list-all-trace {
+function stap-list-all-kernel-function {
     stap -L 'kernel.function("*")'
     return
 }
