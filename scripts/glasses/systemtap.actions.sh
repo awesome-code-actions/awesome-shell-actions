@@ -22,17 +22,12 @@ function stap-connect-docker() {
   sudo stap -B CONFIG_MODVERSIONS=y -g -vv $base/connect_stat.stp $pidns
 }
 
+function stap-list-all-probele() (
+
+)
 function list-all-syscall() (
   return
 )
-
-function list-all-module {
-  return
-}
-
-function list-all-vfs-file-operation {
-  return
-}
 
 function stap-list-all-kernel-function {
   stap -L 'kernel.function("*")'
@@ -43,6 +38,15 @@ function stap-list-all-module-function {
   stap -L 'module("*").function("*")' 2>&1
   return
 }
+
+function list-all-module {
+  return
+}
+
+function list-all-vfs-file-operation {
+  return
+}
+
 
 function list-all-kernel-file {
   return
