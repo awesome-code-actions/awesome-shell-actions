@@ -23,10 +23,8 @@ function stap-connect-docker() {
 }
 
 function stap-list-all-probele() (
-
-)
-function list-all-syscall() (
-  return
+  stap-list-all-kernel-function
+  stap-list-all-module-function
 )
 
 function stap-list-all-kernel-function {
@@ -39,6 +37,10 @@ function stap-list-all-module-function {
   return
 }
 
+function list-all-syscall() (
+  return
+)
+
 function list-all-module {
   return
 }
@@ -46,7 +48,6 @@ function list-all-module {
 function list-all-vfs-file-operation {
   return
 }
-
 
 function list-all-kernel-file {
   return
