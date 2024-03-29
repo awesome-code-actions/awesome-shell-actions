@@ -36,9 +36,10 @@ function stap-list-all-module-function {
   stap -L 'module("*").function("*")' 2>&1
   return
 }
+
 function stap-list-statement {
   stap -L 'kernel.statement("*")'
-  stap -L 'kernel.statement("*")'
+  stap -L 'module("*").function("*")'
   return
 }
 
