@@ -37,7 +37,8 @@ function stap-list-all-module-function {
   return
 }
 function stap-list-statement {
-
+  stap -L 'kernel.statement("*")'
+  stap -L 'kernel.statement("*")'
   return
 }
 
