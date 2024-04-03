@@ -150,29 +150,34 @@ function gnome-focus-sel() {
 }
 
 function gnome-list-workspace() (
-#   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-#   local code=$(
-#     cat <<EOF
-# import re
-# raw="""$ns"""
-# print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
-# EOF
-#   )
-#   local ns=$(python3 -c "$code")
-#   IFS=' ' read -A arr <<<"$ns"
-#   for n in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
-#     local n1=$(($n + 1))
-#     echo "$n ${arr[$n1]}"
-#   done
-#   return
-   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
-   python3  <<EOF
+  #   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
+  #   local code=$(
+  #     cat <<EOF
+  # import re
+  # raw="""$ns"""
+  # print(" ".join(re.sub(r"""[\[|\]'\,]""",'',raw).split()))
+  # EOF
+  #   )
+  #   local ns=$(python3 -c "$code")
+  #   IFS=' ' read -A arr <<<"$ns"
+  #   for n in $(wmctrl -l | awk '{print $2}' | sort | uniq); do
+  #     local n1=$(($n + 1))
+  #     echo "$n ${arr[$n1]}"
+  #   done
+  #   return
+  local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
+  python3 <<EOF
 import re
 raw="""$ns"""
 [print(f"{x[0]} {x[1]}") for x in enumerate(re.sub(r"""[\[|\]'\,]""",'',raw).split())]
 EOF
 )
 
+function gnome-set-cur-workspace-name() (
+  local id=$(gnome-current-workspace-id)
+  local name=${1-"$(ui-get-input \"workspace-name:\")"}
+  gnome-set-workspace-name $id $name
+)
 function gnome-set-workspace-name() (
   local id=$1
   local name=$2
@@ -181,12 +186,13 @@ function gnome-set-workspace-name() (
     python <<EOF
 import re
 raw="""$ns"""
-ws=re.sub(r"""[\[|\]'\,]""",'',raw).split()
-ws[$id-1]="""$name"""
-print(f"""[{','.join([f"'{x}'" for x in ws])}]""")
+ws={i:n for i,n in enumerate(re.sub(r"""[\[|\]'\,]""",'',raw).split())}
+ws[$id]="""$name"""
+print(f"""[{','.join([f"'{x}'" for x in ws.values()])}]""")
 EOF
   )
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
+  echo "$ns"
 )
 
 function gnome-list-win() (
@@ -226,9 +232,9 @@ EOF
 
 function rofi-dynamic-workspace-jump-to() (
   while read -r line; do
-    local name=$( echo $line | awk '{print $2}')
+    local name=$(echo $line | awk '{print $2}')
     echo "workspace-jump-to $name"
-  done  < <(gnome-list-workspace)
+  done < <(gnome-list-workspace)
 )
 
 function ui-get-input() (
