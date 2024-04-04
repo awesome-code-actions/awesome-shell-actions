@@ -3,6 +3,7 @@
 function kubelet-alone-init() {
   # https://seankhliao.com/blog/12021-09-06-kubelet-containerd-standalone/
   # 1. 安装kubelet containerd cniplugin nerdctl
+  yay -S kubelet
   cat <<EOF >/etc/containerd/config.toml
 
 # importart or else it defaults to v1

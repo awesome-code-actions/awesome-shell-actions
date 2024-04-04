@@ -90,7 +90,8 @@ function gnome-screen() {
   return
 }
 
-function gnome-alt-tab() {
+function gnome-alt-tab() (
+    set -x
   local json=$(
     cat <<"EOF"
 let mode=Meta.TabList.NORMAL_ALL
@@ -120,7 +121,7 @@ hex
 EOF
   )
   gnome-shell-eval-json "$json"
-}
+)
 
 function gnome-focus() {
   local id="$1"
