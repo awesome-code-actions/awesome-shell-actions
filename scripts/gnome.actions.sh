@@ -240,6 +240,7 @@ function rofi-dynamic-workspace-jump-to() (
 
 function ui-get-input() (
   local prompt=${1-"name: "}
+  if [[ -z ]]
   env | grep IN_ROFI
   if [ -n "$IN_ROFI" ]; then
     echo $(zenity --entry --text="$prompt")
