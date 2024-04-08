@@ -91,7 +91,7 @@ function gnome-screen() {
 }
 
 function gnome-alt-tab() (
-    set -x
+  set -x
   local json=$(
     cat <<"EOF"
 let mode=Meta.TabList.NORMAL_ALL
@@ -240,8 +240,8 @@ function rofi-dynamic-workspace-jump-to() (
 
 function ui-get-input() (
   local prompt=${1-"name: "}
-  if [[ -n "$2"]];then
-    echo $2
+  if [[ -n "$2" ]]; then
+    echo "$2"
   fi
 
   env | grep IN_ROFI
