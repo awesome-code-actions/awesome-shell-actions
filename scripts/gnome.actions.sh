@@ -242,6 +242,7 @@ function ui-get-input() (
   local prompt=${1-"name: "}
   if [ -n "$2" ]; then
     echo "$2"
+    return
   fi
 
   env | grep IN_ROFI
