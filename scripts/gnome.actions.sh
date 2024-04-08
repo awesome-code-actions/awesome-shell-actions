@@ -240,7 +240,7 @@ function rofi-dynamic-workspace-jump-to() (
 
 function ui-get-input() (
   local prompt=${1-"name: "}
-  if [[ -z "$2"]];then
+  if [[ -n "$2"]];then
     echo $2
   fi
 
