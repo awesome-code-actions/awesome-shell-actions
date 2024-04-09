@@ -193,7 +193,8 @@ ws[$id]="""$name"""
 print(f"""[{','.join([f"'{x}'" for x in ws.values()])}]""")
 EOF
   )
-  on-workspace-name-changed $
+  local old_name=$(gnome-get-workspace-name-via-id $id)
+  on-workspace-name-changed $old_name $name
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
   echo "$ns"
 )
