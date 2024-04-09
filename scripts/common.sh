@@ -11,5 +11,6 @@ function time_format_time_diff() {
 }
 
 function log() {
-    
+    mkdir -p ~/.zmx
+    echo "" >>~/.zmx/log
 }
