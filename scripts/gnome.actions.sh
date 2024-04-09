@@ -227,9 +227,9 @@ function gnome-get-winid-via-class() (
 function gnome-sync-wez-tab() (
   while read -r line; do
     local name=$(echo $line | awk '{print $2}')
-    echo "wez-on-new-ws $name"
+    log "wez-on-new-ws $name"
+    wez-create-if-not-exit $name
   done < <(gnome-list-workspace)
-  wmctrl -l -x | grep $1 | awk '{print $1}'
 )
 
 function gnome-get-workspace-name-via-id() (
