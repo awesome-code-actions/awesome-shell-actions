@@ -9,3 +9,7 @@ function time_format_time_diff() {
     local end=$2
     echo $(echo "scale=3; ($end-$start)/1000" | bc)s
 }
+
+function log() {
+    
+}
