@@ -179,6 +179,7 @@ function gnome-set-cur-workspace-name() (
   local name=${1-"$(ui-get-input \"workspace-name:\")"}
   gnome-set-workspace-name $id $name
 )
+
 function gnome-set-workspace-name() (
   local id=$1
   local name=$2
