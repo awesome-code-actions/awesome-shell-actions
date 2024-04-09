@@ -195,7 +195,7 @@ EOF
   )
   local old_name=$(gnome-get-workspace-name-via-id $id)
   log "ws name change $old_name $name"
-  on-workspace-name-changed $old_name $name
+  on-workspace-name-change $old_name $name
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
   echo "$ns"
 )
