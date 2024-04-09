@@ -224,6 +224,14 @@ function gnome-get-winid-via-class() (
   wmctrl -l -x | grep $1 | awk '{print $1}'
 )
 
+function gnome-sync-wez-tab() (
+  while read -r line; do
+    local name=$(echo $line | awk '{print $2}')
+    echo "wez-on-new-ws $name"
+  done < <(gnome-list-workspace)
+  wmctrl -l -x | grep $1 | awk '{print $1}'
+)
+
 function gnome-get-workspace-name-via-id() (
   local id=$1
   local ns=$(gsettings get org.gnome.desktop.wm.preferences workspace-names)
