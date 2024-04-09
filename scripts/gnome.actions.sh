@@ -194,6 +194,7 @@ print(f"""[{','.join([f"'{x}'" for x in ws.values()])}]""")
 EOF
   )
   gsettings set org.gnome.desktop.wm.preferences workspace-names "$ns"
+  on-workspace-name-changed 
   echo "$ns"
 )
 
