@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 function time_now() {
-    echo $(date +%s%3N)
+  echo $(date +%s%3N)
 }
 
 function time_format_time_diff() {
-    local start=$1
-    local end=$2
-    echo $(echo "scale=3; ($end-$start)/1000" | bc)s
+  local start=$1
+  local end=$2
+  echo $(echo "scale=3; ($end-$start)/1000" | bc)s
 }
 
 function log() {
-    mkdir -p ~/.zmx
-    echo "" >>~/.zmx/log
+  mkdir -p ~/.zmx
+  echo "$(date) $@" >>~/.zmx/log
 }
