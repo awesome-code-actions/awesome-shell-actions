@@ -1,8 +1,8 @@
 #!/bin/bash
-SQL_BASE="~/.sql"
-mkdir -p $SQL_BASE
+SQL_BASE="$HOME/.sql"
 
 function sql-eval() {
+  mkdir -p $SQL_BASE
   sqlite3 $SQL_BASE/$(cat $SQL_BASE/.current).db "$@"
   return
 }
