@@ -126,40 +126,15 @@ function tmuxc-select-sessions() {
   tmux switch-client -t $n
 }
 
-function _tmux-save-pane() {
-  local delimiter="$TMUX_DELIMITER"
-  local format=""
-  format+="pane"
-  format+="${delimiter}"
-  format+="#{session_name}"
-  format+="${delimiter}"
-  format+="#{window_index}"
-  format+="${delimiter}"
-  format+="#{window_active}"
-  format+="${delimiter}"
-  format+=":#{window_flags}"
-  format+="${delimiter}"
-  format+="#{pane_index}"
-  format+="${delimiter}"
-  format+="#{@mytitle}"
-  format+="${delimiter}"
-  format+="#{pane_active}"
-  format+="${delimiter}"
-  format+="#{$myssh}"
-  format+="${delimiter}"
-  format+="#{$mycwd}"
-  format+="${delimiter}"
-  format+="#{pane_current_path}"
-  format+="${delimiter}"
-  format+="#{pane_pid}"
-  format+="${delimiter}"
-  format+="#{history_size}"
-  tmux list-panes -a -F "$format"
-}
+function _tmux-save-pane() (
+  cd $SHELL_ACTIONS_BASE/scripts
+  ./tmux.py tmux-list-panel
+)
 
 function _tmux-save-win() {
   local delimiter="$TMUX_DELIMITER"
   local format
+  local format="session_name #{session_name} window_index #{window_index} window_active #{window_active} window_flags :#{window_flags} window_layout #{window_layout}"
   format+="window"
   format+="${delimiter}"
   format+="#{session_name}"
