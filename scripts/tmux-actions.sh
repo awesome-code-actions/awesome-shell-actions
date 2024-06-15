@@ -35,8 +35,9 @@ function tmux-save() (
 )
 
 function tmux-load() (
-  python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-load $1
+  tmux display-popup "zsh -c \"source ~/.zshrc; cd $PWD;pwd;python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-load $1\"" &
 )
+
 function tmux-kill-other() (
   tmux kill-window -a && tmux kill-pane -a
 )
