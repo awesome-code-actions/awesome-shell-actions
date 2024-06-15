@@ -3,10 +3,63 @@
 function tmux-kill-server() {
   tmux kill-server
 }
-TMUX_DELIMITER=" |-| "
+
+function tmux-cur-pane-t() {
+  tmux display-message -p '#{session_name}:#{window_index}.#{pane_index}'
+}
+
+function tmux-list-pane-t() {
+  tmux list-panes -s -F "#{session_name}:#{window_index}.#{pane_index} #{@mytitle}"
+}
+
 function tmux-set-panel-title() {
-  title=$1
-  tmux-rename-current-panel $title
+  tmux-set-panel-title-pane "$(tmux-cur-pane-t)" "$1"
+}
+
+function tmux-set-panel() {
+  local t=$1
+  local title=$2
+  local booter=$3
+  tmux set -p -t "$t" @mytitle "$title"
+  tmux-boot-pane "$t" "$booter"
+}
+
+function tmux-set-panel-title-pane() {
+  local t=$1
+  local title=$2
+  tmux set -p -t "$t" @mytitle "$title"
+}
+
+function tmux-save() (
+  python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-save
+)
+
+function tmux-load() (
+  python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-load $1
+)
+function tmux-kill-other() (
+  tmux kill-window -a && tmux kill-pane -a
+)
+
+function tmux-boot-cur() {
+  tmux-boot-pane $(tmux-cur-pane-t) "$1"
+}
+
+function tmux-boot-pane() {
+  local t=$1
+  local booter="$2"
+  tmux set -p -t "$t" @mybooter "$booter"
+  local cmd=$(
+    cd $SHELL_ACTIONS_BASE/scripts
+    python3 tmux.py gen_tmux_send_keys "$booter"
+  )
+  if [[ -z $t ]]; then
+    cmd="tmux send-keys $cmd"
+  else
+    cmd="tmux send-keys -t $t $cmd"
+  fi
+  echo "$cmd"
+  eval "$cmd"
 }
 
 function tmux-set-window-title() {
@@ -17,11 +70,6 @@ function tmux-set-window-title() {
 function tmux-rename-current-session() {
   name=$1
   tmux rename-session $name
-}
-
-function tmux-rename-current-panel() {
-  local name=$1
-  tmux set -p @mytitle "$name"
 }
 
 function tmux-rename-current-window() {
@@ -126,103 +174,7 @@ function tmuxc-select-sessions() {
   tmux switch-client -t $n
 }
 
-function _tmux-save-pane() (
-  cd $SHELL_ACTIONS_BASE/scripts
-  ./tmux.py tmux-list-panel
-)
-
-function _tmux-save-win() {
-  local delimiter="$TMUX_DELIMITER"
-  local format
-  local format="session_name #{session_name} window_index #{window_index} window_active #{window_active} window_flags :#{window_flags} window_layout #{window_layout}"
-  format+="window"
-  format+="${delimiter}"
-  format+="#{session_name}"
-  format+="${delimiter}"
-  format+="#{window_index}"
-  format+="${delimiter}"
-  format+=":#{window_name}"
-  format+="${delimiter}"
-  format+="#{window_active}"
-  format+="${delimiter}"
-  format+=":#{window_flags}"
-  format+="${delimiter}"
-  format+="#{window_layout}"
-  tmux list-windows -a -F "$format"
-  return
-}
-
-function tmux-save-layout() {
-  local session=$(tmux list-panes -F "#{session_name}" | head -n 1)
-  local layout=""
-  layout+=$(_tmux-save-pane)
-  layout+="\n"
-  layout+=$(_tmux-save-win)
-  echo "$layout" >./$session.tmux.layout
-  echo "$layout"
-  return
-}
-
-function tmux-set-ssh() {
-  local ssh="$@"
-  tmux set -p @myssh "$ssh"
-}
-
 function tmux-set-cwd() {
   local mycwd="$@"
   tmux set -p @mycwd "$mycwd"
 }
-
-function tmux-load-layout() {
-  local layout="$(cat $1)"
-  if [[ -z "$layout" ]]; then
-    echo "layout is empty"
-    return
-  fi
-  #   echo "$layout" | grep pane
-  echo "$layout" | grep pane | _tmux_restore_panel
-}
-
-function _tmux_restore_panel() (
-  #   function remove_first_char() {
-  #     echo "$1" | cut -c2-
-  #   }
-
-  #   function new_pane() {
-  #     local session_name="$1"
-  #     local window_number="$2"
-  #     local dir="$3"
-  #     local pane_index="$4"
-  #     local pane_id="${session_name}:${window_number}.${pane_index}"
-  #     # if is_restoring_pane_contents && pane_contents_file_exists "$pane_id"; then
-  #     #   local pane_creation_command="$(pane_creation_command "$session_name" "$window_number" "$pane_index")"
-  #     #   tmux split-window -t "${session_name}:${window_number}" -c "$dir" "$pane_creation_command"
-  #     # else
-  #     tmux split-window -t "${session_name}:${window_number}" -c "$dir"
-  #     # fi
-  #     # minimize window so more panes can fit
-  #     tmux resize-pane -t "${session_name}:${window_number}" -U "999"
-  #   }
-  #   function window_exists() {
-  #     local session_name="$1"
-  #     local window_number="$2"
-  #     tmux list-windows -t "$session_name" -F "#{window_index}" 2>/dev/null |
-  #       \grep -q "^$window_number$"
-  #   }
-
-  while IFS="$TMUX_DELIMITER" read line_type session_name window_index window_active window_flags pane_index mytitle pane_active myssh mycwd; do
-    echo "================"
-    # dir="$(remove_first_char "$dir")"
-    # pane_full_command="$(remove_first_char "$pane_full_command")"
-    # if window_exists "$session_name" "$window_number"; then
-    #   new_pane "$session_name" "$window_number" "$dir" "$pane_index"
-    # elif session_exists "$session_name"; then
-    #   new_window "$session_name" "$window_number" "$dir" "$pane_index"
-    # else
-    #   new_session "$session_name" "$window_number" "$dir" "$pane_index"
-    # fi
-    # # set pane title
-    # tmux select-pane -t "$session_name:$window_number.$pane_index" -T "$pane_title"
-    echo "pane_title: $mytitle mycwd: $mycwd pane_index: $pane_index session_name: $session_name window_number: $window_index"
-  done
-)
