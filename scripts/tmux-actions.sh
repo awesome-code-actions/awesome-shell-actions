@@ -16,13 +16,6 @@ function tmux-set-panel-title() {
   tmux-set-panel-title-pane "$(tmux-cur-pane-t)" "$1"
 }
 
-function tmux-set-panel() {
-  local t=$1
-  local title=$2
-  local booter=$3
-  tmux set -p -t "$t" @mytitle "$title"
-  tmux-boot-pane "$t" "$booter"
-}
 
 function tmux-set-panel-title-pane() {
   local t=$1
@@ -44,6 +37,14 @@ function tmux-kill-other() (
 
 function tmux-boot-cur() {
   tmux-boot-pane $(tmux-cur-pane-t) "$1"
+}
+
+function tmux-set-panel() {
+  local t=$1
+  local title=$2
+  local booter=$3
+  tmux set -p -t "$t" @mytitle "$title"
+  tmux-boot-pane "$t" "$booter"
 }
 
 function tmux-boot-pane() {
