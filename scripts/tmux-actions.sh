@@ -16,7 +16,6 @@ function tmux-set-panel-title() {
   tmux-set-panel-title-pane "$(tmux-cur-pane-t)" "$1"
 }
 
-
 function tmux-set-panel-title-pane() {
   local t=$1
   local title=$2
@@ -45,6 +44,35 @@ function tmux-set-panel() {
   local booter=$3
   tmux set -p -t "$t" @mytitle "$title"
   tmux-boot-pane "$t" "$booter"
+}
+
+function tmux-sel-t() {
+  tmux list-panes -s -F "#{session_name}:#{window_index}.#{pane_index} #{@mytitle}" | fzf
+}
+
+function tmux-get-opt() {
+  local t=${1-$(tmux-sel-t)}
+  local opt=$2
+  local opt_v=$(tmux list-panes -s -F "#{session_name}:#{window_index}.#{pane_index} #{@$opt}" | grep $t | cut -d' ' -f2-)
+  echo "$opt_v"
+}
+
+function tmux-reboot-pane() {
+  local t=${1-$(tmux-sel-t)}
+  t=$(echo $t | cut -d ' ' -f 1)
+  local booter=$(tmux-get-opt $t mybooter)
+  echo "$t |$booter|"
+  local cmd=$(tmux-gen-send-key "$booter")
+  echo "$cmd"
+  eval "tmux send-keys -t $t $cmd"
+}
+
+function tmux-gen-send-key() {
+  local cmd=$(
+    cd $SHELL_ACTIONS_BASE/scripts
+    python3 tmux.py gen_tmux_send_keys "$1"
+  )
+  echo "$cmd"
 }
 
 function tmux-boot-pane() {
