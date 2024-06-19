@@ -23,7 +23,7 @@ function tmux-set-panel-title-pane() {
 }
 
 function tmux-save() (
-  python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-save
+  python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-save ${1-"./"}
 )
 
 function tmux-load() (

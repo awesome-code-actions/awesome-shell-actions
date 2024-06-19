@@ -135,11 +135,11 @@ class X:
         ps = self.cli.list_window()
         print(Window.schema().dumps(ps, many=True))
 
-    def save(self):
+    def save(self,output:str):
         session_name = self.cli.cur_session()
         layout = Layout(session_name=session_name, wins=self.cli.list_window(
             session_name), panes=self.cli.list_pane(session_name))
-        p = f"./{layout.session_name}.tmux.json"
+        p = f"{output}/{layout.session_name}.tmux.json"
         Path(p).write_text(
             layout.to_json(indent=2, ensure_ascii=False))
         print(p)
