@@ -1,6 +1,5 @@
 #!/usr/bin/env python3.12
 from dataclasses import dataclass
-import json
 import os
 import sys
 from time import sleep
@@ -18,12 +17,13 @@ class Window(DataClassJsonMixin):
     delimeter: ClassVar[str] = "\t"
     session_name: str = field(default="", metadata={"fmt": "#{session_name}"})
     window_index: int = field(default=0, metadata={"fmt": "#{window_index}"})
-    window_name: str = field(default=False, metadata={
-        "fmt": ":#{window_name}"})
+    window_name: str = field(default="", metadata={
+                             "fmt": ":#{window_name}"})
     window_active: bool = field(default=False, metadata={
                                 "fmt": "#{window_active}"})
     window_flags: str = field(default="", metadata={"fmt": ":#{window_flags}"})
-    window_layout: str = field(default=0, metadata={"fmt": "#{window_layout}"})
+    window_layout: str = field(default="", metadata={
+                               "fmt": "#{window_layout}"})
 
     @classmethod
     def to_tmux_fmt(cls) -> str:
@@ -96,7 +96,7 @@ class TmuxCli:
         self.run = invoke.run
 
     def ami_intmux(self) -> bool:
-        return os.environ.get("TMUX", False)
+        return os.environ.get("TMUX", "") != ""
 
     def list_pane(self, session_name: str) -> list[Pane]:
         panes = self.run(
@@ -127,15 +127,15 @@ class X:
     def __init__(self):
         self.cli = TmuxCli()
 
-    def list_panel(self):
-        ps = self.cli.list_pane()
+    def list_panel(self, name: str):
+        ps = self.cli.list_pane(name)
         print(Pane.schema().dumps(ps, many=True))
 
-    def list_window(self):
-        ps = self.cli.list_window()
+    def list_window(self, name: str):
+        ps = self.cli.list_window(name)
         print(Window.schema().dumps(ps, many=True))
 
-    def save(self,output:str):
+    def save(self, output: str):
         session_name = self.cli.cur_session()
         layout = Layout(session_name=session_name, wins=self.cli.list_window(
             session_name), panes=self.cli.list_pane(session_name))
@@ -153,8 +153,8 @@ class X:
         full = " 'enter' ".join(cmds)
         return f"{full} 'enter';"
 
-    def load(self, p: str):
-        exp = Layout.from_json(Path(p).read_text())
+    def load(self, fpath: str):
+        exp = Layout.from_json(Path(fpath).read_text())
         if not self.cli.ami_intmux():
             raise Exception("在tmux环境下执行")
         session_name = self.cli.cur_session()
@@ -190,6 +190,8 @@ class X:
         # booter
         for p in exp.panes:
             t = f"{session_name}:{p.window_index}.{p.pane_index}"
+            if p.mybooter.strip() == "":
+                continue
             cmd = self.gen_tmux_send_keys(p.mybooter)
             self.cli.run(f""" tmux send-keys -t "{t}" {cmd} """, hide=True)
         pass
