@@ -173,6 +173,8 @@ class X:
             if p.pane_index not in cur_pane_index:
                 self.cli.run(
                     f"tmux split-window -t \"{session_name}:{p.window_index}\" -c \"{p.pane_current_path}\"", hide=True)
+                self.cli.run(
+                    f"tmux select-layout -t \"{session_name}:{p.window_index}\" tiled", hide=True)
         # 设置layout
         for w in exp.wins:
             self.cli.run(
