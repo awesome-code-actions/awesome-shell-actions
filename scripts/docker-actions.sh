@@ -156,6 +156,7 @@ function docker-build-with-proxy {
 
 function docker-image-exist {
   # TODO
+  return
 }
 
 function docker-pull-if-not-exist {
