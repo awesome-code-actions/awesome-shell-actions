@@ -98,6 +98,11 @@ class TmuxCli:
     def ami_intmux(self) -> bool:
         return os.environ.get("TMUX", "") != ""
 
+    def list_options(self, session_name: str) -> dict[str, str]:
+        opts = self.run(
+            f"tmux show-options  -t {session_name}", hide=True).stdout
+        return {x.split()[0]: x.split()[1] for x in opts.splitlines() if x.startswith("@my_")}
+
     def list_pane(self, session_name: str) -> list[Pane]:
         panes = self.run(
             f"tmux list-panes -t {session_name} -F \"{Pane.to_tmux_fmt()}\"", hide=True).stdout
@@ -121,6 +126,7 @@ class Layout(DataClassJsonMixin):
     session_name: str
     wins: list[Window]
     panes: list[Pane]
+    var: dict[str, str] = field(default_factory=dict)
 
 
 class X:
@@ -135,10 +141,43 @@ class X:
         ps = self.cli.list_window(name)
         print(Window.schema().dumps(ps, many=True))
 
+    def _fetch_var_path(self, layout: Layout):
+        env = {}
+        my_var_path = layout.var.get("@my_var_path", None)
+        if my_var_path is None:
+            return None
+        for e in my_var_path.split(","):
+            env[e] = os.environ.get(e, "")
+        return env
+
+    def _resolve_var_path(self, layout: Layout):
+        env = self._fetch_var_path(layout)
+        if env is None:
+            return
+        for p in layout.panes:
+            pcp = p.pane_current_path
+            for k, v in env.items():
+                if pcp.startswith("$"+k):
+                    p.pane_current_path = pcp.replace("$"+k, v)
+        pass
+
+    def _patch_var_path(self, layout: Layout):
+        env = self._fetch_var_path(layout)
+        if env is None:
+            return
+        for p in layout.panes:
+            pcp = p.pane_current_path
+            for k, v in env.items():
+                if pcp.startswith(v):
+                    p.pane_current_path = pcp.replace(v, "$"+k)
+        pass
+
     def save(self, output: str):
         session_name = self.cli.cur_session()
+        var = self.cli.list_options(session_name)
         layout = Layout(session_name=session_name, wins=self.cli.list_window(
-            session_name), panes=self.cli.list_pane(session_name))
+            session_name), panes=self.cli.list_pane(session_name), var=var)
+        self._patch_var_path(layout)
         p = f"{output}/{layout.session_name}.tmux.json"
         Path(p).write_text(
             layout.to_json(indent=2, ensure_ascii=False))
@@ -160,6 +199,11 @@ class X:
         session_name = self.cli.cur_session()
         cur = Layout(session_name=self.cli.cur_session(), wins=self.cli.list_window(session_name),
                      panes=self.cli.list_pane(session_name))
+
+        for k, v in exp.var.items():
+            self.cli.run(
+                f"tmux set-option -t {session_name} {k} {v}", hide=True)
+        self._resolve_var_path(exp)
         for w in exp.wins:
             cur_win_index = [x.window_index for x in cur.wins]
             if w.window_index not in cur_win_index:

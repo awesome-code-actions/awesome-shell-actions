@@ -93,7 +93,7 @@ function tmux-boot-pane() {
 }
 
 function tmux-set-window-title() {
-  title=$1
+  local title=$1
   tmux rename-window $title
 }
 
