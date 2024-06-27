@@ -208,3 +208,7 @@ function tmux-set-cwd() {
   local mycwd="$@"
   tmux set -p @mycwd "$mycwd"
 }
+
+function tmux-cat-pane-log() {
+  tmux capture-pane -pS -9000000
+}
