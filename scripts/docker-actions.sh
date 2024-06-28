@@ -168,3 +168,65 @@ function docker-pull-if-not-exist {
   fi
   docker pull $image
 }
+
+
+function docker-ps-via-id() (
+  local id=${1-$(docker-select-id)}
+  local pid_of_container=$(docker inspect $id | jq '.[0].State.Pid')
+  local pidns=$(sudo sh -c "ls -l /proc/$pid_of_container/ns/pid|grep -o '\[.*\]'|tr -d '[]'")
+  while read pid; do
+    local pid_info_in_host=$(ps -o pid,uid,cmd -p $pid --no-headers)
+    local pid_in_ns=$(cat /proc/$pid/status | grep NSpid | awk '{print $3}')
+    echo $pid_in_ns $pid_info_in_host
+  done < <(sudo sh -c "ls -l /proc/*/ns/pid|grep $pidns | awk '{print \$9}'| awk -F'/' '{print \$3}'")
+)
+
+function ps-with-container() {
+  local filter="$1"
+  declare -A pid_cinfo_m
+  declare -A cid_pid_m
+  declare -A pid_pidns_m
+  declare -A pidns_cid_m
+  declare -A cid_inspect_m
+  while read cinfo; do
+    local cid=$(echo "$cinfo"| awk '{print $1}')
+    local cid_inspect=$(crictl inspect $cid | jq  -c '{pod: .status.labels."io.kubernetes.pod.name",pid: .info.pid,container: .info.config.metadata.name}' | tr -d '\n')
+    local pid=$(echo "$cid_inspect"| jq '.pid')
+    cid_inspect_m["$cid"]="$cid_inspect"
+    cid_pid_m["$cid"]=$pid
+    pid_cinfo_m["$pid"]=$pid
+    if [ ! -e /proc/$pid ];then
+      continue
+    fi
+    local pidns=$(ls -l /proc/$pid/ns/pid|grep -o '\[.*\]'|tr -d '[]')
+    pid_pidns_m[$pid]=$pidns
+    pidns_cid_m[$pidns]=$cid
+  done < <(crictl ps |tail -n+2)
+
+  while read pinfo; do
+    local pid=$(echo "$pinfo"|awk '{print $2}')
+    if [ ! -e /proc/$pid ];then
+      continue
+    fi
+    local pidns=$(ls -l /proc/$pid/ns/pid|grep -o '\[.*\]'|tr -d '[]')
+    echo "$pid $pidns"
+
+    local pid_in_ns=$(cat /proc/$pid/status | grep NSpid | awk '{print $3}')
+    if [[ -z "$pid_in_ns" ]];then
+        echo "- $pinfo"
+        continue
+    fi
+    local container=""
+
+    if [[ ! -v "pidns_cid_m[$pidns]" ]]; then
+        echo "- $pinfo"
+        continue
+    fi
+    local cid="${pidns_cid_m[$pidns]}"
+    local pid_in_ns=$(cat /proc/$pid/status | grep NSpid | awk '{print $3}')
+    local cinspect=${cid_inspect_m[$cid]}
+    local name=$(echo "$cinspect"|jq -r '.container')
+    local pod=$(echo "$cinspect"|jq -r '.pod')
+    echo  "* $pod $name $cid $pid $pid_in_ns $pinfo"
+  done < <( ps -aux --no-headers| grep "$filter")
+}
