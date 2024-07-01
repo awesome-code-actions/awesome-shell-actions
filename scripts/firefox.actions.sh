@@ -1,6 +1,6 @@
 #!/bin/bash
 function ff-find-profile-folder() {
-  fd -a release ~/.mozilla/firefox/
+  fd -a release ~/.mozilla/firefox/ | head -n1
 }
 
 function ff-init-csss() {
