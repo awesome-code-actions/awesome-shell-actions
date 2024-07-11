@@ -5,13 +5,21 @@ function chrome-kill-me() {
 }
 
 function chrome-get-debug-ws-ep() (
+  zmx-log "chrome get ws"
   local ep=$(curl -s http://localhost:9222/json/version | jq -r '.webSocketDebuggerUrl')
   if [ -n "$ep" ]; then
     echo "$ep"
     return
   fi
+  pkill chrome
   /opt/google/chrome/chrome --remote-debugging-port=9222 &>~/.chrome.log &
-  sleep 3
-  local ep=$(curl -s http://localhost:9222/json/version | jq -r '.webSocketDebuggerUrl')
-  echo "$ep"
+  while true; do
+    zmx-log "keep try"
+    ep=$(curl -s http://localhost:9222/json/version | jq -r '.webSocketDebuggerUrl')
+    if [ -n "$ep" ]; then
+      echo "$ep"
+      return
+    fi
+    sleep 1
+  done
 )
