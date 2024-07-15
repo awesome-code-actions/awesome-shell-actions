@@ -209,6 +209,14 @@ function tmux-set-cwd() {
   tmux set -p @mycwd "$mycwd"
 }
 
+function tmux-show-var-path() {
+  tmux show-options @my_var_path
+}
+
+function tmux-set-var-path() {
+  tmux set-option '@my_var_path' '$1'
+}
+
 function tmux-cat-pane-log() {
   tmux capture-pane -pS -9000000
 }
