@@ -116,9 +116,17 @@ function git-commit-no-edit-and-force-push-origin() {
 }
 
 function git-commit-no-edit-and-force-push-origin-no-verify() {
+  local origin=${1-origin}
+  git-commit-no-edit
+  current_branch=$(git branch --show-current | tr -d '\n\r')
+  git push $origin $current_branch -f --no-verify
+}
+
+function git-commit-no-edit-and-force-push-origin-no-verify-both() {
   git-commit-no-edit
   current_branch=$(git branch --show-current | tr -d '\n\r')
   git push origin $current_branch -f --no-verify
+  git push gh $current_branch -f --no-verify
 }
 
 function git-add-modify-files-commit-update-and-push-origin() {
