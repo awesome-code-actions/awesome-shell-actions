@@ -104,7 +104,7 @@ function xorg-save() {
     p="./store/$(xorg-current-workspace-name).win.txt"
   fi
   local cur_ws=$(xorg-current-workspace-id)
-  wmctrl -lGx | grep $cur_ws | awk '{print $3, $4, $5, $6, $7}' >$p
+  wmctrl -lGx | awk "\$2 == \"$cur_ws\"" | awk '{print $3, $4, $5, $6, $7}' >$p
   return
 }
 
