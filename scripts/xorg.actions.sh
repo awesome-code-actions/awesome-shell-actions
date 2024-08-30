@@ -83,27 +83,35 @@ function xorg-list-win-with-name() (
   done < <(wmctrl -l)
 )
 
-function ui-get-input() (
-  local prompt=${1-"name: "}
-  if [ -n "$2" ]; then
-    echo "$2"
-    return
-  fi
-
-  env | grep IN_ROFI
-  if [ -n "$IN_ROFI" ]; then
-    echo $(zenity --entry --text="$prompt")
-    return
-  fi
-  a=$(bash -c "read -e -p \"$prompt\" tmp; echo \$tmp")
-  echo $a
-  return
-)
-
 function workspace-jump-to() (
   local name=$1
   echo "jump to $name"
   local id=$(gnome-list-workspace | grep "$name" | awk '{print $1}')
   echo "id $id"
   wmctrl -s $id
+)
+
+function xorg-current-workspace-name() (
+  local id=$(xorg-current-workspace-id)
+  local name=$(gnome-list-workspace | grep $id | awk '{print $2}')
+  echo $name
+)
+
+# save current workspace win layout
+function xorg-save() {
+  local p="$1"
+  if [[ -z "$p" ]]; then
+    p="./store/$(xorg-current-workspace-name).win.txt"
+  fi
+  local cur_ws=$(xorg-current-workspace-id)
+  wmctrl -lGx | grep $cur_ws | awk '{print $3, $4, $5, $6, $7}' >$p
+  return
+}
+
+function xorg-load() {
+  return
+}
+
+function xorg-close-cur-anonymuos-win() (
+  xorg-list-win | grep -v '@' | awk '{print $1}' | xargs -I{} wmctrl -ic {}
 )
