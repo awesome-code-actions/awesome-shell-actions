@@ -31,27 +31,24 @@ def find_mac_of_vm(vm: libvirt.virDomain)->str:
 
 @task()
 def list_vm(_ctx):
-    domain="qemu:///system"
-    conn = libvirt.open(None)
-    for c in conn.listAllDomains():
-        vm = conn.lookupByName(c.name())
-        name = vm.name()
-        [state_int,_] = vm.state()
-        state = STATE_MAP[state_int]
-        if state_int!=libvirt.VIR_DOMAIN_RUNNING:
-            print(" ".join([domain,name,state]))
-            continue
-        network = conn.networkLookupByName("default")
-        bridge_name = network.bridgeName()
-        mac = find_mac_of_vm(vm)
-        dhcp ={x["mac"]:x for x in network.DHCPLeases()}
-        ip=dhcp[mac]["ipaddr"]
-        host=dhcp[mac]["hostname"]
-        print(" ".join([domain,name,state,mac,ip,host,bridge_name]))
-    # Get VM MAC address
-    
-
-    
+    domains=["qemu+ssh://kuku.cong/system","qemu+ssh://k2.cong/system"]
+    for d in domains:
+        conn = libvirt.open(d)
+        for c in conn.listAllDomains():
+            vm = conn.lookupByName(c.name())
+            name = vm.name()
+            [state_int,_] = vm.state()
+            state = STATE_MAP[state_int]
+            if state_int!=libvirt.VIR_DOMAIN_RUNNING:
+                print(" ".join([d,name,state]))
+                continue
+            network = conn.networkLookupByName("default")
+            bridge_name = network.bridgeName()
+            mac = find_mac_of_vm(vm)
+            dhcp ={x["mac"]:x for x in network.DHCPLeases()}
+            ip=dhcp[mac]["ipaddr"]
+            host=dhcp[mac]["hostname"]
+            print(" ".join([str(x) for x in [d,name,state,mac,ip,host,bridge_name]]))
 
 @task()
 def stop_vm(_ctx):
