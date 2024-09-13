@@ -97,21 +97,3 @@ function xorg-current-workspace-name() (
   echo $name
 )
 
-# save current workspace win layout
-function xorg-save() {
-  local p="$1"
-  if [[ -z "$p" ]]; then
-    p="./store/$(xorg-current-workspace-name).win.txt"
-  fi
-  local cur_ws=$(xorg-current-workspace-id)
-  wmctrl -lGx | awk "\$2 == \"$cur_ws\"" | awk '{print $3, $4, $5, $6, $7}' >$p
-  return
-}
-
-function xorg-load() {
-  return
-}
-
-function xorg-close-cur-anonymuos-win() (
-  xorg-list-win | grep -v '@' | awk '{print $1}' | xargs -I{} wmctrl -ic {}
-)
