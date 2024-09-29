@@ -12,6 +12,7 @@ function chrome-get-debug-ws-ep() (
     return
   fi
   pkill chrome
+#   /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
   /opt/google/chrome/chrome --remote-debugging-port=9222 &>~/.chrome.log &
   while true; do
     zmx-log "keep try"
