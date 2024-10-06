@@ -48,10 +48,9 @@ function xorg-max() (
   return
 )
 
-export WM_XX=$(xrandr --current | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f1)
-export WM_YY=$(xrandr --current | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f2)
-
 function wm-resolve() (
+  local WM_XX=$(xrandr --current | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f1)
+  local WM_YY=$(xrandr --current | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f2)
   local name=$1
   if [[ "$name" == "right" ]]; then
     echo "0,$(expr $WM_XX / 2),0,$(expr $WM_XX / 2),$WM_YY"
@@ -96,4 +95,3 @@ function xorg-current-workspace-name() (
   local name=$(gnome-list-workspace | grep $id | awk '{print $2}')
   echo $name
 )
-
