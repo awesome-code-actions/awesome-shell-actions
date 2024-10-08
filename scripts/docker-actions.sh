@@ -169,7 +169,6 @@ function docker-pull-if-not-exist {
   docker pull $image
 }
 
-
 function docker-ps-via-id() (
   local id=${1-$(docker-select-id)}
   local pid_of_container=$(docker inspect $id | jq '.[0].State.Pid')
@@ -189,44 +188,48 @@ function ps-with-container() {
   declare -A pidns_cid_m
   declare -A cid_inspect_m
   while read cinfo; do
-    local cid=$(echo "$cinfo"| awk '{print $1}')
-    local cid_inspect=$(crictl inspect $cid | jq  -c '{pod: .status.labels."io.kubernetes.pod.name",pid: .info.pid,container: .info.config.metadata.name}' | tr -d '\n')
-    local pid=$(echo "$cid_inspect"| jq '.pid')
+    local cid=$(echo "$cinfo" | awk '{print $1}')
+    local cid_inspect=$(crictl inspect $cid | jq -c '{pod: .status.labels."io.kubernetes.pod.name",pid: .info.pid,container: .info.config.metadata.name}' | tr -d '\n')
+    local pid=$(echo "$cid_inspect" | jq '.pid')
     cid_inspect_m["$cid"]="$cid_inspect"
     cid_pid_m["$cid"]=$pid
     pid_cinfo_m["$pid"]=$pid
-    if [ ! -e /proc/$pid ];then
+    if [ ! -e /proc/$pid ]; then
       continue
     fi
-    local pidns=$(ls -l /proc/$pid/ns/pid|grep -o '\[.*\]'|tr -d '[]')
+    local pidns=$(ls -l /proc/$pid/ns/pid | grep -o '\[.*\]' | tr -d '[]')
     pid_pidns_m[$pid]=$pidns
     pidns_cid_m[$pidns]=$cid
-  done < <(crictl ps |tail -n+2)
+  done < <(crictl ps | tail -n+2)
 
   while read pinfo; do
-    local pid=$(echo "$pinfo"|awk '{print $2}')
-    if [ ! -e /proc/$pid ];then
+    local pid=$(echo "$pinfo" | awk '{print $2}')
+    if [ ! -e /proc/$pid ]; then
       continue
     fi
-    local pidns=$(ls -l /proc/$pid/ns/pid|grep -o '\[.*\]'|tr -d '[]')
+    local pidns=$(ls -l /proc/$pid/ns/pid | grep -o '\[.*\]' | tr -d '[]')
     echo "$pid $pidns"
 
     local pid_in_ns=$(cat /proc/$pid/status | grep NSpid | awk '{print $3}')
-    if [[ -z "$pid_in_ns" ]];then
-        echo "- $pinfo"
-        continue
+    if [[ -z "$pid_in_ns" ]]; then
+      echo "- $pinfo"
+      continue
     fi
     local container=""
 
     if [[ ! -v "pidns_cid_m[$pidns]" ]]; then
-        echo "- $pinfo"
-        continue
+      echo "- $pinfo"
+      continue
     fi
     local cid="${pidns_cid_m[$pidns]}"
     local pid_in_ns=$(cat /proc/$pid/status | grep NSpid | awk '{print $3}')
     local cinspect=${cid_inspect_m[$cid]}
-    local name=$(echo "$cinspect"|jq -r '.container')
-    local pod=$(echo "$cinspect"|jq -r '.pod')
-    echo  "* $pod $name $cid $pid $pid_in_ns $pinfo"
-  done < <( ps -aux --no-headers| grep "$filter")
+    local name=$(echo "$cinspect" | jq -r '.container')
+    local pod=$(echo "$cinspect" | jq -r '.pod')
+    echo "* $pod $name $cid $pid $pid_in_ns $pinfo"
+  done < <(ps -aux --no-headers | grep "$filter")
 }
+
+function docker-purge() (
+  docker system prune
+)
