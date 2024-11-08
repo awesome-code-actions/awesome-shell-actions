@@ -90,6 +90,16 @@ function workspace-jump-to() (
   wmctrl -s $id
 )
 
+function workspace-pre() (
+  local pre=$(gnome-list-workspace | grep $(xorg-current-workspace-name) -B 1 | head -n1 | awk '{print $2}')
+  workspace-jump-to $pre
+)
+
+function workspace-next() (
+  local next=$(gnome-list-workspace | grep $(xorg-current-workspace-name) -A 1 | tail -n1 | awk '{print $2}')
+  workspace-jump-to $next
+)
+
 function xorg-current-workspace-name() (
   local id=$(xorg-current-workspace-id)
   local name=$(gnome-list-workspace | grep $id | awk '{print $2}')
