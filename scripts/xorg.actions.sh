@@ -102,6 +102,6 @@ function workspace-next() (
 
 function xorg-current-workspace-name() (
   local id=$(xorg-current-workspace-id)
-  local name=$(gnome-list-workspace | grep $id | awk '{print $2}')
+  local name=$(gnome-list-workspace | grep "$id " | awk '{print $2}')
   echo $name
 )
