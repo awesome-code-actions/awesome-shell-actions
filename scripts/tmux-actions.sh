@@ -220,3 +220,7 @@ function tmux-set-var-path() {
 function tmux-cat-pane-log() {
   tmux capture-pane -pS -9000000
 }
+
+function tmux-attach-with-cwd() {
+  tmux attach -dt $1 -c $2
+}
