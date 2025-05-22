@@ -222,5 +222,6 @@ function tmux-cat-pane-log() {
 }
 
 function tmux-attach-with-cwd() {
-  tmux attach -dt $1 -c $2
+  local session=${1:-$(tmux ls | cut -d ':' -f 1 | fzf)}
+  tmux attach -dt $session -c $PWD
 }
