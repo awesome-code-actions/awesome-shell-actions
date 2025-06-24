@@ -12,11 +12,11 @@ function tmux-list-pane-t() {
   tmux list-panes -s -F "#{session_name}:#{window_index}.#{pane_index} #{@mytitle}"
 }
 
-function tmux-set-panel-title() {
-  tmux-set-panel-title-pane "$(tmux-cur-pane-t)" "$1"
+function tmux-set-current-panel-title() {
+  tmux-set-panel-title "$(tmux-cur-pane-t)" "$1"
 }
 
-function tmux-set-panel-title-pane() {
+function tmux-set-panel-title() {
   local t=$1
   local title=$2
   tmux set -p -t "$t" @mytitle "$title"
@@ -120,16 +120,18 @@ function tmux-send-key-to-pane() {
   shift
   local pane_index=$(tmux-get-paneid $title)
   echo tmux send-keys -t $pane_index "$@"
+  tmux send-keys -t $pane_index "C-c"
   tmux send-keys -t $pane_index "$@"
+  tmux send-keys -t $pane_index "Enter"
 }
 
 function tmux-get-paneid() {
   local title=$1
-  tmux-list-current-window-panel | grep $title | cut -d '~' -f 2 | tr -d '\n\r'
+  tmux-list-current-window-panel | grep $title | awk -F'?' '{print $2}' | tr -d '\n\r' |xargs
 }
 
 function tmux-list-current-window-panel() {
-  tmux list-panes -t $(tmux-get-current-window-id) -F "#{pane_title}#{pane_index}" | grep '~'
+  tmux list-panes -t $(tmux-get-current-window-id) -F "#{@mytitle}?#{pane_index}"
 }
 
 function tmux-get-current-window-id() {
