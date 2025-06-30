@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.12
+# pip3 install dataclasses-json invoke dataclasses --break-system-packages
 from dataclasses import dataclass
 import os
 import sys
@@ -10,7 +11,6 @@ from dataclasses import dataclass, field, fields
 from dataclasses_json import dataclass_json, DataClassJsonMixin
 from pathlib import Path
 from typing import ClassVar
-
 
 @dataclass
 class Window(DataClassJsonMixin):

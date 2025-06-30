@@ -110,6 +110,11 @@ function git-force-push-origin() {
   git push origin $current_branch -f
 }
 
+function git-commit-update-and-push-origin() {
+  git commit -m "update $(date '+%Y-%m-%d %H:%M:%S')"
+  git push origin
+}
+
 function git-commit-no-edit-and-force-push-origin() {
   git-commit-no-edit
   git-force-push-origin

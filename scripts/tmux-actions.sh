@@ -1,5 +1,10 @@
 #!/bin/bash
 
+TMUX_ACTIONS_PY=""
+if [[ -n "$SHELL_ACTIONS_BASE" ]]; then
+  TMUX_ACTIONS_PY=$SHELL_ACTIONS_BASE/scripts/tmux.py
+fi
+
 function tmux-kill-server() {
   tmux kill-server
 }
@@ -23,11 +28,11 @@ function tmux-set-panel-title() {
 }
 
 function tmux-save() (
-  python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-save ${1-"./"}
+  python $TMUX_ACTIONS_PY tmux-save ${1-"./"}
 )
 
 function tmux-load() (
-  tmux display-popup "zsh -c \"source ~/.zshrc; cd $PWD;pwd;python $SHELL_ACTIONS_BASE/scripts/tmux.py tmux-load $1; echo 'load ok'\"" &
+  tmux display-popup "cd $PWD;pwd;python $TMUX_ACTIONS_PY tmux-load $1; echo 'load ok'\"" &
 )
 
 function tmux-kill-other() (
@@ -127,7 +132,7 @@ function tmux-send-key-to-pane() {
 
 function tmux-get-paneid() {
   local title=$1
-  tmux-list-current-window-panel | grep $title | awk -F'?' '{print $2}' | tr -d '\n\r' |xargs
+  tmux-list-current-window-panel | grep $title | awk -F'?' '{print $2}' | tr -d '\n\r' | xargs
 }
 
 function tmux-list-current-window-panel() {
