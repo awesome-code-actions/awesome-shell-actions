@@ -1,3 +1,5 @@
+#! /bin/bash
+
 function _prepare_kind_cluster_config() {
   file=${1:-"/tmp/cluster.yaml"}
   echo $file
@@ -7,6 +9,13 @@ apiVersion: kind.x-k8s.io/v1alpha4
 networking:
   ipFamily: dual
   apiServerAddress: "127.0.0.1"
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:60080"]
+    endpoint = ["http://registry.alauda.cn:60080"]
+  [plugins."io.containerd.grpc.v1.cri".registry.configs]
+    [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.alauda.cn:60080".tls]
+      insecure_skip_verify = true
 nodes:
 - role: control-plane
 EOL
@@ -110,6 +119,19 @@ function kind-create-1.28.0() {
 
   kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.28.0
 }
+
+function kind-create-1.33.1() {
+  local name=${1:-"k-1-33-1"}
+  local node=$2
+  if [ -z "$node" ]; then
+    _prepare_kind_cluster_config /tmp/cluster.yaml
+  else
+    _prepare_kind_cluster_config_3 /tmp/cluster.yaml
+  fi
+
+  kind create cluster --config /tmp/cluster.yaml --name $name --image=kindest/node:v1.33.1
+}
+
 
 function default-cluster-config() {
   p=/${RANDOM:0:2}
