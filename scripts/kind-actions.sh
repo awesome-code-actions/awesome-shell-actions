@@ -1,6 +1,7 @@
 #! /bin/bash
 
-function _prepare_kind_cluster_config() {
+function _prepare_kind_cluster_config_http() {
+  # local http docker registry
   file=${1:-"/tmp/cluster.yaml"}
   echo $file
   cat >$file <<EOL
@@ -11,14 +12,71 @@ networking:
   apiServerAddress: "127.0.0.1"
 containerdConfigPatches:
 - |-
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:60080"]
-    endpoint = ["http://registry.alauda.cn:60080"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."outside.local:5000"]
+      endpoint = ["http://outside.local:5000"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.alauda.cn:60080"]
+      endpoint = ["http://registry.alauda.cn:60080"]
   [plugins."io.containerd.grpc.v1.cri".registry.configs]
-    [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.alauda.cn:60080".tls]
+    [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.alauda.cn:60070".tls]
       insecure_skip_verify = true
 nodes:
 - role: control-plane
 EOL
+}
+
+function _prepare_kind_cluster_config_https() {
+  # local http docker registry
+  # not yet
+  file=${1:-"/tmp/cluster.yaml"}
+  echo $file
+  cat >$file <<EOL
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: dual
+  apiServerAddress: "127.0.0.1"
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.alauda.cn:60080"]
+      endpoint = ["http://registry.alauda.cn:60080"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."outside.local:5000"]
+      endpoint = ["https://outside.local:5000"]
+  [plugins."io.containerd.grpc.v1.cri".registry.configs]
+    [plugins."io.containerd.grpc.v1.cri".registry.configs."outside.local:5000".tls]
+      insecure_skip_verify = true
+nodes:
+- role: control-plane
+EOL
+}
+
+
+function _prepare_kind_cluster_config_custom_ca() {
+  # local http docker registry
+  file=${1:-"/tmp/cluster.yaml"}
+  echo $file
+  cat >$file <<EOL
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: dual
+  apiServerAddress: "127.0.0.1"
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.alauda.cn:60080"]
+      endpoint = ["http://registry.alauda.cn:60080"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."outside.local:5000"]
+          endpoint = ["outside.local:5000"]
+  [plugins."io.containerd.grpc.v1.cri".registry.configs]
+    [plugins."io.containerd.grpc.v1.cri".registry.configs."outside.local:5000".tls]
+      insecure_skip_verify = true
+nodes:
+- role: control-plane
+EOL
+}
+
+
+function _prepare_kind_cluster_config() {
+   _prepare_kind_cluster_config_http $1
 }
 
 function _prepare_kind_cluster_config_2() {
