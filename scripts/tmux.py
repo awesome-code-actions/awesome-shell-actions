@@ -1,5 +1,9 @@
-#!/usr/bin/env python3.12
-# pip3 install dataclasses-json invoke dataclasses --break-system-packages
+#/// script
+# dependencies = [
+#   "dataclasses",
+#   "invoke",
+# ]
+# ///
 from dataclasses import dataclass
 import os
 import sys
@@ -60,6 +64,7 @@ class Pane(DataClassJsonMixin):
 
     mytitle: str = field(default="", metadata={"fmt": "#{@mytitle}"})
     mybooter: str = field(default="", metadata={"fmt": "#{@mybooter}"})
+    mypreboot: str = field(default="", metadata={"fmt": "#{@mypreboot}"})
     pane_active: bool = field(default=False, metadata={
                               "fmt": "#{pane_active}"})
     pane_current_path: str = field(
@@ -86,6 +91,7 @@ class Pane(DataClassJsonMixin):
             pane_index=int(obj["pane_index"]),
             mytitle=obj["mytitle"],
             mybooter=obj["mybooter"],
+            mypreboot=obj["mypreboot"],
             pane_active=obj["pane_active"] == "1",
             pane_current_path=obj["pane_current_path"],
         )
@@ -93,7 +99,14 @@ class Pane(DataClassJsonMixin):
 
 class TmuxCli:
     def __init__(self):
-        self.run = invoke.run
+        pass
+    def lrun(self, cmd: str, **kwargs):
+        print(cmd)
+        if os.environ.get("TMUX_DRY_RUN", "") == "true":
+            return
+        return invoke.run(cmd, **kwargs)
+    def run(self, cmd: str, **kwargs):
+        return invoke.run(cmd, **kwargs)
 
     def ami_intmux(self) -> bool:
         return os.environ.get("TMUX", "") != ""
@@ -178,18 +191,34 @@ class X:
         layout = Layout(session_name=session_name, wins=self.cli.list_window(
             session_name), panes=self.cli.list_pane(session_name), var=var)
         self._patch_var_path(layout)
+        data=layout.to_json(indent=2, ensure_ascii=False)
+        if output == "-":
+            print(data)
+            return
+        pass
         p = f"{output}/{layout.session_name}.tmux.json"
-        Path(p).write_text(
-            layout.to_json(indent=2, ensure_ascii=False))
+        Path(p).write_text(data)
         print(p)
         pass
 
-    def gen_tmux_send_keys(self, booter: str):
-        delimeter = booter.split(" ")[0]
-        cmds = [f"'{x.strip()}'" for x in booter.removeprefix(
+    def gen_tmux_send_keys(self, booter: str,without_enter:bool=False):
+        if not booter:
+            raise ValueError("booter is empty")
+
+        delimeter = booter[0]
+        print(f"|{booter}|   |{delimeter}|")
+        cmds=[]
+        if delimeter != "@":
+            cmds=[booter]
+            pass
+        else:
+            cmds = [f"'{x.strip()}'" for x in booter.removeprefix(
             delimeter).split(delimeter)]
+        print(f"cmds is {cmds}")
         cmds.insert(0, "C-c")
         full = " 'enter' ".join(cmds)
+        if without_enter:
+            return f"{full};"
         return f"{full} 'enter';"
 
     def load(self, fpath: str):
@@ -201,58 +230,74 @@ class X:
                      panes=self.cli.list_pane(session_name))
 
         for k, v in exp.var.items():
-            self.cli.run(
+            self.cli.lrun(
                 f"tmux set-option -t {session_name} {k} {v}", hide=True)
         self._resolve_var_path(exp)
         for w in exp.wins:
             cur_win_index = [x.window_index for x in cur.wins]
             if w.window_index not in cur_win_index:
-                self.cli.run(
+                self.cli.lrun(
                     f"tmux new-window -d -t \"{session_name}:{w.window_index}\"", hide=True)
-            self.cli.run(
+            self.cli.lrun(
                 f"tmux rename-window -t \"{session_name}:{w.window_index}\"  \"{w.window_name}\"", hide=True)
         # 创建panel
         for p in exp.panes:
             cur_pane_index = [x.pane_index for x in cur.panes]
             if p.pane_index not in cur_pane_index:
-                self.cli.run(
+                self.cli.lrun(
                     f"tmux split-window -t \"{session_name}:{p.window_index}\" -c \"{p.pane_current_path}\"", hide=True)
-                self.cli.run(
+                self.cli.lrun(
                     f"tmux select-layout -t \"{session_name}:{p.window_index}\" tiled", hide=True)
         # 设置layout
         for w in exp.wins:
-            self.cli.run(
+            self.cli.lrun(
                 f"tmux select-layout -t \"{session_name}:{w.window_index}\" \"{w.window_layout}\"", hide=True)
         # 设置option
         for p in exp.panes:
             t = f"{session_name}:{p.window_index}.{p.pane_index}"
 
             cmd = f"""tmux set-option -p -t "{t}" @mytitle "{p.mytitle}" """
-            self.cli.run(cmd, hide=True)
+            self.cli.lrun(cmd, hide=True)
+
+            cmd = f"""tmux set-option -p -t "{t}" @mypreboot "{p.mypreboot}" """
+            self.cli.lrun(cmd, hide=True)
 
             cmd = f"""tmux set-option -p -t "{t}" @mybooter "{p.mybooter}" """
-            self.cli.run(cmd, hide=True)
+            self.cli.lrun(cmd, hide=True)
+        sleep(5)
+        # prebooter
+        print("preboot")
+        for p in exp.panes:
+            print(f"preboot title: {p.mytitle} index: {p.pane_index}")
+            t = f"{session_name}:{p.window_index}.{p.pane_index}"
+            if p.mypreboot is None or p.mypreboot.strip() == "":
+                continue
+            cmd = self.gen_tmux_send_keys(p.mypreboot)
+            print(f"do preboot |{p.mypreboot}| cmd is {cmd}")
+            if p.pane_active:
+                cmd=cmd.removesuffix("'enter'")
+            self.cli.lrun(f""" tmux send-keys -t {t} {cmd} """, hide=True)
+        print("booter")
         sleep(3)
-        # booter
         for p in exp.panes:
             t = f"{session_name}:{p.window_index}.{p.pane_index}"
-            if p.mybooter.strip() == "":
+            if p.mybooter is None or p.mybooter.strip() == "":
                 continue
-            cmd = self.gen_tmux_send_keys(p.mybooter)
-            self.cli.run(f""" tmux send-keys -t "{t}" {cmd} """, hide=True)
+            cmd = self.gen_tmux_send_keys(p.mybooter,without_enter=p.pane_active)
+            self.cli.lrun(f""" tmux send-keys -t "{t}" {cmd} """, hide=True)
         pass
 
         # focus window and pane
         for p in exp.panes:
             if p.pane_active:
                 t = f"{session_name}:{p.window_index}.{p.pane_index}"
-            self.cli.run(
+            self.cli.lrun(
                 f"""tmux switch-client -t "{session_name}:{p.window_index}" """, hide=True)
-            self.cli.run(
+            self.cli.lrun(
                 f"""tmux select-pane -t "{p.pane_index}" """, hide=True)
         for w in exp.wins:
             if w.window_active:
-                self.cli.run(
+                self.cli.lrun(
                     f"""tmux select-window -t "{session_name}:{w.window_index}" """, hide=True)
         pass
 

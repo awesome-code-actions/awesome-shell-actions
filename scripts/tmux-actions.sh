@@ -5,6 +5,9 @@ if [[ -n "$SHELL_ACTIONS_BASE" ]]; then
   TMUX_ACTIONS_PY=$SHELL_ACTIONS_BASE/scripts/tmux.py
 fi
 
+function tmux-my-call() {
+    uv run $TMUX_ACTIONS_PY "$@"
+}
 function tmux-kill-server() {
   tmux kill-server
 }
@@ -27,23 +30,45 @@ function tmux-set-panel-title() {
   tmux set -p -t "$t" @mytitle "$title"
 }
 
+function tmux-set-panel-booter() {
+  local t=$1
+  local booter=$2
+  tmux set -p -t "$t" @mybooter "$booter"
+}
+
+function tmux-set-panel-preboot() {
+  local t=$1
+  local cmd=$2
+  tmux set -p -t "$t" @mypreboot "$cmd"
+}
+
+function tmux-do-preboot-panel() {
+    local panel=$1
+    local preboot=$(tmux-get-opt $panel mypreboot)
+    local cmd=$(tmux-gen-send-key $preboot)
+    echo "preboot $preboot"
+    echo "cmd $cmd"
+    tmux respawn-pane -k -t $panel
+    eval "tmux send-keys -t $panel $cmd"
+}
+
 function tmux-save() (
-  python $TMUX_ACTIONS_PY tmux-save ${1-"./"}
+    tmux-my-call tmux-save ${1-"./"}
+)
+
+function tmux-load-raw() (
+  uv run $TMUX_ACTIONS_PY tmux-load $1; echo 'load ok'
 )
 
 function tmux-load() (
-  tmux display-popup "cd $PWD;pwd;python $TMUX_ACTIONS_PY tmux-load $1; echo 'load ok'\"" &
+  tmux display-popup "cd $PWD;pwd;uv run $TMUX_ACTIONS_PY tmux-load $1; echo 'load ok'" &
 )
 
 function tmux-kill-other() (
   tmux kill-window -a && tmux kill-pane -a
 )
 
-function tmux-boot-cur() {
-  tmux-boot-pane $(tmux-cur-pane-t) "$1"
-}
-
-function tmux-set-panel() {
+function tmux-set-panel-tittle-and-booter() {
   local t=$1
   local title=$2
   local booter=$3
@@ -73,21 +98,14 @@ function tmux-reboot-pane() {
 }
 
 function tmux-gen-send-key() {
-  local cmd=$(
-    cd $SHELL_ACTIONS_BASE/scripts
-    python3 tmux.py gen_tmux_send_keys "$1"
-  )
-  echo "$cmd"
+    tmux-tmux-my-call  gen_tmux_send_keys "$1"
 }
 
 function tmux-boot-pane() {
   local t=$1
   local booter="$2"
   tmux set -p -t "$t" @mybooter "$booter"
-  local cmd=$(
-    cd $SHELL_ACTIONS_BASE/scripts
-    python3 tmux.py gen_tmux_send_keys "$booter"
-  )
+  local cmd=$(tmux-tmux-my-call gen_tmux_send_keys "$booter")
   if [[ -z $t ]]; then
     cmd="tmux send-keys $cmd"
   else
