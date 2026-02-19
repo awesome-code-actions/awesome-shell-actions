@@ -1,6 +1,7 @@
-#/// script
+# /// script
 # dependencies = [
 #   "dataclasses",
+#   "dataclasses-json",
 #   "invoke",
 # ]
 # ///

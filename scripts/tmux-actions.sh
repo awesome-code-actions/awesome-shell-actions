@@ -53,16 +53,30 @@ function tmux-do-preboot-panel() {
 }
 
 function tmux-save() (
-    tmux-my-call tmux-save ${1-"./"}
+    local output=${1:-"./"}
+    if [[ -d "./store" && -z "$1" ]]; then
+        output="./store"
+    fi
+    tmux-my-call tmux-save "$output"
 )
 
 function tmux-load-raw() (
   uv run $TMUX_ACTIONS_PY tmux-load $1; echo 'load ok'
 )
 
-function tmux-load() (
-  tmux display-popup "cd $PWD;pwd;uv run $TMUX_ACTIONS_PY tmux-load $1; echo 'load ok'" &
-)
+function tmux-load() {
+  local fpath=$1
+  local popup_cmd="display-popup -E \"cd '$PWD' && uv run '$TMUX_ACTIONS_PY' tmux-load '$fpath'; echo 'load ok'; read\""
+  if [[ -z "$TMUX" ]]; then
+    # 不在 tmux 中，创建新 session，用 hook 在 attach 后触发 popup
+    local session_name=$(basename "$fpath" .tmux.json)
+    tmux new-session -d -s "$session_name" -c "$PWD"
+    tmux set-hook -t "$session_name" client-attached "set-hook -u -t '$session_name' client-attached; $popup_cmd"
+    tmux attach -t "$session_name"
+  else
+    tmux display-popup -E "cd '$PWD' && uv run '$TMUX_ACTIONS_PY' tmux-load '$fpath'; echo 'load ok'; read"
+  fi
+}
 
 function tmux-kill-other() (
   tmux kill-window -a && tmux kill-pane -a
