@@ -11,3 +11,8 @@ function ai-notebook-gen() {
             echo
         done >./$normal_fpath.$filter.txt
 }
+
+function ai-test-glm() {
+	local key=$1
+	return
+}
